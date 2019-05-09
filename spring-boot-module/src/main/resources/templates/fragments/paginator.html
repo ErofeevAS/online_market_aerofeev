@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div class="pagination" th:fragment="paginator">
+    <div class="page-dropdown">
+        <select th:field="${paginator.size}" th:id="sizeSelector" th:name="sizeSelector"
+                onchange="selectAmout('sizeSelector')">
+            <option th:each="state : ${paginator.droppedListValues}"
+                    th:selected="${state==paginator.size}" th:value="${state}" th:text="${state}">
+            </option>
+        </select>
+    </div>
+    <span class="current-page">
+        <span>page:</span>
+        <span th:text="${paginator.page} + '/' +${paginator.maxPage} "></span>
+    </span>
+
+    <a th:href="@{''+${content}(page='1',size=${paginator.size})}">|&lt</a>
+    <a th:href="@{''+${content}(page=${paginator.page}-1,size=${paginator.size})}">&lt</a>
+    <span th:each="pageNumber:${#numbers.sequence(1,paginator.maxPage)}">
+        <a th:href="@{''+${content}(page=${pageNumber},size=${paginator.size})}" th:text="${pageNumber}"></a>
+    </span>
+    <a th:href="@{''+${content}(page=${paginator.page}+1,size=${paginator.size})}">&gt</a>
+    <a th:href="@{''+${content}(page=${paginator.maxPage},size=${paginator.size})}">&gt|</a>
+
+    <script th:inline="javascript">
+        function selectAmout(size) {
+            var size = document.getElementById(size);
+            window.location.href;
+            var url = new URL(window.location.href.split('?')[0]);
+            var queryString = url.search;
+            var searchParams = new URLSearchParams(queryString);
+            searchParams.append('page', '1');
+            searchParams.append('size', size.value);
+            url.search = searchParams.toString();
+            var new_url = url.toString();
+            window.location.replace(url);
+        }
+    </script>
+</div>
+</body>
+</html>
