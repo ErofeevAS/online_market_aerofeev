@@ -8,12 +8,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
-public class PasswordEncoderCreator {
+public class PasswordEncoderConfig {
 
     @Autowired
     private final SecurityProperties securityProperties;
 
-    public PasswordEncoderCreator(SecurityProperties securityProperties) {
+    public PasswordEncoderConfig(SecurityProperties securityProperties) {
         this.securityProperties = securityProperties;
     }
 

@@ -5,12 +5,11 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 <body>
-<div th:insert="~{fragments/my_header :: myHeader}"></div>
+<div th:insert="~{fragments/header :: header}"></div>
 <div th:insert="~{fragments/navbar :: navbar}"></div>
 
 
@@ -18,7 +17,6 @@
     <thead>
     <tr>
         <th> #</th>
-        <th> id</th>
         <th> title</th>
         <th> date</th>
         <th> lastname</th>
@@ -30,13 +28,12 @@
     </tr>
     </thead>
     <tbody>
-    <form action="#" th:action="@{/articles/update}" th:object="${changes}" method="post" id="hideForm"></form>
-    <th:block th:each="article,number : ${articles}">
+    <form action="#" th:action="@{/articles/update}" th:object="${articlesChanges}" method="post" id="hideForm"></form>
+    <th:block th:each="article,number : ${articlesChanges.articles}">
         <tr>
             <form action="#" th:action="@{/articles/{id}/delete(id=${article.id})}"
                   method="post">
                 <td th:text="${number.count+paginator.size*((paginator.page)-1)}"></td>
-                <td th:text="${article.id}"/>
                 <td th:text="${article.title}">...</td>
                 <td th:text="${article.date}">...</td>
                 <td th:text="${article.user.lastName}">...</td>
@@ -46,27 +43,34 @@
                 <td>
                     <button type="submit"> delete</button>
                 </td>
-                <td>
-                    <input type="checkbox"
-                           th:value="${'11'}"
-                           th:name="${changes.testVariable}"
-                           th:checked="${article.hided}" form="hideForm"/>
+                <td><input hidden type="text" th:field="${articlesChanges.articles[__${number.index}__].id}"
+                           th:value="${article.id}" form="hideForm">
                 </td>
-                <input  type="text" th:value="123" th:field="${changes.testVariable}"/>
-
+                <td>
+                    <input type="hidden" name="checkbox_1" value="0">
+                    <input  name="checkbox_1"
+                            type="checkbox"
+                           th:checked="${article.hided}"
+                           th:value="${article.hided}"
+                           th:field="${articlesChanges.articles[__${number.index}__].hided}"
+                           form="hideForm"/>
+                </td>
             </form>
-
         </tr>
+
     </th:block>
+    <button type="submit" class="btn btn-outline-primary" onclick="return confirm('Are you sure?')" form="hideForm">
+        hide
+    </button>
+
     </tbody>
     <tfoot>
     </tfoot>
 </table>
-<button type="submit" class="btn btn-outline-primary" form="hideForm" onclick="return confirm('Are you sure?')">
-    hide
-</button>
+
 
 <div th:insert="~{fragments/paginator :: paginator(content='/articles')}"></div>
+<div th:insert="~{fragments/footer :: footer}"></div>
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
