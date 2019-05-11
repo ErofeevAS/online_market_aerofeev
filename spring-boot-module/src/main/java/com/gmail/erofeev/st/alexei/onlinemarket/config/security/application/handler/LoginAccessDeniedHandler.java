@@ -21,11 +21,14 @@ public class LoginAccessDeniedHandler implements AccessDeniedHandler {
     private SecurityProperties securityProperties;
 
     @Override
-    public void handle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AccessDeniedException e) throws IOException {
+    public void handle(HttpServletRequest request,
+                       HttpServletResponse response,
+                       AccessDeniedException e) throws IOException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null) {
-            logger.info("{} was trying to access protected resources: {}", authentication.getName(), httpServletRequest.getRequestURI());
+            logger.warn("{} was trying to access protected resources: {}",
+                    authentication.getName(), request.getRequestURI());
         }
-        httpServletResponse.sendRedirect(httpServletRequest.getContextPath() + securityProperties.getForbidRedirectPage());
+        response.sendRedirect(request.getContextPath() + securityProperties.getForbidRedirectPage());
     }
 }

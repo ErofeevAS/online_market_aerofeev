@@ -7,8 +7,6 @@ import java.util.List;
 public interface UserService {
     List<UserDTO> getUsers(int page, int amount);
 
-    UserDTO save(UserDTO userDTO);
-
     Integer getAmount(int amountOfDisplayedUsers);
 
     UserDTO findUserByEmail(String email);
@@ -16,4 +14,10 @@ public interface UserService {
     void delete(List<Long> usersIdForDelete);
 
     void updateRole(Long id, String roleName);
+
+    UserDTO register(UserDTO user);
+
+    void changePassword(UserDTO user);
+
+    UserDTO findUserById(Long id);
 }

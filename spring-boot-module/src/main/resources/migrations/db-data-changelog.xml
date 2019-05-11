@@ -106,8 +106,6 @@
         </insert>
     </changeSet>
 
-
-
     <changeSet author="alexei.st.erofeev@gmail.com" id="ARTICLE_COMMENT_POPULATE_ID_1">
         <insert tableName="articles_comments">
             <column name="article_id" value="1"/>
@@ -135,5 +133,27 @@
         </insert>
     </changeSet>
 
+    <changeSet author="alexei.st.erofeev@gmail.com" id="REVIEW_POPULATE_ID_1">
+        <insert tableName="reviews">
+            <column name="id" value="1"/>
+            <column name="user_id" value="1"/>
+            <column name="content" value="my first REVIEW!! user_1"/>
+        </insert>
+        <insert tableName="reviews">
+            <column name="id" value="2"/>
+            <column name="user_id" value="1"/>
+            <column name="content" value="my second REVIEW!! user_1"/>
+        </insert>
+        <insert tableName="reviews">
+            <column name="id" value="3"/>
+            <column name="user_id" value="1"/>
+            <column name="content" value="my third REVIEW!! user_1"/>
+        </insert>
+        <insert tableName="reviews">
+            <column name="id" value="4"/>
+            <column name="user_id" value="3"/>
+            <column name="content" value="my first REVIEW!! user_3"/>
+        </insert>
+    </changeSet>
 
 </databaseChangeLog>

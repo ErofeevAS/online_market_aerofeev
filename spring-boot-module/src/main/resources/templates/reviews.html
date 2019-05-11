@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Users</title>
+    <title>Reviews</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -17,7 +17,6 @@
     <thead>
     <tr>
         <th> #</th>
-        <th> title</th>
         <th> date</th>
         <th> lastname</th>
         <th> firstname</th>
@@ -28,31 +27,30 @@
     </tr>
     </thead>
     <tbody>
-    <form action="#" th:action="@{/articles/update}" th:object="${articlesChanges}" method="post" id="hideForm"></form>
-    <th:block th:each="article,number : ${articlesChanges.articles}">
+    <form action="#" th:action="@{/reviews/update}" th:object="${reviewsChanges}" method="post" id="hideForm"></form>
+    <th:block th:each="review,number : ${reviewsChanges.reviews}">
         <tr>
-            <form action="#" th:action="@{/articles/{id}/delete(id=${article.id})}"
+            <form action="#" th:action="@{/reviews/{id}/delete(id=${review.id})}"
                   method="post">
                 <td th:text="${number.count+paginator.size*((paginator.page)-1)}"></td>
-                <td th:text="${article.title}">...</td>
-                <td th:text="${article.date}">...</td>
-                <td th:text="${article.user.lastName}">...</td>
-                <td th:text="${article.user.firstName}">...</td>
-                <td th:text="${article.user.patronymic}">...</td>
-                <td th:text="${article.content}">...</td>
+                <td th:text="${review.date}">...</td>
+                <td th:text="${review.user.lastName}">...</td>
+                <td th:text="${review.user.firstName}">...</td>
+                <td th:text="${review.user.patronymic}">...</td>
+                <td th:text="${review.content}">...</td>
                 <td>
                     <button type="submit"> delete</button>
                 </td>
-                <td><input hidden type="text" th:field="${articlesChanges.articles[__${number.index}__].id}"
-                           th:value="${article.id}" form="hideForm">
+                <td><input hidden type="text" th:field="${reviewsChanges.reviews[__${number.index}__].id}"
+                           th:value="${review.id}" form="hideForm">
                 </td>
                 <td>
                     <input type="hidden" name="checkbox_1" value="0">
-                    <input  name="checkbox_1"
-                            type="checkbox"
-                           th:checked="${article.hided}"
-                           th:value="${article.hided}"
-                           th:field="${articlesChanges.articles[__${number.index}__].hided}"
+                    <input name="checkbox_1"
+                           type="checkbox"
+                           th:checked="${review.hided}"
+                           th:value="${review.hided}"
+                           th:field="${reviewsChanges.reviews[__${number.index}__].hided}"
                            form="hideForm"/>
                 </td>
             </form>
@@ -69,7 +67,7 @@
 </table>
 
 
-<div th:insert="~{fragments/paginator :: paginator(content='/articles')}"></div>
+<div th:insert="~{fragments/paginator :: paginator(content='/reviews')}"></div>
 <div th:insert="~{fragments/footer :: footer}"></div>
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"

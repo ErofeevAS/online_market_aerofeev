@@ -4,6 +4,8 @@ import com.gmail.erofeev.st.alexei.onlinemarket.repository.RoleRepository;
 import com.gmail.erofeev.st.alexei.onlinemarket.repository.UserRepository;
 import com.gmail.erofeev.st.alexei.onlinemarket.repository.model.Role;
 import com.gmail.erofeev.st.alexei.onlinemarket.repository.model.User;
+import com.gmail.erofeev.st.alexei.onlinemarket.service.MailService;
+import com.gmail.erofeev.st.alexei.onlinemarket.service.PasswordService;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.UserService;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.converter.UserConverter;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.exception.ServiceException;
@@ -22,19 +24,22 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
     private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
     private static final String STANDARD_PASSWORD = "1234";
-
+    private static final int STANDARD_PASSWORD_LENGTH = 10;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final UserConverter userConverter;
     private final PasswordEncoder passwordEncoder;
-
+    private final PasswordService passwordService;
+    private final MailService mailService;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, UserConverter userConverter, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, UserConverter userConverter, RoleRepository roleRepository, PasswordEncoder passwordEncoder, PasswordService passwordService, MailService mailService) {
         this.userRepository = userRepository;
         this.userConverter = userConverter;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
+        this.passwordService = passwordService;
+        this.mailService = mailService;
     }
 
     @Override
@@ -59,35 +64,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO save(UserDTO userDTO) {
-        try (Connection connection = userRepository.getConnection()) {
-            connection.setAutoCommit(false);
-            try {
-                User user = userConverter.fromDTO(userDTO);
-                Role role = roleRepository.findRoleByName(connection, user.getRole().getName());
-                user.setPassword(passwordEncoder.encode(STANDARD_PASSWORD));
-                user.setRole(role);
-                user = userRepository.save(connection, user);
-                connection.commit();
-                return userConverter.toDTO(user);
-            } catch (SQLException e) {
-                connection.rollback();
-                logger.error(e.getMessage(), e);
-                throw new ServiceException(e.getMessage(), e);
-            }
-        } catch (SQLException e) {
-            logger.error(e.getMessage(), e);
-            throw new ServiceException(e.getMessage(), e);
-        }
-    }
-
-
-    @Override
     public Integer getAmount(int amountOfDisplayedUsers) {
         try (Connection connection = userRepository.getConnection()) {
             connection.setAutoCommit(false);
             try {
-                Integer amount = userRepository.getAmount(connection,"users");
+                amountOfDisplayedUsers = Math.abs(amountOfDisplayedUsers);
+                Integer amount = userRepository.getAmount(connection, "users");
                 amount = (Math.round(amount / amountOfDisplayedUsers) + 1);
                 connection.commit();
                 return amount;
@@ -160,6 +142,83 @@ public class UserServiceImpl implements UserService {
         } catch (SQLException e) {
             logger.error(e.getMessage(), e);
             throw new ServiceException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public UserDTO register(UserDTO userDTO) {
+        String email = userDTO.getEmail();
+        try (Connection connection = userRepository.getConnection()) {
+            connection.setAutoCommit(false);
+            try {
+                User userFindByEmail = userRepository.findUserByEmail(connection, email);
+                if (userFindByEmail == null) {
+                    User user = userConverter.fromDTO(userDTO);
+                    String password = passwordService.generatePassword(STANDARD_PASSWORD_LENGTH);
+                    user.setPassword(passwordEncoder.encode(password));
+                    Role role = roleRepository.findRoleByName(connection, user.getRole().getName());
+                    user.setRole(role);
+                    user = userRepository.save(connection, user);
+                    connection.commit();
+                    String message = String.format("Hello! %s. Your was registered on www.aerofeev-market.com  your password: %s", userDTO.getFullName(), password);
+                    mailService.send(email, "new password", message);
+                    logger.info(String.format("User with email: %s and password: %s was saved", email, password));
+                    return userConverter.toDTO(user);
+                } else {
+                    return null;
+                }
+            } catch (SQLException e) {
+                connection.rollback();
+                logger.error(e.getMessage(), e);
+                throw new ServiceException(e.getMessage(), e);
+            }
+        } catch (SQLException e) {
+            logger.error(e.getMessage(), e);
+            throw new ServiceException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void changePassword(UserDTO user) {
+        String email = user.getEmail();
+        try (Connection connection = userRepository.getConnection()) {
+            connection.setAutoCommit(false);
+            try {
+                String password = passwordService.generatePassword(STANDARD_PASSWORD_LENGTH);
+                String encodePassword = passwordEncoder.encode(password);
+                userRepository.update(connection, email, encodePassword);
+                connection.commit();
+                String message = String.format("Hello! %s. Your password on www.aerofeev-market.com  was changed on %s", user.getFullName(), password);
+                mailService.send(email, "new password", message);
+            } catch (SQLException e) {
+                connection.rollback();
+                logger.error(e.getMessage(), e);
+                throw new ServiceException(String.format("Can't change password for user: %s :", email), e);
+            }
+        } catch (SQLException e) {
+            logger.error(e.getMessage(), e);
+            throw new ServiceException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public UserDTO findUserById(Long id) {
+        try (Connection connection = userRepository.getConnection()) {
+            connection.setAutoCommit(false);
+            try {
+                User user = userRepository.findUserById(connection, id);
+                UserDTO userDTO = userConverter.toDTO(user);
+                connection.commit();
+                logger.info("user was found: " + user);
+                return userDTO;
+            } catch (SQLException e) {
+                connection.rollback();
+                logger.error("Database error, changes were rollbacked: " + e.getMessage(), e);
+                throw new ServiceException(e.getMessage(), e);
+            }
+        } catch (SQLException e) {
+            logger.error(e.getMessage(), e);
+            throw new ServiceException("Can't establish connection to database:" + e.getMessage(), e);
         }
     }
 }

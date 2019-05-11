@@ -26,12 +26,10 @@ public class Paginator {
 
     public void setPage(int page) {
         if (page > maxPage) {
-            this.page = 1;
-            return;
+            page = maxPage;
         }
         if (page < 1) {
-            this.page = 1;
-            return;
+            page = 1;
         }
         this.page = page;
     }
@@ -54,7 +52,7 @@ public class Paginator {
             return;
         }
         if (size < 1) {
-            this.size = 10;
+            this.size = Math.abs(size);
             return;
         }
         this.size = size;

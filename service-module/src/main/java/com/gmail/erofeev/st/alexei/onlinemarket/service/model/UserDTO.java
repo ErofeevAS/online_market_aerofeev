@@ -1,11 +1,27 @@
 package com.gmail.erofeev.st.alexei.onlinemarket.service.model;
 
+import org.springframework.validation.annotation.Validated;
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+
+@Validated
 public class UserDTO {
     private Long id;
+    @NotNull
+    @Pattern(regexp = "^[A-Za-z_]{1,40}$", message = "must be from 1 to 40, only English letters")
     private String lastName;
+    @NotNull
+    @Pattern(regexp = "^[A-Za-z_]{1,20}$", message = "must be from 1 to 20, only English letters")
     private String firstName;
+    @Pattern(regexp = "^[A-Za-z_]{0,40}$", message = "must be from 1 to 40, only English letters")
     private String patronymic;
     private String password;
+    @NotNull
+    @NotEmpty
+    @Email
     private String email;
     private RoleDTO role;
     private Boolean deleted;

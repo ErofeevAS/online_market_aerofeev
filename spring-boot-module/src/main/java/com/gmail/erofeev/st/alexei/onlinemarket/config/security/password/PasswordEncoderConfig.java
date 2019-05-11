@@ -1,4 +1,4 @@
-package com.gmail.erofeev.st.alexei.onlinemarket.config.security.bean;
+package com.gmail.erofeev.st.alexei.onlinemarket.config.security.password;
 
 import com.gmail.erofeev.st.alexei.onlinemarket.config.properties.SecurityProperties;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,81 +1,58 @@
 <!DOCTYPE html>
-<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:th="http://www.thymeleaf.org"
-      layout:decorate="~{fragments/layout}">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-<!-- Bootstrap CSS -->
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 <title>Registration page</title>
 </head>
 <body>
-<div th:insert="~{fragments/my_header :: myHeader}"></div>
+<div th:insert="~{fragments/header :: header}"></div>
 <div th:insert="~{fragments/navbar :: navbar}"></div>
 <div layout:fragment="content" th:remove="tag">
     <div class="container col-md-6 col-lg-5 ml-auto d-flex align-items-center mt-4 mt-md-0">
         <div class="row">
             <div class="col-ml-6">
                 <form th:action="@{/users/add}" th:object="${user}" method="post">
-                    <!--<div th:if="${!successfulMessage.isEmpty()}">-->
-                    <!--<div class="alert-success" th:text="${successfulMessage}">-->
-                    <!--</div>-->
-                    <!--</div>-->
 
-                    <div th:if="${errors.containsKey('lastName')}">
-                        <div class="alert alert-danger" th:text="${errors.get('lastName')}">
-                        </div>
+                    <div class="alert alert-info" th:if="${info}" th:text="${info}">
+
+                    </div>
+                    <div class="alert alert-danger" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">
+                        Name Error
                     </div>
                     <div class="form-group">
-                        <label for="lastName">last name</label>:
-                        <input type="text"
-                               id="lastName"
-                               name="lastName"
-                               class="form-control"
-                               autofocus="autofocus"
+                        <label>last name</label>:
+                        <input type="text" th:field="*{lastName}" class="form-control" autofocus="autofocus"
                                placeholder="lastName">
                     </div>
 
-                    <div th:if="${errors.containsKey('firstName')}">
-                        <div class="alert alert-danger" th:text="${errors.get('firstName')}">
-                        </div>
+                    <div class="alert alert-danger" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">
+                        Name Error
                     </div>
                     <div class="form-group">
-                        <label for="firstName">first name</label>:
-                        <input type="text"
-                               id="firstName"
-                               name="firstName"
-                               class="form-control"
-                               autofocus="autofocus"
+                        <label>first name</label>:
+                        <input type="text" th:field="*{firstName}" class="form-control" autofocus="autofocus"
                                placeholder="firstName">
                     </div>
 
-                    <div th:if="${errors.containsKey('patronymic')}">
-                        <div class="alert alert-danger" th:text="${errors.get('patronymic')}">
-                        </div>
+                    <div class="alert alert-danger" th:if="${#fields.hasErrors('patronymic')}"
+                         th:errors="*{patronymic}">
+                        Name Error
                     </div>
                     <div class="form-group">
-                        <label for="patronymic">patronymic</label>:
-                        <input type="text"
-                               id="patronymic"
-                               name="patronymic"
-                               class="form-control"
-                               autofocus="autofocus"
+                        <label>patronymic</label>:
+                        <input type="text" th:field="*{patronymic}" class="form-control" autofocus="autofocus"
                                placeholder="patronymic">
                     </div>
 
-                    <div th:if="${errors.containsKey('email')}">
-                        <div class="alert alert-danger" th:text="${errors.get('email')}">
-                        </div>
+                    <div class="alert alert-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">
+                        Name Error
                     </div>
                     <div class="form-group">
-                        <label for="email">email</label>:
-                        <input type="text"
-                               id="email"
-                               name="email"
-                               class="form-control"
-                               autofocus="autofocus"
+                        <label>email</label>:
+                        <input type="text" th:field="*{email}" class="form-control" autofocus="autofocus"
                                placeholder="email">
                     </div>
                     <label class="label">Role:</label>
@@ -86,7 +63,6 @@
                                 th:selected="${state==T(com.gmail.erofeev.st.alexei.onlinemarket.controller.util.RolesNameEnum).valueOf('ROLE_Customer')}">
                         </option>
                     </select>
-
 
                     <div class="form-group">
                         <div class="row">
@@ -104,6 +80,7 @@
         </div>
     </div>
 </div>
+<div th:insert="~{fragments/footer :: footer}"></div>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script>

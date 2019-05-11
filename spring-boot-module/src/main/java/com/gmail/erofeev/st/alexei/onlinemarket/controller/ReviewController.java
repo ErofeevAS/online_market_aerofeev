@@ -14,25 +14,24 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.validation.constraints.Positive;
 import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-public class ArticleController {
+public class ReviewController {
 
     private final ReviewService reviewService;
     private List<ReviewHideFieldState> tempReviewHideFieldStates = new ArrayList<>();
 
     @Autowired
-    public ArticleController(ReviewService reviewService) {
+    public ReviewController(ReviewService reviewService) {
         this.reviewService = reviewService;
     }
 
     @GetMapping("/reviews")
     public String getReviews(Model model,
-                             @RequestParam(defaultValue = "1", required = false) @Positive int page,
-                             @RequestParam(defaultValue = "10", required = false) @Positive int size) {
+                             @RequestParam(defaultValue = "1", required = false) int page,
+                             @RequestParam(defaultValue = "10", required = false) int size) {
         Integer maxPage = reviewService.getAmount(size);
         Paginator paginator = new Paginator(page, maxPage, size);
         List<ReviewDTO> reviews = reviewService.getReviews(page, size);
@@ -45,14 +44,14 @@ public class ArticleController {
     }
 
     @PostMapping("/reviews/update")
-    public String updateArticles(@ModelAttribute("reviewsChanges") ReviewsHidedFieldChanges articlesHidedFieldChanges) {
-        List<ReviewHideFieldState> newReviewHideFieldStates = reviewService.getIdAndHidedState(articlesHidedFieldChanges.getReviews());
+    public String updateReviews(@ModelAttribute("reviewsChanges") ReviewsHidedFieldChanges reviewsHidedFieldChanges) {
+        List<ReviewHideFieldState> newReviewHideFieldStates = reviewService.getIdAndHidedState(reviewsHidedFieldChanges.getReviews());
         reviewService.updateHidedFields(tempReviewHideFieldStates, newReviewHideFieldStates);
         return "redirect:/reviews";
     }
 
     @PostMapping("/reviews/{id}/delete")
-    public String deleteArticlesPost(@PathVariable Long id) {
+    public String deleteReview(@PathVariable Long id) {
         reviewService.delete(id);
         return "redirect:/reviews";
     }

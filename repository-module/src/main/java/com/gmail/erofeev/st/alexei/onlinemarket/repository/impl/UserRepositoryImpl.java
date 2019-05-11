@@ -45,28 +45,27 @@ public class UserRepositoryImpl extends GenericRepositoryImpl implements UserRep
     @Override
     public User findUserByEmail(Connection connection, String email) {
         String sql =
-                "SELECT users.id as user_id,lastname,firstname,patronymic,email,`password`,deleted, roles.id as role_id,roles.`name` as role_name" +
+                "SELECT users.id as user_id,lastname,firstname,patronymic,email,password,deleted, roles.id as role_id,roles.name as role_name" +
                         " FROM users" +
                         " JOIN roles ON users.role_id = roles.id   where users.email=?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, email);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                resultSet.next();
-                return getUser(resultSet);
+                if (resultSet.next()) {
+                    return getUser(resultSet);
+                } else {
+                    return null;
+                }
             }
         } catch (SQLException e) {
-            logger.error("Can't get user with name: {} ", email, e);
-            throw new RepositoryException(e.getMessage(), e);
+            logger.error(e.getMessage(), e);
+            throw new RepositoryException(String.format("Can't get user with email: %s :", email + e.getMessage()), e);
         }
     }
 
     @Override
     public void delete(Connection connection, List<Long> usersIdForDelete) {
-        String subSql = "";
-        for (Long id : usersIdForDelete) {
-            subSql += "?,";
-        }
-        subSql = subSql.substring(0, subSql.length() - 1);
+        String subSql = getSubString(usersIdForDelete);
         String sql = "UPDATE users SET deleted=true WHERE id IN (" + subSql + ") and undeletable=false ";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             int counter = 1;
@@ -91,9 +90,42 @@ public class UserRepositoryImpl extends GenericRepositoryImpl implements UserRep
             preparedStatement.setLong(2, id);
             preparedStatement.execute();
         } catch (SQLException e) {
-            String message = "Database exception during updating a users with id: " + id + ": " + e.getMessage();
-            logger.error(message, e);
-            throw new RepositoryException(message, e);
+            logger.error(e.getMessage(), e);
+            throw new RepositoryException(String.format("Database exception during updating a users with id: %s :", id) + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void update(Connection connection, String email, String encodePassword) {
+        String sql = "UPDATE users SET password=? WHERE email=? ";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setString(1, encodePassword);
+            preparedStatement.setString(2, email);
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            logger.error(e.getMessage(), e);
+            throw new RepositoryException(String.format("Database exception during updating password for users with email: %s :", email) + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public User findUserById(Connection connection, Long id) {
+        String sql =
+                "SELECT users.id as user_id,lastname,firstname,patronymic,email,password,deleted, roles.id as role_id,roles.name as role_name" +
+                        " FROM users" +
+                        " JOIN roles ON users.role_id = roles.id   where users.id=?";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setLong(1, id);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    return getUser(resultSet);
+                } else {
+                    return null;
+                }
+            }
+        } catch (SQLException e) {
+            logger.error(e.getMessage(), e);
+            throw new RepositoryException(String.format("Can't find user with id: %s :", id + e.getMessage()), e);
         }
     }
 
@@ -107,7 +139,7 @@ public class UserRepositoryImpl extends GenericRepositoryImpl implements UserRep
             preparedStatement.setString(3, user.getPatronymic());
             preparedStatement.setString(4, email);
             preparedStatement.setString(5, user.getPassword());
-            preparedStatement.setLong(6, user.getRole().getId());        
+            preparedStatement.setLong(6, user.getRole().getId());
             preparedStatement.executeUpdate();
             try (ResultSet resultSet = preparedStatement.getGeneratedKeys()) {
                 if (resultSet.next()) {
@@ -117,8 +149,8 @@ public class UserRepositoryImpl extends GenericRepositoryImpl implements UserRep
             }
             return user;
         } catch (SQLException e) {
-            logger.error("Database exception during saving a user with email: {} ." + e.getMessage(), email, e);
-            throw new RepositoryException("Database exception during saving a user with email: " + email, e);
+            logger.error(e.getMessage(), e);
+            throw new RepositoryException(String.format("Database exception during saving a user with email: ", email) + e.getMessage(), e);
         }
     }
 
@@ -136,5 +168,14 @@ public class UserRepositoryImpl extends GenericRepositoryImpl implements UserRep
         User user = new User(lastName, firstName, patronymic, email, password, role, isDeleted);
         user.setId(id);
         return user;
+    }
+
+    private String getSubString(List<Long> usersIdForDelete) {
+        String subSql = "";
+        for (Long id : usersIdForDelete) {
+            subSql += "?,";
+        }
+        subSql = subSql.substring(0, subSql.length() - 1);
+        return subSql;
     }
 }

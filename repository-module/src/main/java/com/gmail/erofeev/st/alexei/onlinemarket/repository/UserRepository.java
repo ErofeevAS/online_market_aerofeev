@@ -16,4 +16,7 @@ public interface UserRepository extends GenericRepository {
 
     void updateRole(Connection connection, Long id, Long roleId);
 
+    void update(Connection connection, String email, String encodePassword);
+
+    User findUserById(Connection connection, Long id);
 }
