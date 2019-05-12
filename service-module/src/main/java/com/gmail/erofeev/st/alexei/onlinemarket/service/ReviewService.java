@@ -1,7 +1,7 @@
 package com.gmail.erofeev.st.alexei.onlinemarket.service;
 
-import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ReviewHideFieldState;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ReviewDTO;
+import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ReviewsListWrapper;
 
 import java.util.List;
 
@@ -10,9 +10,7 @@ public interface ReviewService {
 
     List<ReviewDTO> getReviews(int page, int amount);
 
-    List<ReviewHideFieldState> getIdAndHidedState(List<ReviewDTO> reviews);
-
-    void updateHidedFields(List<ReviewHideFieldState> tempArticleHideFieldStates, List<ReviewHideFieldState> newArticleHideFieldStates);
-
     void delete(Long id);
+
+    void updateDifference(ReviewsListWrapper reviewsListWrapper, ReviewsListWrapper reviewsChanges);
 }

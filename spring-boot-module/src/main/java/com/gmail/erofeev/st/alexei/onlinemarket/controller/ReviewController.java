@@ -1,11 +1,12 @@
 package com.gmail.erofeev.st.alexei.onlinemarket.controller;
 
+import com.gmail.erofeev.st.alexei.onlinemarket.controller.util.PageSizeValidator;
 import com.gmail.erofeev.st.alexei.onlinemarket.controller.util.Paginator;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.ReviewService;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ReviewDTO;
-import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ReviewHideFieldState;
-import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ReviewsHidedFieldChanges;
+import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ReviewsListWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,33 +15,39 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.ArrayList;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
+@Scope("session")
 public class ReviewController {
 
     private final ReviewService reviewService;
     private final Paginator paginator;
-    private List<ReviewHideFieldState> tempReviewHideFieldStates = new ArrayList<>();
+    private final PageSizeValidator pageSizeValidator;
 
     @Autowired
-    public ReviewController(ReviewService reviewService, Paginator paginator) {
+    public ReviewController(ReviewService reviewService, Paginator paginator, PageSizeValidator pageSizeValidator) {
         this.reviewService = reviewService;
         this.paginator = paginator;
+        this.pageSizeValidator = pageSizeValidator;
     }
 
     @GetMapping("/reviews")
     public String getReviews(Model model,
-                             @RequestParam(defaultValue = "1", required = false) int page,
-                             @RequestParam(defaultValue = "10", required = false) int size) {
-        Integer maxPage = reviewService.getAmount(size);
-        paginator.validate(page, maxPage, size);
-        List<ReviewDTO> reviews = reviewService.getReviews(paginator.getPage(), paginator.getSize());
-        tempReviewHideFieldStates = reviewService.getIdAndHidedState(reviews);
+                             @RequestParam(defaultValue = "1", required = false) String page,
+                             @RequestParam(defaultValue = "10", required = false) String size,
+                             HttpServletRequest request) {
+        int intPage = pageSizeValidator.validatePage(page);
+        int intSize = pageSizeValidator.validateSize(size);
+        Integer maxPage = reviewService.getAmount(intSize);
+        paginator.validate(intPage, maxPage, intSize);
         model.addAttribute("paginator", paginator);
-        ReviewsHidedFieldChanges reviewsChanges = new ReviewsHidedFieldChanges();
-        reviewsChanges.setReviews(reviews);
+        List<ReviewDTO> reviews = reviewService.getReviews(paginator.getPage(), paginator.getSize());
+        ReviewsListWrapper reviewsListWrapper = new ReviewsListWrapper(reviews);
+        request.getSession().setAttribute("reviewsListWrapperOld", reviewsListWrapper);
+        ReviewsListWrapper reviewsChanges = new ReviewsListWrapper(reviews);
         model.addAttribute("reviewsChanges", reviewsChanges);
         return "reviews";
     }
@@ -52,9 +59,11 @@ public class ReviewController {
     }
 
     @PostMapping("/reviews/update")
-    public String updateReviews(@ModelAttribute("reviewsChanges") ReviewsHidedFieldChanges reviewsHidedFieldChanges) {
-        List<ReviewHideFieldState> newReviewHideFieldStates = reviewService.getIdAndHidedState(reviewsHidedFieldChanges.getReviews());
-        reviewService.updateHidedFields(tempReviewHideFieldStates, newReviewHideFieldStates);
+    public String updateReviews(@ModelAttribute("reviewsChanges") ReviewsListWrapper reviewsChanges,
+                                HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        ReviewsListWrapper reviewsListWrapper = (ReviewsListWrapper) session.getAttribute("reviewsListWrapperOld");
+        reviewService.updateDifference(reviewsListWrapper, reviewsChanges);
         return "redirect:/reviews";
     }
 }

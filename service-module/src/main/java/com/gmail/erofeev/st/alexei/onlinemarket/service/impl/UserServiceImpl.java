@@ -56,11 +56,11 @@ public class UserServiceImpl implements UserService {
             } catch (SQLException e) {
                 connection.rollback();
                 logger.error(e.getMessage(), e);
-                throw new ServiceException(e.getMessage(), e);
+                throw new ServiceException("Can't get users from repository.", e);
             }
         } catch (SQLException e) {
             logger.error(e.getMessage(), e);
-            throw new ServiceException(e.getMessage(), e);
+            throw new ServiceException("Can't establish connection to database.", e);
         }
     }
 
@@ -76,14 +76,12 @@ public class UserServiceImpl implements UserService {
                 return amount;
             } catch (SQLException e) {
                 connection.rollback();
-                String message = "Can't get amount of users from repository: " + e.getMessage();
-                logger.error(message, e);
-                throw new ServiceException(message, e);
+                logger.error(e.getMessage(), e);
+                throw new ServiceException("Can't get amount of users from repository.", e);
             }
         } catch (SQLException e) {
-            String message = "Can't establish connection to database: " + e.getMessage();
-            logger.error(message, e);
-            throw new ServiceException(message, e);
+            logger.error(e.getMessage(), e);
+            throw new ServiceException("Can't establish connection to database.", e);
         }
     }
 
@@ -99,12 +97,12 @@ public class UserServiceImpl implements UserService {
                 return userDTO;
             } catch (SQLException e) {
                 connection.rollback();
-                logger.error("Database error, changes were rollbacked: " + e.getMessage(), e);
-                throw new ServiceException(e.getMessage(), e);
+                logger.error(e.getMessage(), e);
+                throw new ServiceException(String.format("Can't get user with email: %s", email), e);
             }
         } catch (SQLException e) {
-            logger.error("Can't establish connection to database:" + e.getMessage(), e);
-            throw new ServiceException(e.getMessage(), e);
+            logger.error(e.getMessage(), e);
+            throw new ServiceException("Can't establish connection to database.", e);
         }
     }
 
@@ -118,11 +116,11 @@ public class UserServiceImpl implements UserService {
             } catch (SQLException e) {
                 connection.rollback();
                 logger.error(e.getMessage(), e);
-                throw new ServiceException(e.getMessage(), e);
+                throw new ServiceException(String.format("Can't delete users with ids: %s", usersIdForDelete), e);
             }
         } catch (SQLException e) {
             logger.error(e.getMessage(), e);
-            throw new ServiceException(e.getMessage(), e);
+            throw new ServiceException("Can't establish connection to database.", e);
         }
     }
 
@@ -138,11 +136,11 @@ public class UserServiceImpl implements UserService {
             } catch (SQLException e) {
                 connection.rollback();
                 logger.error(e.getMessage(), e);
-                throw new ServiceException(e.getMessage(), e);
+                throw new ServiceException(String.format("Can't get update role: %s for  user  with id: %s", roleName, id), e);
             }
         } catch (SQLException e) {
             logger.error(e.getMessage(), e);
-            throw new ServiceException(e.getMessage(), e);
+            throw new ServiceException("Can't establish connection to database.", e);
         }
     }
 
@@ -171,11 +169,11 @@ public class UserServiceImpl implements UserService {
             } catch (SQLException e) {
                 connection.rollback();
                 logger.error(e.getMessage(), e);
-                throw new ServiceException(e.getMessage(), e);
+                throw new ServiceException(String.format("Can't get register user  with email: %s", email), e);
             }
         } catch (SQLException e) {
             logger.error(e.getMessage(), e);
-            throw new ServiceException(e.getMessage(), e);
+            throw new ServiceException("Can't establish connection to database.", e);
         }
     }
 
@@ -198,7 +196,7 @@ public class UserServiceImpl implements UserService {
             }
         } catch (SQLException e) {
             logger.error(e.getMessage(), e);
-            throw new ServiceException(e.getMessage(), e);
+            throw new ServiceException("Can't establish connection to database.", e);
         }
     }
 
@@ -214,12 +212,12 @@ public class UserServiceImpl implements UserService {
                 return userDTO;
             } catch (SQLException e) {
                 connection.rollback();
-                logger.error("Database error, changes were rollbacked: " + e.getMessage(), e);
-                throw new ServiceException(e.getMessage(), e);
+                logger.error(e.getMessage(), e);
+                throw new ServiceException(String.format("Can't get user with id: %s", id), e);
             }
         } catch (SQLException e) {
             logger.error(e.getMessage(), e);
-            throw new ServiceException("Can't establish connection to database:" + e.getMessage(), e);
+            throw new ServiceException("Can't establish connection to database.", e);
         }
     }
 }

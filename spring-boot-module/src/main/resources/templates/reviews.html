@@ -42,6 +42,7 @@
                 </td>
                 <td><input hidden="true" type="text" th:field="${reviewsChanges.reviews[__${number.index}__].id}"
                            th:value="${review.id}" form="hideForm"/>
+
                     <input type="checkbox"
                            th:checked="${review.hided}"
                            th:value="${review.hided}"

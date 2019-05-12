@@ -6,7 +6,7 @@ import com.gmail.erofeev.st.alexei.onlinemarket.service.ReviewService;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.converter.ReviewConverter;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.exception.ServiceException;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ReviewDTO;
-import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ReviewHideFieldState;
+import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ReviewsListWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,11 +42,11 @@ public class ReviewServiceImpl implements ReviewService {
             } catch (SQLException e) {
                 connection.rollback();
                 logger.error(e.getMessage(), e);
-                throw new ServiceException("Can't get amount of reviews from repository: " + e.getMessage(), e);
+                throw new ServiceException("Can't get amount of reviews from repository.", e);
             }
         } catch (SQLException e) {
             logger.error(e.getMessage(), e);
-            throw new ServiceException("Can't establish connection to database: " + e.getMessage(), e);
+            throw new ServiceException("Can't establish connection to database.", e);
         }
     }
 
@@ -64,32 +63,11 @@ public class ReviewServiceImpl implements ReviewService {
             } catch (SQLException e) {
                 connection.rollback();
                 logger.error(e.getMessage(), e);
-                throw new ServiceException("Can't get reviews from repository: " + e.getMessage(), e);
+                throw new ServiceException("Can't get reviews from repository.", e);
             }
         } catch (SQLException e) {
             logger.error(e.getMessage(), e);
-            throw new ServiceException("Can't establish connection to database: " + e.getMessage(), e);
-        }
-    }
-
-    @Override
-    public void updateHidedFields(List<ReviewHideFieldState> tempReviewHideFieldStates, List<ReviewHideFieldState> newReviewHideFieldStates) {
-        Map<Long, Boolean> difference = getDifference(tempReviewHideFieldStates, newReviewHideFieldStates);
-        if (!difference.isEmpty()) {
-            try (Connection connection = reviewRepository.getConnection()) {
-                connection.setAutoCommit(false);
-                try {
-                    reviewRepository.updateHided(connection, difference.keySet());
-                    connection.commit();
-                } catch (SQLException e) {
-                    connection.rollback();
-                    logger.error(e.getMessage(), e);
-                    throw new ServiceException(e.getMessage(), e);
-                }
-            } catch (SQLException e) {
-                logger.error(e.getMessage(), e);
-                throw new ServiceException(e.getMessage(), e);
-            }
+            throw new ServiceException("Can't establish connection to database.", e);
         }
     }
 
@@ -103,40 +81,52 @@ public class ReviewServiceImpl implements ReviewService {
             } catch (SQLException e) {
                 connection.rollback();
                 logger.error(e.getMessage(), e);
-                throw new ServiceException(String.format("Can't delete review with id: %s :", id) + e.getMessage(), e);
+                throw new ServiceException(String.format("Can't delete review with id: %s :", id), e);
             }
         } catch (SQLException e) {
             logger.error(e.getMessage(), e);
-            throw new ServiceException("Can't establish connection to database: " + e.getMessage(), e);
+            throw new ServiceException("Can't establish connection to database.", e);
         }
     }
 
     @Override
-    public List<ReviewHideFieldState> getIdAndHidedState(List<ReviewDTO> reviews) {
-        List<ReviewHideFieldState> changes = new ArrayList<>(reviews.size());
-        for (ReviewDTO review : reviews) {
-            Long id = review.getId();
-            Boolean hided = review.getHided();
-            if (hided == null) {
-                hided = false;
+    public void updateDifference(ReviewsListWrapper oldReviewsList, ReviewsListWrapper newReviewsList) {
+        Map<Long, Boolean> difference = getDifference(oldReviewsList, newReviewsList);
+        if (!difference.isEmpty()) {
+            try (Connection connection = reviewRepository.getConnection()) {
+                connection.setAutoCommit(false);
+                try {
+                    reviewRepository.updateHided(connection, difference.keySet());
+                    connection.commit();
+                } catch (SQLException e) {
+                    connection.rollback();
+                    logger.error(e.getMessage(), e);
+                    throw new ServiceException(String.format("Can't update difference between new and old hided fields: %s", difference), e);
+                }
+            } catch (SQLException e) {
+                logger.error(e.getMessage(), e);
+                throw new ServiceException("Can't establish connection to database.", e);
             }
-            ReviewHideFieldState reviewHideFieldState = new ReviewHideFieldState(id, hided);
-            changes.add(reviewHideFieldState);
         }
-        return changes;
     }
 
-    private Map<Long, Boolean> getDifference(List<ReviewHideFieldState> tempReviewHideFieldStates, List<ReviewHideFieldState> newReviewHideFieldStates) {
+    private Map<Long, Boolean> getDifference(ReviewsListWrapper oldList, ReviewsListWrapper newList) {
         Map<Long, Boolean> difference = new HashMap<>();
-        for (int i = 0; i < tempReviewHideFieldStates.size(); i++) {
-            Long tempId = tempReviewHideFieldStates.get(i).getId();
-            Boolean tempHided = tempReviewHideFieldStates.get(i).getHided();
-            Boolean newHided = newReviewHideFieldStates.get(i).getHided();
-            if (tempHided != null || newHided != null) {
-                boolean isDifference = tempHided ^ newHided;
-                if (isDifference) {
-                    difference.put(tempId, tempHided ^ newHided);
-                }
+        List<ReviewDTO> newReviews = newList.getReviews();
+        List<ReviewDTO> oldReviews = oldList.getReviews();
+        for (int i = 0; i < oldReviews.size(); i++) {
+            Long tempId = oldReviews.get(i).getId();
+            Boolean tempHided = oldReviews.get(i).getHided();
+            Boolean newHided = newReviews.get(i).getHided();
+            if (tempHided == null) {
+                tempHided = false;
+            }
+            if (newHided == null) {
+                newHided = false;
+            }
+            boolean isDifference = tempHided ^ newHided;
+            if (isDifference) {
+                difference.put(tempId, tempHided ^ newHided);
             }
         }
         return difference;

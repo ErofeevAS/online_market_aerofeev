@@ -1,5 +1,6 @@
 package com.gmail.erofeev.st.alexei.onlinemarket.controller;
 
+import com.gmail.erofeev.st.alexei.onlinemarket.controller.util.PageSizeValidator;
 import com.gmail.erofeev.st.alexei.onlinemarket.controller.util.Paginator;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.UserService;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.UserDTO;
@@ -21,19 +22,23 @@ public class UserController {
 
     private final UserService userService;
     private final Paginator paginator;
+    private final PageSizeValidator pageSizeValidator;
 
     @Autowired
-    public UserController(UserService userService, Paginator paginator) {
+    public UserController(UserService userService, Paginator paginator, PageSizeValidator pageSizeValidator) {
         this.userService = userService;
         this.paginator = paginator;
+        this.pageSizeValidator = pageSizeValidator;
     }
 
     @GetMapping("/users")
     public String getUsers(Model model,
-                           @RequestParam(defaultValue = "1", required = false) int page,
-                           @RequestParam(defaultValue = "10", required = false) int size) {
-        Integer maxPage = userService.getAmount(size);
-        paginator.validate(page, maxPage, size);
+                           @RequestParam(defaultValue = "1", required = false) String page,
+                           @RequestParam(defaultValue = "10", required = false) String size) {
+        int intPage = pageSizeValidator.validatePage(page);
+        int intSize = pageSizeValidator.validateSize(size);
+        Integer maxPage = userService.getAmount(intSize);
+        paginator.validate(intPage, maxPage, intSize);
         List<UserDTO> users = userService.getUsers(paginator.getPage(), paginator.getSize());
         model.addAttribute("users", users);
         model.addAttribute("paginator", paginator);

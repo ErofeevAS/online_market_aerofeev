@@ -37,9 +37,6 @@ public class Paginator {
         if (page > maxPage) {
             page = maxPage;
         }
-        if (page < 1) {
-            page = 1;
-        }
         this.page = page;
     }
 
@@ -56,14 +53,6 @@ public class Paginator {
     }
 
     public void setSize(int size) {
-        if (size > 100) {
-            this.size = 1;
-            return;
-        }
-        if (size < 1) {
-            this.size = Math.abs(size);
-            return;
-        }
         this.size = size;
     }
 
