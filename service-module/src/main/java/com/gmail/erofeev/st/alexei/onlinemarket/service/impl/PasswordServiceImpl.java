@@ -7,8 +7,6 @@ import org.passay.PasswordGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
-
 @Service
 public class PasswordServiceImpl implements PasswordService {
     private final PasswordGenerator passwordGenerator;
@@ -22,10 +20,5 @@ public class PasswordServiceImpl implements PasswordService {
     public String generatePassword(int length) {
         CharacterRule rule = new CharacterRule(EnglishCharacterData.Alphabetical);
         return passwordGenerator.generatePassword(length, rule);
-    }
-
-    @Override
-    public String generateToken() {
-        return UUID.randomUUID().toString();
     }
 }

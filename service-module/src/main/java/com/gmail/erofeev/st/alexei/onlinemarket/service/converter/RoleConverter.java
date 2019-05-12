@@ -7,5 +7,4 @@ public interface RoleConverter {
     RoleDTO toRoleDTO(Role role);
 
     Role fromRoleDTO(RoleDTO role);
-
 }

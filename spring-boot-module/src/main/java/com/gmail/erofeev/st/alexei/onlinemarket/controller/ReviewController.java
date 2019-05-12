@@ -21,11 +21,13 @@ import java.util.List;
 public class ReviewController {
 
     private final ReviewService reviewService;
+    private final Paginator paginator;
     private List<ReviewHideFieldState> tempReviewHideFieldStates = new ArrayList<>();
 
     @Autowired
-    public ReviewController(ReviewService reviewService) {
+    public ReviewController(ReviewService reviewService, Paginator paginator) {
         this.reviewService = reviewService;
+        this.paginator = paginator;
     }
 
     @GetMapping("/reviews")
@@ -33,8 +35,8 @@ public class ReviewController {
                              @RequestParam(defaultValue = "1", required = false) int page,
                              @RequestParam(defaultValue = "10", required = false) int size) {
         Integer maxPage = reviewService.getAmount(size);
-        Paginator paginator = new Paginator(page, maxPage, size);
-        List<ReviewDTO> reviews = reviewService.getReviews(page, size);
+        paginator.validate(page, maxPage, size);
+        List<ReviewDTO> reviews = reviewService.getReviews(paginator.getPage(), paginator.getSize());
         tempReviewHideFieldStates = reviewService.getIdAndHidedState(reviews);
         model.addAttribute("paginator", paginator);
         ReviewsHidedFieldChanges reviewsChanges = new ReviewsHidedFieldChanges();
@@ -43,16 +45,16 @@ public class ReviewController {
         return "reviews";
     }
 
+    @PostMapping("/reviews/{id}/delete")
+    public String deleteReview(@PathVariable Long id) {
+        reviewService.delete(id);
+        return "redirect:/reviews";
+    }
+
     @PostMapping("/reviews/update")
     public String updateReviews(@ModelAttribute("reviewsChanges") ReviewsHidedFieldChanges reviewsHidedFieldChanges) {
         List<ReviewHideFieldState> newReviewHideFieldStates = reviewService.getIdAndHidedState(reviewsHidedFieldChanges.getReviews());
         reviewService.updateHidedFields(tempReviewHideFieldStates, newReviewHideFieldStates);
-        return "redirect:/reviews";
-    }
-
-    @PostMapping("/reviews/{id}/delete")
-    public String deleteReview(@PathVariable Long id) {
-        reviewService.delete(id);
         return "redirect:/reviews";
     }
 }

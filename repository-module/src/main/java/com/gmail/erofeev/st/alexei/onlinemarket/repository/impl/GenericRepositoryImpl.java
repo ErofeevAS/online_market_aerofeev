@@ -25,7 +25,7 @@ public class GenericRepositoryImpl implements GenericRepository {
             return dataSource.getConnection();
         } catch (SQLException e) {
             logger.error(e.getMessage(), e);
-            throw new RepositoryException(e.getMessage(), e);
+            throw new RepositoryException(String.format("Can't get connection to datasource: %s", e.getMessage()), e);
         }
     }
 
@@ -38,10 +38,8 @@ public class GenericRepositoryImpl implements GenericRepository {
                 return resultSet.getInt(1);
             }
         } catch (SQLException e) {
-            String message = "Can't get amount of  " + tableName + " " + e.getMessage();
-            logger.error(message, e);
-            throw new RepositoryException(message, e);
+            logger.error(e.getMessage(), e);
+            throw new RepositoryException(String.format("Can't get amount of %s", tableName), e);
         }
     }
-
 }

@@ -23,7 +23,7 @@
                     <a class="nav-link" href="/about">about</a>
                 </li>
                 <li class="nav-item" sec:authorize="isAuthenticated()">
-                    <p class="label-info" sec:authentication="name">user name</p>
+                    <a class="nav-link"  sec:authentication="name">user name</a>
                 </li>
                 <li class="nav-item" sec:authorize="isAuthenticated()">
                     <a class="nav-link" href="/logout">logout</a>

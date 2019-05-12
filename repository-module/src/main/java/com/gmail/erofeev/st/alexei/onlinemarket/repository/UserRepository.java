@@ -14,7 +14,7 @@ public interface UserRepository extends GenericRepository {
 
     void delete(Connection connection, List<Long> usersIdForDelete);
 
-    void updateRole(Connection connection, Long id, Long roleId);
+    void update(Connection connection, Long id, Long roleId);
 
     void update(Connection connection, String email, String encodePassword);
 

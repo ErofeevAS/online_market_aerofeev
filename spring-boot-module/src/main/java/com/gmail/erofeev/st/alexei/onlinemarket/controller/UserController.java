@@ -1,7 +1,6 @@
 package com.gmail.erofeev.st.alexei.onlinemarket.controller;
 
 import com.gmail.erofeev.st.alexei.onlinemarket.controller.util.Paginator;
-import com.gmail.erofeev.st.alexei.onlinemarket.service.PasswordService;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.UserService;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,20 +14,18 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 public class UserController {
 
     private final UserService userService;
-    private final PasswordService passwordService;
+    private final Paginator paginator;
 
     @Autowired
-    public UserController(UserService userService, PasswordService passwordService) {
+    public UserController(UserService userService, Paginator paginator) {
         this.userService = userService;
-        this.passwordService = passwordService;
+        this.paginator = paginator;
     }
 
     @GetMapping("/users")
@@ -36,7 +33,7 @@ public class UserController {
                            @RequestParam(defaultValue = "1", required = false) int page,
                            @RequestParam(defaultValue = "10", required = false) int size) {
         Integer maxPage = userService.getAmount(size);
-        Paginator paginator = new Paginator(page, maxPage, size);
+        paginator.validate(page, maxPage, size);
         List<UserDTO> users = userService.getUsers(paginator.getPage(), paginator.getSize());
         model.addAttribute("users", users);
         model.addAttribute("paginator", paginator);
@@ -59,10 +56,8 @@ public class UserController {
 
     @GetMapping("/users/add")
     public String addUser(Model model) {
-        Map<String, String> errors = new HashMap<>();
         UserDTO user = new UserDTO();
         model.addAttribute("user", user);
-        model.addAttribute("errors", errors);
         return "adduser";
     }
 
@@ -77,7 +72,7 @@ public class UserController {
             model.addAttribute("info", "user was registered");
             return "adduser";
         } else {
-            model.addAttribute("info", "user with the same exist");
+            model.addAttribute("info", "user with the same email exist");
             return "adduser";
         }
     }

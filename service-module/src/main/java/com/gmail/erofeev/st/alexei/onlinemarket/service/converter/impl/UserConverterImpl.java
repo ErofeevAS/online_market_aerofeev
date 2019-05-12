@@ -16,7 +16,11 @@ import java.util.List;
 @Component
 public class UserConverterImpl implements UserConverter {
     @Autowired
-    private RoleConverter roleConverter;
+    private final RoleConverter roleConverter;
+
+    public UserConverterImpl(RoleConverter roleConverter) {
+        this.roleConverter = roleConverter;
+    }
 
     @Override
     public UserDTO toDTO(User user) {
@@ -43,8 +47,7 @@ public class UserConverterImpl implements UserConverter {
         RoleDTO roleDTO = userDTO.getRole();
         Role role = roleConverter.fromRoleDTO(roleDTO);
         Boolean deleted = userDTO.getDeleted();
-        User user = new User(lastName, firstName, patronymic, email, role, deleted);
-        return user;
+        return new User(lastName, firstName, patronymic, email, role, deleted);
     }
 
     @Override

@@ -116,5 +116,4 @@ public class User {
                 ", deleted=" + deleted +
                 '}';
     }
-
 }

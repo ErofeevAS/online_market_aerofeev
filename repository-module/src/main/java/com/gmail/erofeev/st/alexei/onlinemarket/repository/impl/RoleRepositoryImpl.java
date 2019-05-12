@@ -23,10 +23,10 @@ public class RoleRepositoryImpl extends GenericRepositoryImpl implements RoleRep
             preparedStatement.setString(1, roleName);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
-                    Role role = getRole(resultSet);
-                    return role;
+                    return getRole(resultSet);
                 } else {
-                    throw new RepositoryException("Role whith name: " + roleName + " not found");
+                    logger.warn(String.format("Role with name: %s not found", roleName));
+                    throw new RepositoryException(String.format("Role with name: %s not found", roleName));
                 }
             }
         } catch (SQLException e) {

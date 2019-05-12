@@ -30,5 +30,6 @@ public class MailServiceImpl implements MailService {
         mailMessage.setSubject(subject);
         mailMessage.setText(message);
         javaMailSender.send(mailMessage);
+        logger.debug(String.format("%s was send to %s", message, email));
     }
 }

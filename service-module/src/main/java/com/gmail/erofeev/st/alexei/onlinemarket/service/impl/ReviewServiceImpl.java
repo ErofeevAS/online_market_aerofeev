@@ -73,21 +73,6 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public List<ReviewHideFieldState> getIdAndHidedState(List<ReviewDTO> reviews) {
-        List<ReviewHideFieldState> changes = new ArrayList<>(reviews.size());
-        for (ReviewDTO review : reviews) {
-            Long id = review.getId();
-            Boolean hided = review.getHided();
-            if (hided == null) {
-                hided = false;
-            }
-            ReviewHideFieldState reviewHideFieldState = new ReviewHideFieldState(id, hided);
-            changes.add(reviewHideFieldState);
-        }
-        return changes;
-    }
-
-    @Override
     public void updateHidedFields(List<ReviewHideFieldState> tempReviewHideFieldStates, List<ReviewHideFieldState> newReviewHideFieldStates) {
         Map<Long, Boolean> difference = getDifference(tempReviewHideFieldStates, newReviewHideFieldStates);
         if (!difference.isEmpty()) {
@@ -126,6 +111,21 @@ public class ReviewServiceImpl implements ReviewService {
         }
     }
 
+    @Override
+    public List<ReviewHideFieldState> getIdAndHidedState(List<ReviewDTO> reviews) {
+        List<ReviewHideFieldState> changes = new ArrayList<>(reviews.size());
+        for (ReviewDTO review : reviews) {
+            Long id = review.getId();
+            Boolean hided = review.getHided();
+            if (hided == null) {
+                hided = false;
+            }
+            ReviewHideFieldState reviewHideFieldState = new ReviewHideFieldState(id, hided);
+            changes.add(reviewHideFieldState);
+        }
+        return changes;
+    }
+
     private Map<Long, Boolean> getDifference(List<ReviewHideFieldState> tempReviewHideFieldStates, List<ReviewHideFieldState> newReviewHideFieldStates) {
         Map<Long, Boolean> difference = new HashMap<>();
         for (int i = 0; i < tempReviewHideFieldStates.size(); i++) {
@@ -133,7 +133,7 @@ public class ReviewServiceImpl implements ReviewService {
             Boolean tempHided = tempReviewHideFieldStates.get(i).getHided();
             Boolean newHided = newReviewHideFieldStates.get(i).getHided();
             if (tempHided != null || newHided != null) {
-                Boolean isDifference = tempHided ^ newHided;
+                boolean isDifference = tempHided ^ newHided;
                 if (isDifference) {
                     difference.put(tempId, tempHided ^ newHided);
                 }

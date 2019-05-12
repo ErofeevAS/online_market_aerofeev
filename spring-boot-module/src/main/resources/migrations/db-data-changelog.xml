@@ -56,6 +56,13 @@
         </insert>
     </changeSet>
 
+    <changeSet author="alexei.st.erofeev@gmail.com" id="USER_POPULATE_ID_2">
+        <update tableName="users">
+            <column name="email" value="spokeman152@yandex.ru"></column>
+            <where>id=1</where>
+        </update>
+    </changeSet>
+
     <changeSet author="alexei.st.erofeev@gmail.com" id="ARTICLE_POPULATE_ID_1">
         <insert tableName="articles">
             <column name="id" value="1"/>

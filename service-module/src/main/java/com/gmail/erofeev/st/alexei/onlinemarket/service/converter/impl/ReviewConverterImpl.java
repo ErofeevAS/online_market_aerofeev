@@ -14,7 +14,6 @@ import java.util.List;
 
 @Component
 public class ReviewConverterImpl implements ReviewConverter {
-
     private final UserConverter userConverter;
 
     @Autowired
@@ -30,9 +29,7 @@ public class ReviewConverterImpl implements ReviewConverter {
         Timestamp date = review.getDate();
         Boolean deleted = review.getDeleted();
         Boolean hided = review.getHided();
-        String title = review.getTitle();
-        ReviewDTO reviewDTO = new ReviewDTO(id, user, content, date, deleted, hided);
-        return reviewDTO;
+        return new ReviewDTO(id, user, content, date, deleted, hided);
     }
 
     @Override
@@ -40,8 +37,7 @@ public class ReviewConverterImpl implements ReviewConverter {
         Long id = reviewDTO.getId();
         Boolean deleted = reviewDTO.getDeleted();
         Boolean hided = reviewDTO.getHided();
-        Review review = new Review(id, deleted, hided);
-        return review;
+        return new Review(id, deleted, hided);
     }
 
     @Override

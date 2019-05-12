@@ -30,21 +30,6 @@ public class ReviewDTO {
         this.hided = hided;
     }
 
-    public ReviewDTO(Long id, Boolean deleted, Boolean hided) {
-        this.id = id;
-        this.deleted = deleted;
-        this.hided = hided;
-    }
-
-    public ReviewDTO(Long id, UserDTO user, String content, Timestamp date, boolean deleted, boolean hided) {
-        this.id = id;
-        this.user = user;
-        this.content = content;
-        this.date = date;
-        this.deleted = deleted;
-        this.hided = hided;
-    }
-
     public Long getId() {
         return id;
     }

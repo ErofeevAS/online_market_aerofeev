@@ -38,18 +38,14 @@ public class ReviewRepositoryImpl extends GenericRepositoryImpl implements Revie
             return reviews;
         } catch (SQLException e) {
             logger.error(e.getMessage(), e);
-            throw new RepositoryException(e.getMessage(), e);
+            throw new RepositoryException("Can't get reviews", e);
         }
     }
 
     @Override
     public void updateHided(Connection connection, Set<Long> keySet) {
-        String subSql = "";
-        for (Long id : keySet) {
-            subSql += "?,";
-        }
-        subSql = subSql.substring(0, subSql.length() - 1);
-        String sql = "UPDATE reviews SET hided = NOT hided WHERE id IN (" + subSql + ")";
+        String subSql = getString(keySet.size());
+        String sql = "UPDATE reviews SET hided = NOT hided WHERE id IN " + subSql;
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             int counter = 1;
             for (Long id : keySet) {
@@ -79,14 +75,22 @@ public class ReviewRepositoryImpl extends GenericRepositoryImpl implements Revie
         Long id = resultSet.getLong("review_id");
         Timestamp date = resultSet.getTimestamp("date");
         String content = resultSet.getString("content");
-        Boolean reviewDeleted = resultSet.getBoolean("review_deleted");
-        Boolean hided = resultSet.getBoolean("hided");
+        boolean reviewDeleted = resultSet.getBoolean("review_deleted");
+        boolean hided = resultSet.getBoolean("hided");
         long userId = resultSet.getLong("user_id");
         String lastName = resultSet.getString("lastname");
         String firstName = resultSet.getString("firstname");
         String patronymic = resultSet.getString("patronymic");
         User user = new User(userId, lastName, firstName, patronymic);
-        Review review = new Review(id, user, content, date, reviewDeleted, hided);
-        return review;
+        return new Review(id, user, content, date, reviewDeleted, hided);
+    }
+
+    private String getString(int size) {
+        String subSql = "(";
+        for (int i = 0; i < size; i++) {
+            subSql += "?,";
+        }
+        subSql = subSql.substring(0, subSql.length() - 1) + ")";
+        return subSql;
     }
 }

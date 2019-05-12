@@ -23,10 +23,9 @@ public class UserRepositoryImpl extends GenericRepositoryImpl implements UserRep
     @Override
     public List<User> getUsers(Connection connection, int offset, int amount) {
         List<User> users = new ArrayList<>();
-        String sql =
-                "SELECT users.id as user_id,lastname,firstname,patronymic,email,`password`,deleted, roles.id as role_id,roles.`name` as role_name" +
-                        " FROM users" +
-                        " JOIN roles ON users.role_id = roles.id where users.deleted=false ORDER BY lastname,firstname,patronymic LIMIT ?,?";
+        String sql = "SELECT users.id as user_id,lastname,firstname,patronymic,email,`password`,deleted, roles.id as role_id,roles.`name` as role_name" +
+                " FROM users" +
+                " JOIN roles ON users.role_id = roles.id where users.deleted=false ORDER BY lastname,firstname,patronymic LIMIT ?,?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, offset);
             preparedStatement.setInt(2, amount);
@@ -38,16 +37,15 @@ public class UserRepositoryImpl extends GenericRepositoryImpl implements UserRep
             return users;
         } catch (SQLException e) {
             logger.error(e.getMessage(), e);
-            throw new RepositoryException(e.getMessage(), e);
+            throw new RepositoryException("Can't get users", e);
         }
     }
 
     @Override
     public User findUserByEmail(Connection connection, String email) {
-        String sql =
-                "SELECT users.id as user_id,lastname,firstname,patronymic,email,password,deleted, roles.id as role_id,roles.name as role_name" +
-                        " FROM users" +
-                        " JOIN roles ON users.role_id = roles.id   where users.email=?";
+        String sql = "SELECT users.id as user_id,lastname,firstname,patronymic,email,password,deleted, roles.id as role_id,roles.name as role_name" +
+                " FROM users" +
+                " JOIN roles ON users.role_id = roles.id   where users.email=?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, email);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -65,8 +63,8 @@ public class UserRepositoryImpl extends GenericRepositoryImpl implements UserRep
 
     @Override
     public void delete(Connection connection, List<Long> usersIdForDelete) {
-        String subSql = getSubString(usersIdForDelete);
-        String sql = "UPDATE users SET deleted=true WHERE id IN (" + subSql + ") and undeletable=false ";
+        String subSql = getSubString(usersIdForDelete.size());
+        String sql = "UPDATE users SET deleted=true WHERE id IN " + subSql + " and undeletable=false ";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             int counter = 1;
             for (Long id : usersIdForDelete) {
@@ -76,14 +74,13 @@ public class UserRepositoryImpl extends GenericRepositoryImpl implements UserRep
             preparedStatement.execute();
 
         } catch (SQLException e) {
-            String message = "Database exception during deleting a users with id: " + e.getMessage();
-            logger.error(message, usersIdForDelete, e);
-            throw new RepositoryException("Database exception during saving a user with email: " + usersIdForDelete, e);
+            logger.error(e.getMessage(), e);
+            throw new RepositoryException(String.format("Database exception during deleting a users with ids: %s :", usersIdForDelete), e);
         }
     }
 
     @Override
-    public void updateRole(Connection connection, Long id, Long roleId) {
+    public void update(Connection connection, Long id, Long roleId) {
         String sql = "UPDATE users SET role_id=? WHERE id=? and undeletable=false ";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setLong(1, roleId);
@@ -91,13 +88,13 @@ public class UserRepositoryImpl extends GenericRepositoryImpl implements UserRep
             preparedStatement.execute();
         } catch (SQLException e) {
             logger.error(e.getMessage(), e);
-            throw new RepositoryException(String.format("Database exception during updating a users with id: %s :", id) + e.getMessage(), e);
+            throw new RepositoryException(String.format("Database exception during updating a users with id: %s :", id), e);
         }
     }
 
     @Override
     public void update(Connection connection, String email, String encodePassword) {
-        String sql = "UPDATE users SET password=? WHERE email=? ";
+        String sql = "UPDATE users SET password=? WHERE email=? and undeletable=false ";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, encodePassword);
             preparedStatement.setString(2, email);
@@ -125,7 +122,7 @@ public class UserRepositoryImpl extends GenericRepositoryImpl implements UserRep
             }
         } catch (SQLException e) {
             logger.error(e.getMessage(), e);
-            throw new RepositoryException(String.format("Can't find user with id: %s :", id + e.getMessage()), e);
+            throw new RepositoryException(String.format("Can't find user with id: %s :", id), e);
         }
     }
 
@@ -144,7 +141,6 @@ public class UserRepositoryImpl extends GenericRepositoryImpl implements UserRep
             try (ResultSet resultSet = preparedStatement.getGeneratedKeys()) {
                 if (resultSet.next()) {
                     user.setId(resultSet.getLong(1));
-
                 }
             }
             return user;
@@ -170,12 +166,12 @@ public class UserRepositoryImpl extends GenericRepositoryImpl implements UserRep
         return user;
     }
 
-    private String getSubString(List<Long> usersIdForDelete) {
-        String subSql = "";
-        for (Long id : usersIdForDelete) {
+    private String getSubString(int size) {
+        String subSql = "(";
+        for (int i = 0; i < size; i++) {
             subSql += "?,";
         }
-        subSql = subSql.substring(0, subSql.length() - 1);
+        subSql = subSql.substring(0, subSql.length() - 1) + ")";
         return subSql;
     }
 }

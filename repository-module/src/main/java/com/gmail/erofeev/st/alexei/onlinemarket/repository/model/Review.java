@@ -4,7 +4,6 @@ import java.sql.Timestamp;
 
 public class Review {
     private Long id;
-    private String title;
     private User user;
     private String content;
     private Timestamp date;
@@ -12,24 +11,6 @@ public class Review {
     private Boolean hided;
 
     public Review() {
-    }
-
-    public Review(Long id, String title, User user, String content, Timestamp date, Boolean deleted, Boolean hided) {
-        this.id = id;
-        this.title = title;
-        this.user = user;
-        this.content = content;
-        this.date = date;
-        this.deleted = deleted;
-        this.hided = hided;
-    }
-
-    public Review(User user, String content, Timestamp date, Boolean deleted, Boolean hided) {
-        this.user = user;
-        this.content = content;
-        this.date = date;
-        this.deleted = deleted;
-        this.hided = hided;
     }
 
     public Review(Long id, Boolean deleted, Boolean hided) {
@@ -57,14 +38,6 @@ public class Review {
 
     public User getUser() {
         return user;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public void setUser(User user) {
@@ -106,9 +79,8 @@ public class Review {
 
     @Override
     public String toString() {
-        return "Article{" +
+        return "Review{" +
                 "id=" + id +
-                ", title='" + title + '\'' +
                 ", user=" + user +
                 ", content='" + content + '\'' +
                 ", date=" + date +

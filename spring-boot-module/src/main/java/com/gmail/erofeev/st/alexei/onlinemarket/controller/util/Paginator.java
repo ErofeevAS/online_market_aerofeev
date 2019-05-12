@@ -1,9 +1,12 @@
 package com.gmail.erofeev.st.alexei.onlinemarket.controller.util;
 
+import org.springframework.stereotype.Component;
+
 import java.util.List;
 
 import static java.util.Arrays.asList;
 
+@Component
 public class Paginator {
     private int page;
     private int maxPage;
@@ -12,6 +15,12 @@ public class Paginator {
     private String url;
 
     public Paginator(int current, int maxPage, int size) {
+        this.setMaxPage(maxPage);
+        this.setPage(current);
+        this.setSize(size);
+    }
+
+    public void validate(int current, int maxPage, int size) {
         this.setMaxPage(maxPage);
         this.setPage(current);
         this.setSize(size);

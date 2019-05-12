@@ -13,6 +13,7 @@ import com.gmail.erofeev.st.alexei.onlinemarket.service.model.UserDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,8 +24,8 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements UserService {
     private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
-    private static final String STANDARD_PASSWORD = "1234";
-    private static final int STANDARD_PASSWORD_LENGTH = 10;
+    @Value("${app.generated.password.length}")
+    private int STANDARD_PASSWORD_LENGTH;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final UserConverter userConverter;
@@ -132,7 +133,7 @@ public class UserServiceImpl implements UserService {
             try {
                 roleName = roleName.split("_")[1];
                 Role role = roleRepository.findRoleByName(connection, roleName);
-                userRepository.updateRole(connection, id, role.getId());
+                userRepository.update(connection, id, role.getId());
                 connection.commit();
             } catch (SQLException e) {
                 connection.rollback();

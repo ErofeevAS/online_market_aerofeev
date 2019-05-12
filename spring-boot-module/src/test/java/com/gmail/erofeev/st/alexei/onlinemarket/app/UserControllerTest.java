@@ -5,61 +5,46 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.hamcrest.CoreMatchers.containsString;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.formLogin;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserControllerTest {
-
     @Autowired
-    private MockMvc mockMvc;
+    MockMvc mockMvc;
 
     @Test
-    public void shouldSucceedWith200ForLoginPage() throws Exception {
-        mockMvc.perform(get("/login"))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    public void shouldSucceedWith200ForAboutPage() throws Exception {
-        mockMvc.perform(get("/about"))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    @WithMockUser(roles = {"Administrator"})
-    public void shouldGetUsersPage() throws Exception {
-        mockMvc.perform(get("/users"))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    @WithMockUser(roles = {"Administrator"})
-    public void shouldGetUsersPageWithSomeUsers() throws Exception {
-        mockMvc.perform(get("/articles"))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    @WithMockUser(roles = "Administrator")
-    public void shouldSucceedWith200ForUsersPage() throws Exception {
-        mockMvc.perform(get("/users"))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    @WithMockUser(roles = "Customer")
-    public void shouldForbidAccess() throws Exception {
+    public void accessDeniedTestForUnauthorizedUserOnUsersPage() throws Exception {
         mockMvc.perform(get("/users"))
                 .andExpect(status().isFound())
-                .andExpect(redirectedUrl("/403"));
+                .andExpect(redirectedUrl("http://localhost/login"));
+    }
 
+    @Test
+    public void accessDeniedTestForUnauthorizedUserOnReviewsPage() throws Exception {
+        mockMvc.perform(get("/reviews"))
+                .andExpect(status().isFound())
+                .andExpect(redirectedUrl("http://localhost/login"));
+    }
+
+    @Test
+    public void correctLoginTestForAdmin() throws Exception {
+        mockMvc.perform(formLogin().user("admin@gmail.com").password("admin"))
+                .andExpect(status().isFound())
+                .andExpect(redirectedUrl("/users"));
+    }
+
+    @Test
+    public void wrongLoginTestForUser() throws Exception {
+        mockMvc.perform(formLogin().user("wrong@gmail.com").password("wrong_password"))
+                .andExpect(status().isFound())
+                .andExpect(redirectedUrl("/login?error"));
     }
 }

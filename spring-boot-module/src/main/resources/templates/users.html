@@ -3,15 +3,15 @@
 <head>
     <title>Users</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"/>
 </head>
 <body>
 <div th:insert="~{fragments/header :: header}"></div>
 <div th:insert="~{fragments/navbar :: navbar}"></div>
 
-<table class="table table-striped">
+<table class="table table-striped" id="usersTable">
     <thead>
     <tr>
         <th> #</th>
@@ -28,7 +28,7 @@
     <form action="#" th:action="@{/users/delete}" method="post" id="deletedForm"></form>
 
     <th:block th:each="user,number : ${users}">
-        <tr>
+        <tr id="user">
             <form action="#" th:action="@{/users/changepassword}" method="post"
                   id="changePasswordForm"></form>
             <form action="#" th:action="@{/users/{id}/update(id=${user.id})}" method="post">
@@ -43,8 +43,8 @@
                             onclick="return confirm('Are you sure?')">
                         changepassword
                     </button>
+                </td>
                 <td>
-
                     <select name="roleName" onchange="this.form.submit()">
                         <option th:each="state : ${T(com.gmail.erofeev.st.alexei.onlinemarket.controller.util.RolesNameEnum).values()}"
                                 th:value="${state}"

@@ -3,15 +3,14 @@
 <head>
     <title>Reviews</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"/>
 </head>
 <body>
 <div th:insert="~{fragments/header :: header}"></div>
 <div th:insert="~{fragments/navbar :: navbar}"></div>
-
 
 <table class="table table-striped">
     <thead>
@@ -28,8 +27,8 @@
     </thead>
     <tbody>
     <form action="#" th:action="@{/reviews/update}" th:object="${reviewsChanges}" method="post" id="hideForm"></form>
-    <th:block th:each="review,number : ${reviewsChanges.reviews}">
-        <tr>
+    <th:block th:each="review,number : ${reviewsChanges.reviews}" id="reviewsTable">
+        <tr id="review">
             <form action="#" th:action="@{/reviews/{id}/delete(id=${review.id})}"
                   method="post">
                 <td th:text="${number.count+paginator.size*((paginator.page)-1)}"></td>
@@ -41,13 +40,9 @@
                 <td>
                     <button type="submit"> delete</button>
                 </td>
-                <td><input hidden type="text" th:field="${reviewsChanges.reviews[__${number.index}__].id}"
-                           th:value="${review.id}" form="hideForm">
-                </td>
-                <td>
-                    <input type="hidden" name="checkbox_1" value="0">
-                    <input name="checkbox_1"
-                           type="checkbox"
+                <td><input hidden="true" type="text" th:field="${reviewsChanges.reviews[__${number.index}__].id}"
+                           th:value="${review.id}" form="hideForm"/>
+                    <input type="checkbox"
                            th:checked="${review.hided}"
                            th:value="${review.hided}"
                            th:field="${reviewsChanges.reviews[__${number.index}__].hided}"
@@ -65,7 +60,6 @@
     <tfoot>
     </tfoot>
 </table>
-
 
 <div th:insert="~{fragments/paginator :: paginator(content='/reviews')}"></div>
 <div th:insert="~{fragments/footer :: footer}"></div>
