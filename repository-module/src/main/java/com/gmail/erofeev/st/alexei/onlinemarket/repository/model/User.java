@@ -13,32 +13,6 @@ public class User {
     public User() {
     }
 
-    public User(String lastName, String firstName, String patronymic, String email, String password, Role role, Boolean deleted) {
-        this.lastName = lastName;
-        this.firstName = firstName;
-        this.patronymic = patronymic;
-        this.email = email;
-        this.password = password;
-        this.role = role;
-        this.deleted = deleted;
-    }
-
-    public User(String lastName, String firstName, String patronymic, String email, Role role, Boolean deleted) {
-        this.lastName = lastName;
-        this.firstName = firstName;
-        this.patronymic = patronymic;
-        this.email = email;
-        this.role = role;
-        this.deleted = deleted;
-    }
-
-    public User(long user_id, String lastName, String firstName, String patronymic) {
-        this.id = user_id;
-        this.lastName = lastName;
-        this.firstName = firstName;
-        this.patronymic = patronymic;
-    }
-
     public Long getId() {
         return id;
     }

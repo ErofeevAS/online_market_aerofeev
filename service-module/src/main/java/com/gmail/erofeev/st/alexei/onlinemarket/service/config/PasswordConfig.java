@@ -1,15 +1,14 @@
 package com.gmail.erofeev.st.alexei.onlinemarket.service.config;
 
-import org.passay.PasswordGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.security.SecureRandom;
+
 @Configuration
 public class PasswordConfig {
-
     @Bean
-    PasswordGenerator generate() {
-        PasswordGenerator passwordGenerator = new PasswordGenerator();
-        return passwordGenerator;
+    public SecureRandom getSecureRandom() {
+        return new SecureRandom();
     }
 }

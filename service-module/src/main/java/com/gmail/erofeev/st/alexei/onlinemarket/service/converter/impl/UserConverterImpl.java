@@ -1,6 +1,5 @@
 package com.gmail.erofeev.st.alexei.onlinemarket.service.converter.impl;
 
-
 import com.gmail.erofeev.st.alexei.onlinemarket.repository.model.Role;
 import com.gmail.erofeev.st.alexei.onlinemarket.repository.model.User;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.converter.RoleConverter;
@@ -47,7 +46,14 @@ public class UserConverterImpl implements UserConverter {
         RoleDTO roleDTO = userDTO.getRole();
         Role role = roleConverter.fromRoleDTO(roleDTO);
         Boolean deleted = userDTO.getDeleted();
-        return new User(lastName, firstName, patronymic, email, role, deleted);
+        User user = new User();
+        user.setLastName(lastName);
+        user.setFirstName(firstName);
+        user.setPassword(patronymic);
+        user.setEmail(email);
+        user.setRole(role);
+        user.setDeleted(deleted);
+        return user;
     }
 
     @Override

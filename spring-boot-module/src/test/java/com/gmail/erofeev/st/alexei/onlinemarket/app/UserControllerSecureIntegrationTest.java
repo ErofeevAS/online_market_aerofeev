@@ -14,21 +14,19 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.xpath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserControllerSecureIntegrationTest {
+    private static final String ROLE_ADMIN = "Administrator";
+    private static final String ROLE_CUSTOMER = "CUSTOMER";
     @Autowired
     private MockMvc mockMvc;
 
     @Test
-    @WithMockUser(roles = "Administrator")
+    @WithMockUser(roles = ROLE_ADMIN)
     public void shouldSucceedWith200ForUsersPage() throws Exception {
         mockMvc.perform(get("/users"))
                 .andExpect(status().isOk())
@@ -37,15 +35,15 @@ public class UserControllerSecureIntegrationTest {
     }
 
     @Test
-    @WithMockUser(roles = "Administrator")
+    @WithMockUser(roles = ROLE_ADMIN)
     public void shouldSucceedRedirectOnUsersPageAfterChangePassword() throws Exception {
-        mockMvc.perform(post("/users/changepassword").param("idForPasswordChange", "1"))
+        mockMvc.perform(post("/users/changepassword").param("userId", "1"))
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl("/users"));
     }
 
     @Test
-    @WithMockUser(roles = "Administrator")
+    @WithMockUser(roles = ROLE_ADMIN)
     public void shouldSucceedWith200ForUserAddPage() throws Exception {
         mockMvc.perform(get("/users/add"))
                 .andExpect(status().isOk())
@@ -53,7 +51,7 @@ public class UserControllerSecureIntegrationTest {
     }
 
     @Test
-    @WithMockUser(roles = "Administrator")
+    @WithMockUser(roles = ROLE_ADMIN)
     public void shouldSucceedWith200ForUserAddPagePost() throws Exception {
         mockMvc.perform(post("/users/add"))
                 .andExpect(status().isOk())
@@ -61,7 +59,7 @@ public class UserControllerSecureIntegrationTest {
     }
 
     @Test
-    @WithMockUser(roles = "Administrator")
+    @WithMockUser(roles = ROLE_ADMIN)
     public void shouldGetThreeTestUserFromUsersPage() throws Exception {
         mockMvc.perform(get("/users"))
                 .andExpect(status().isOk())
@@ -69,7 +67,7 @@ public class UserControllerSecureIntegrationTest {
     }
 
     @Test
-    @WithMockUser(roles = "Customer")
+    @WithMockUser(roles = ROLE_CUSTOMER)
     public void shouldForbidAccess() throws Exception {
         mockMvc.perform(get("/users"))
                 .andExpect(status().isFound())
@@ -77,7 +75,7 @@ public class UserControllerSecureIntegrationTest {
     }
 
     @Test
-    @WithMockUser(roles = "Administrator")
+    @WithMockUser(roles = ROLE_ADMIN)
     public void shouldSucceedWith200AfterAddUser() throws Exception {
         UserDTO user = new UserDTO(66L, "test", "test", "test", "test@gmail", new RoleDTO(10L, "Role_Customer2"), false);
         mockMvc.perform(post("/users/add").requestAttr("user", user))
@@ -86,7 +84,7 @@ public class UserControllerSecureIntegrationTest {
     }
 
     @Test
-    @WithMockUser(roles = "Administrator")
+    @WithMockUser(roles = ROLE_ADMIN)
     public void shouldSucceedRedirectOnUsersPageAfterDeleteUser() throws Exception {
         mockMvc.perform(post("/users/delete").param("deletedUsersId", "1"))
                 .andExpect(status().isFound())

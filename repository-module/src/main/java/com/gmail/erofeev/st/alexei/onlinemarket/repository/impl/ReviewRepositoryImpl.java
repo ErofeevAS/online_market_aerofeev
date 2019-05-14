@@ -15,7 +15,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 @Repository
 public class ReviewRepositoryImpl extends GenericRepositoryImpl implements ReviewRepository {
@@ -43,19 +43,19 @@ public class ReviewRepositoryImpl extends GenericRepositoryImpl implements Revie
     }
 
     @Override
-    public void updateHided(Connection connection, Set<Long> keySet) {
-        String subSql = getString(keySet.size());
-        String sql = "UPDATE reviews SET hided = NOT hided WHERE id IN " + subSql;
+    public void updateHidedFields(Connection connection, Map<Long, Boolean> mapIdHided) {
+        String sql = "UPDATE reviews SET hided = ? WHERE id = ? ";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            int counter = 1;
-            for (Long id : keySet) {
-                preparedStatement.setLong(counter, id);
-                counter++;
+            for (Long id : mapIdHided.keySet()) {
+                boolean hided = mapIdHided.get(id);
+                preparedStatement.setBoolean(1, hided);
+                preparedStatement.setLong(2, id);
+                preparedStatement.addBatch();
             }
-            preparedStatement.execute();
+            preparedStatement.executeBatch();
         } catch (SQLException e) {
             logger.error(e.getMessage(), e);
-            throw new RepositoryException(String.format("Database exception during updating hided field in reviews with id: %s", keySet), e);
+            throw new RepositoryException(String.format("Database exception during updating hided field in reviews with ids: %s", mapIdHided), e);
         }
     }
 
@@ -81,16 +81,11 @@ public class ReviewRepositoryImpl extends GenericRepositoryImpl implements Revie
         String lastName = resultSet.getString("lastname");
         String firstName = resultSet.getString("firstname");
         String patronymic = resultSet.getString("patronymic");
-        User user = new User(userId, lastName, firstName, patronymic);
+        User user = new User();
+        user.setId(userId);
+        user.setLastName(lastName);
+        user.setFirstName(firstName);
+        user.setPatronymic(patronymic);
         return new Review(id, user, content, date, reviewDeleted, hided);
-    }
-
-    private String getString(int size) {
-        String subSql = "(";
-        for (int i = 0; i < size; i++) {
-            subSql += "?,";
-        }
-        subSql = subSql.substring(0, subSql.length() - 1) + ")";
-        return subSql;
     }
 }

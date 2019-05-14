@@ -6,7 +6,6 @@ import com.gmail.erofeev.st.alexei.onlinemarket.service.ReviewService;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ReviewDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ReviewsListWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,11 +15,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
-@Scope("session")
 public class ReviewController {
 
     private final ReviewService reviewService;
@@ -45,8 +42,6 @@ public class ReviewController {
         paginator.validate(intPage, maxPage, intSize);
         model.addAttribute("paginator", paginator);
         List<ReviewDTO> reviews = reviewService.getReviews(paginator.getPage(), paginator.getSize());
-        ReviewsListWrapper reviewsListWrapper = new ReviewsListWrapper(reviews);
-        request.getSession().setAttribute("reviewsListWrapperOld", reviewsListWrapper);
         ReviewsListWrapper reviewsChanges = new ReviewsListWrapper(reviews);
         model.addAttribute("reviewsChanges", reviewsChanges);
         return "reviews";
@@ -59,11 +54,8 @@ public class ReviewController {
     }
 
     @PostMapping("/reviews/update")
-    public String updateReviews(@ModelAttribute("reviewsChanges") ReviewsListWrapper reviewsChanges,
-                                HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        ReviewsListWrapper reviewsListWrapper = (ReviewsListWrapper) session.getAttribute("reviewsListWrapperOld");
-        reviewService.updateDifference(reviewsListWrapper, reviewsChanges);
+    public String updateReviews(@ModelAttribute("reviewsChanges") ReviewsListWrapper reviewsChanges) {
+        reviewService.updateHidedFields(reviewsChanges);
         return "redirect:/reviews";
     }
 }

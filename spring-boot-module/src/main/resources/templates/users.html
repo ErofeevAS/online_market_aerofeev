@@ -38,7 +38,7 @@
                 <td th:text="${user.patronymic}">...</td>
                 <td th:text="${user.email}">...</td>
                 <td>
-                    <button type="submit" th:value="${user.id}" name="idForPasswordChange" form="changePasswordForm"
+                    <button type="submit" th:value="${user.id}" name="userId" form="changePasswordForm"
                             class="btn btn-outline-primary"
                             onclick="return confirm('Are you sure?')">
                         changepassword

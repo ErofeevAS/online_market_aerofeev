@@ -63,7 +63,7 @@ public class UserRepositoryImpl extends GenericRepositoryImpl implements UserRep
 
     @Override
     public void delete(Connection connection, List<Long> usersIdForDelete) {
-        String subSql = getSubString(usersIdForDelete.size());
+        String subSql = getSQLParameters(usersIdForDelete.size());
         String sql = "UPDATE users SET deleted=true WHERE id IN " + subSql + " and undeletable=false ";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             int counter = 1;
@@ -72,7 +72,6 @@ public class UserRepositoryImpl extends GenericRepositoryImpl implements UserRep
                 counter++;
             }
             preparedStatement.execute();
-
         } catch (SQLException e) {
             logger.error(e.getMessage(), e);
             throw new RepositoryException(String.format("Database exception during deleting a users with ids: %s :", usersIdForDelete), e);
@@ -161,12 +160,19 @@ public class UserRepositoryImpl extends GenericRepositoryImpl implements UserRep
         Long roleId = resultSet.getLong(8);
         String roleName = resultSet.getString(9);
         Role role = new Role(roleId, roleName);
-        User user = new User(lastName, firstName, patronymic, email, password, role, isDeleted);
+        User user = new User();
+        user.setLastName(lastName);
+        user.setFirstName(firstName);
+        user.setPatronymic(patronymic);
+        user.setEmail(email);
+        user.setPassword(password);
+        user.setRole(role);
+        user.setDeleted(isDeleted);
         user.setId(id);
         return user;
     }
 
-    private String getSubString(int size) {
+    private String getSQLParameters(int size) {
         String subSql = "(";
         for (int i = 0; i < size; i++) {
             subSql += "?,";

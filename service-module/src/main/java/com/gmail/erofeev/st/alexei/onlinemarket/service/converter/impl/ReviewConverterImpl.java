@@ -42,10 +42,10 @@ public class ReviewConverterImpl implements ReviewConverter {
 
     @Override
     public List<ReviewDTO> toListDTO(List<Review> reviews) {
-        List<ReviewDTO> articleDTOList = new ArrayList<>();
+        List<ReviewDTO> reviewDTOList = new ArrayList<>(reviews.size());
         for (Review review : reviews) {
-            articleDTOList.add(toDTO(review));
+            reviewDTOList.add(toDTO(review));
         }
-        return articleDTOList;
+        return reviewDTOList;
     }
 }

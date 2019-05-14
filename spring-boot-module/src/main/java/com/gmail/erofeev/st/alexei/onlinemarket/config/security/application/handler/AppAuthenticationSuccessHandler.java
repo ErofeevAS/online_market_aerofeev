@@ -41,21 +41,15 @@ public class AppAuthenticationSuccessHandler implements AuthenticationSuccessHan
     }
 
     private String determinateUrl(Authentication authentication) {
-        boolean isUser = false;
         boolean isAdmin = false;
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         for (GrantedAuthority authority : authorities) {
-            if (authority.getAuthority().equals(securityProperties.getRoleUser())) {
-                isUser = true;
-                break;
-            } else if (authority.getAuthority().equals(securityProperties.getRoleAdmin())) {
+            if (authority.getAuthority().equals(securityProperties.getRoleAdmin())) {
                 isAdmin = true;
                 break;
             }
         }
-        if (isUser) {
-            return "/items";
-        } else if (isAdmin) {
+        if (isAdmin) {
             return "/users";
         } else {
             logger.error("role not defined");

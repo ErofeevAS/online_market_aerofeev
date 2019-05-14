@@ -90,45 +90,34 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public void updateDifference(ReviewsListWrapper oldReviewsList, ReviewsListWrapper newReviewsList) {
-        Map<Long, Boolean> difference = getDifference(oldReviewsList, newReviewsList);
-        if (!difference.isEmpty()) {
-            try (Connection connection = reviewRepository.getConnection()) {
-                connection.setAutoCommit(false);
-                try {
-                    reviewRepository.updateHided(connection, difference.keySet());
-                    connection.commit();
-                } catch (SQLException e) {
-                    connection.rollback();
-                    logger.error(e.getMessage(), e);
-                    throw new ServiceException(String.format("Can't update difference between new and old hided fields: %s", difference), e);
-                }
+    public void updateHidedFields(ReviewsListWrapper newReviewsList) {
+        Map<Long, Boolean> mapIdHided = getMapIdHided(newReviewsList.getReviews());
+        try (Connection connection = reviewRepository.getConnection()) {
+            connection.setAutoCommit(false);
+            try {
+                reviewRepository.updateHidedFields(connection, mapIdHided);
+                connection.commit();
             } catch (SQLException e) {
+                connection.rollback();
                 logger.error(e.getMessage(), e);
-                throw new ServiceException("Can't establish connection to database.", e);
+                throw new ServiceException(String.format("Can't update  hided fields for reviews with ids: %s", mapIdHided.keySet()), e);
             }
+        } catch (SQLException e) {
+            logger.error(e.getMessage(), e);
+            throw new ServiceException("Can't establish connection to database.", e);
         }
     }
 
-    private Map<Long, Boolean> getDifference(ReviewsListWrapper oldList, ReviewsListWrapper newList) {
-        Map<Long, Boolean> difference = new HashMap<>();
-        List<ReviewDTO> newReviews = newList.getReviews();
-        List<ReviewDTO> oldReviews = oldList.getReviews();
-        for (int i = 0; i < oldReviews.size(); i++) {
-            Long tempId = oldReviews.get(i).getId();
-            Boolean tempHided = oldReviews.get(i).getHided();
-            Boolean newHided = newReviews.get(i).getHided();
-            if (tempHided == null) {
-                tempHided = false;
+    private Map<Long, Boolean> getMapIdHided(List<ReviewDTO> reviewsDTO) {
+        Map<Long, Boolean> reviewIdHidedMap = new HashMap<>();
+        for (ReviewDTO review : reviewsDTO) {
+            Long id = review.getId();
+            Boolean hided = review.getHided();
+            if (hided == null) {
+                hided = false;
             }
-            if (newHided == null) {
-                newHided = false;
-            }
-            boolean isDifference = tempHided ^ newHided;
-            if (isDifference) {
-                difference.put(tempId, tempHided ^ newHided);
-            }
+            reviewIdHidedMap.put(id, hided);
         }
-        return difference;
+        return reviewIdHidedMap;
     }
 }

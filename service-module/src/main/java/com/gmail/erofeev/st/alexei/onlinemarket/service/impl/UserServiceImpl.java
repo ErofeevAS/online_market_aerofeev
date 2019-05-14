@@ -208,7 +208,7 @@ public class UserServiceImpl implements UserService {
                 User user = userRepository.findUserById(connection, id);
                 UserDTO userDTO = userConverter.toDTO(user);
                 connection.commit();
-                logger.info("user was found: " + user);
+                logger.debug(String.format("user with id:%s was found", id));
                 return userDTO;
             } catch (SQLException e) {
                 connection.rollback();

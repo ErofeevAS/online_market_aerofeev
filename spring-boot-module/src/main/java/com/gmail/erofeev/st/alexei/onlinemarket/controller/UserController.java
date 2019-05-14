@@ -83,8 +83,8 @@ public class UserController {
     }
 
     @PostMapping("/users/changepassword")
-    public String changePassword(@RequestParam Long idForPasswordChange) {
-        UserDTO userById = userService.findUserById(idForPasswordChange);
+    public String changePassword(@RequestParam Long userId) {
+        UserDTO userById = userService.findUserById(userId);
         userService.changePassword(userById);
         return "redirect:/users";
     }
