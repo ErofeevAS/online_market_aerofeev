@@ -1,0 +1,78 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Reviews</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"/>
+</head>
+<body>
+<div th:insert="~{fragments/header :: header}"></div>
+<div th:insert="~{fragments/navbar :: navbar}"></div>
+
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th> #</th>
+        <th> date</th>
+        <th> lastname</th>
+        <th> firstname</th>
+        <th> patronymic</th>
+        <th> context</th>
+        <th> for deleted</th>
+        <th> for hide</th>
+    </tr>
+    </thead>
+    <tbody>
+    <form action="#" th:action="@{/reviews/update}" th:object="${reviewsChanges}" method="post" id="hideForm"></form>
+    <th:block th:each="review,number : ${reviewsChanges.reviews}" id="reviewsTable">
+        <tr id="review">
+            <form action="#" th:action="@{/reviews/{id}/delete(id=${review.id})}"
+                  method="post">
+                <td th:text="${number.count+paginator.size*((paginator.page)-1)}"></td>
+                <td th:text="${review.date}">...</td>
+                <td th:text="${review.user.lastName}">...</td>
+                <td th:text="${review.user.firstName}">...</td>
+                <td th:text="${review.user.patronymic}">...</td>
+                <td th:text="${review.content}">...</td>
+                <td>
+                    <button type="submit"> delete</button>
+                </td>
+                <td><input hidden="true" type="text" th:field="${reviewsChanges.reviews[__${number.index}__].id}"
+                           th:value="${review.id}" form="hideForm"/>
+
+                    <input type="checkbox"
+                           th:checked="${review.hided}"
+                           th:value="${review.hided}"
+                           th:field="${reviewsChanges.reviews[__${number.index}__].hided}"
+                           form="hideForm"/>
+                </td>
+            </form>
+        </tr>
+
+    </th:block>
+    <button type="submit" class="btn btn-outline-primary" onclick="return confirm('Are you sure?')" form="hideForm">
+        hide
+    </button>
+
+    </tbody>
+    <tfoot>
+    </tfoot>
+</table>
+
+<div th:insert="~{fragments/paginator :: paginator(content='/reviews')}"></div>
+<div th:insert="~{fragments/footer :: footer}"></div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+</body>
+</html>

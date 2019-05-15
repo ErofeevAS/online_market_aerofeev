@@ -1,0 +1,84 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Users</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"/>
+</head>
+<body>
+<div th:insert="~{fragments/header :: header}"></div>
+<div th:insert="~{fragments/navbar :: navbar}"></div>
+
+<table class="table table-striped" id="usersTable">
+    <thead>
+    <tr>
+        <th> #</th>
+        <th> lastname</th>
+        <th> firstname</th>
+        <th> patronymic</th>
+        <th> email</th>
+        <th> change password</th>
+        <th> change role</th>
+        <th> for deleted</th>
+    </tr>
+    </thead>
+    <tbody>
+    <form action="#" th:action="@{/users/delete}" method="post" id="deletedForm"></form>
+
+    <th:block th:each="user,number : ${users}">
+        <tr id="user">
+            <form action="#" th:action="@{/users/changepassword}" method="post"
+                  id="changePasswordForm"></form>
+            <form action="#" th:action="@{/users/{id}/update(id=${user.id})}" method="post">
+                <td th:text="${number.count+paginator.size*((paginator.page)-1)}"></td>
+                <td th:text="${user.lastName}">...</td>
+                <td th:text="${user.firstName}">...</td>
+                <td th:text="${user.patronymic}">...</td>
+                <td th:text="${user.email}">...</td>
+                <td>
+                    <button type="submit" th:value="${user.id}" name="userId" form="changePasswordForm"
+                            class="btn btn-outline-primary"
+                            onclick="return confirm('Are you sure?')">
+                        changepassword
+                    </button>
+                </td>
+                <td>
+                    <select name="roleName" onchange="this.form.submit()">
+                        <option th:each="state : ${T(com.gmail.erofeev.st.alexei.onlinemarket.controller.util.RolesNameEnum).values()}"
+                                th:value="${state}"
+                                th:text="${state}"
+                                th:selected="${state==T(com.gmail.erofeev.st.alexei.onlinemarket.controller.util.RolesNameEnum).valueOf(user.role.name)}">
+                        </option>
+                    </select>
+                </td>
+            </form>
+
+            <td>
+                <input type="checkbox" name="deletedUsersId" th:value="${user.id}" form="deletedForm"/>
+            </td>
+
+        </tr>
+    </th:block>
+    </tbody>
+    <tfoot>
+    </tfoot>
+</table>
+<button type="submit" class="btn btn-outline-primary" form="deletedForm" onclick="return confirm('Are you sure?')">
+    delete
+</button>
+<div th:insert="~{fragments/paginator :: paginator(content='/users')}"></div>
+<div th:insert="~{fragments/footer :: footer}"></div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+</body>
+</html>

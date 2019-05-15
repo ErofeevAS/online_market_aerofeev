@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet author="alexei.st.erofeev@gmail.com" id="ROLE_POPULATE_ID_1">
+        <insert tableName="roles">
+            <column name="id" value="1"/>
+            <column name="name" value="Administrator"/>
+        </insert>
+        <insert tableName="roles">
+            <column name="id" value="2"/>
+            <column name="name" value="Sale"/>
+        </insert>
+        <insert tableName="roles">
+            <column name="id" value="3"/>
+            <column name="name" value="Customer"/>
+        </insert>
+        <insert tableName="roles">
+            <column name="id" value="4"/>
+            <column name="name" value="Secure API"/>
+        </insert>
+    </changeSet>
+
+    <changeSet author="alexei.st.erofeev@gmail.com" id="USER_POPULATE_ID_1">
+        <insert tableName="users">
+            <column name="id" value="1"/>
+            <column name="lastname" value="Admin"/>
+            <column name="firstname" value="Super"/>
+            <column name="patronymic" value="Superovich"/>
+            <column name="email" value="superadmin@gmail.com"/>
+            <column name="password" value="$2a$10$IGusU6L6LTCSNP/qzgS.BerXXVoHgvFfdqhEzfE04RTW8cJc1Xg7m"/>
+            <column name="role_id" value="1"/>
+            <column name="undeletable" valueBoolean="true"/>
+        </insert>
+        <insert tableName="users">
+            <column name="id" value="2"/>
+            <column name="lastname" value="Admin"/>
+            <column name="firstname" value="Admin"/>
+            <column name="patronymic" value="Adminovich"/>
+            <column name="email" value="admin@gmail.com"/>
+            <column name="password" value="$2a$04$57WmpuHQm.MN.v/5JgPgO.aLkT3tSggZ9.P4/Dwt8aqUj2dhKc8h2"/>
+            <column name="role_id" value="1"/>
+        </insert>
+        <insert tableName="users">
+            <column name="id" value="3"/>
+            <column name="lastname" value="User"/>
+            <column name="firstname" value="User"/>
+            <column name="patronymic" value="Userovich"/>
+            <column name="email" value="user@gmail.com"/>
+            <column name="password" value="$2a$04$ujFLCfnVxKEbf08RnrtqHuRZ1oCpymraVCN.X2TIW6z27OHElSy7S"/>
+            <column name="role_id" value="2"/>
+        </insert>
+    </changeSet>
+
+    <changeSet author="alexei.st.erofeev@gmail.com" id="USER_POPULATE_ID_2">
+        <update tableName="users">
+            <column name="email" value="spokeman152@yandex.ru"></column>
+            <where>id=1</where>
+        </update>
+    </changeSet>
+
+    <changeSet author="alexei.st.erofeev@gmail.com" id="ARTICLE_POPULATE_ID_1">
+        <insert tableName="articles">
+            <column name="id" value="1"/>
+            <column name="title" value="first article"/>
+            <column name="user_id" value="1"/>
+            <column name="content" value="my first ARTICLE!! user_1"/>
+        </insert>
+        <insert tableName="articles">
+            <column name="id" value="2"/>
+            <column name="title" value="second article"/>
+            <column name="user_id" value="1"/>
+            <column name="content" value="my second ARTICLE!! user_1"/>
+        </insert>
+        <insert tableName="articles">
+            <column name="id" value="3"/>
+            <column name="title" value="third article"/>
+            <column name="user_id" value="1"/>
+            <column name="content" value="my third ARTICLE!! user_1"/>
+        </insert>
+        <insert tableName="articles">
+            <column name="id" value="4"/>
+            <column name="title" value="article from user with id 3"/>
+            <column name="user_id" value="3"/>
+            <column name="content" value="my first ARTICLE!! user_3"/>
+        </insert>
+    </changeSet>
+
+    <changeSet author="alexei.st.erofeev@gmail.com" id="COMMENT_POPULATE_ID_1">
+        <insert tableName="comments">
+            <column name="id" value="1"/>
+            <column name="user_id" value="1"/>
+            <column name="content" value="my first comment!! user_1"/>
+        </insert>
+        <insert tableName="comments">
+            <column name="id" value="2"/>
+            <column name="user_id" value="1"/>
+            <column name="content" value="my second comment!! user_1"/>
+        </insert>
+        <insert tableName="comments">
+            <column name="id" value="3"/>
+            <column name="user_id" value="1"/>
+            <column name="content" value="my third comment!! user_1"/>
+        </insert>
+        <insert tableName="comments">
+            <column name="id" value="4"/>
+            <column name="user_id" value="3"/>
+            <column name="content" value="my first comment!! user_3"/>
+        </insert>
+    </changeSet>
+
+    <changeSet author="alexei.st.erofeev@gmail.com" id="ARTICLE_COMMENT_POPULATE_ID_1">
+        <insert tableName="articles_comments">
+            <column name="article_id" value="1"/>
+            <column name="comment_id" value="1"/>
+        </insert>
+        <insert tableName="articles_comments">
+            <column name="article_id" value="1"/>
+            <column name="comment_id" value="2"/>
+        </insert>
+        <insert tableName="articles_comments">
+            <column name="article_id" value="1"/>
+            <column name="comment_id" value="3"/>
+        </insert>
+        <insert tableName="articles_comments">
+            <column name="article_id" value="1"/>
+            <column name="comment_id" value="4"/>
+        </insert>
+        <insert tableName="articles_comments">
+            <column name="article_id" value="2"/>
+            <column name="comment_id" value="2"/>
+        </insert>
+        <insert tableName="articles_comments">
+            <column name="article_id" value="3"/>
+            <column name="comment_id" value="4"/>
+        </insert>
+    </changeSet>
+
+    <changeSet author="alexei.st.erofeev@gmail.com" id="REVIEW_POPULATE_ID_1">
+        <insert tableName="reviews">
+            <column name="id" value="1"/>
+            <column name="user_id" value="1"/>
+            <column name="content" value="my first REVIEW!! user_1"/>
+        </insert>
+        <insert tableName="reviews">
+            <column name="id" value="2"/>
+            <column name="user_id" value="1"/>
+            <column name="content" value="my second REVIEW!! user_1"/>
+        </insert>
+        <insert tableName="reviews">
+            <column name="id" value="3"/>
+            <column name="user_id" value="1"/>
+            <column name="content" value="my third REVIEW!! user_1"/>
+        </insert>
+        <insert tableName="reviews">
+            <column name="id" value="4"/>
+            <column name="user_id" value="3"/>
+            <column name="content" value="my first REVIEW!! user_3"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>
