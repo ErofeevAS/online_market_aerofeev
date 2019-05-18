@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+
+    <changeSet author="alexei.st.erofeev@gmail.com" id="COMMENT_TABLE_2">
+        <addColumn tableName="comment">
+            <column name="comment_parent_id" type="BIGINT"/>
+        </addColumn>
+        <addColumn tableName="comment">
+            <column name="article_id" type="BIGINT"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="alexei.st.erofeev@gmail.com" id="COMMENT_PARENT_ID_1">
+        <addForeignKeyConstraint baseColumnNames="comment_parent_id"
+                                 baseTableName="comment"
+                                 constraintName="fk_id_comment_parent_id"
+                                 deferrable="false"
+                                 initiallyDeferred="false"
+                                 onDelete="NO ACTION"
+                                 onUpdate="NO ACTION"
+                                 referencedColumnNames="id"
+                                 referencedTableName="comment"/>
+
+        <addForeignKeyConstraint baseColumnNames="article_id"
+                                 baseTableName="comment"
+                                 constraintName="fk_article_id"
+                                 deferrable="false"
+                                 initiallyDeferred="false"
+                                 onDelete="NO ACTION"
+                                 onUpdate="NO ACTION"
+                                 referencedColumnNames="id"
+                                 referencedTableName="article"/>
+    </changeSet>
+
+
+    <changeSet author="alexei.st.erofeev@gmail.com" id="COMMENT_CHILDREN_COMMENT_TABLE_1">
+        <createTable tableName="comment_child_comment">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="comment_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="child_comment_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="alexei.st.erofeev@gmail.com" id="COMMENT_ID_CHILDREN_COMMENT_ID_1">
+        <addForeignKeyConstraint baseColumnNames="comment_id"
+                                 baseTableName="comment_child_comment"
+                                 constraintName="fk_comment_id_child_comment_id"
+                                 deferrable="false"
+                                 initiallyDeferred="false"
+                                 onDelete="NO ACTION"
+                                 onUpdate="NO ACTION"
+                                 referencedColumnNames="id"
+                                 referencedTableName="comment"/>
+
+        <addForeignKeyConstraint baseColumnNames="comment_id"
+                                 baseTableName="comment_child_comment"
+                                 constraintName="fk_child_comment_id_comment_id"
+                                 deferrable="false"
+                                 initiallyDeferred="false"
+                                 onDelete="NO ACTION"
+                                 onUpdate="NO ACTION"
+                                 referencedColumnNames="id"
+                                 referencedTableName="comment"/>
+    </changeSet>
+
+</databaseChangeLog>

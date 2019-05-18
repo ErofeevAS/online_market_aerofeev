@@ -6,8 +6,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class SecurityProperties {
 
-    @Value("${app.security.role.user}")
-    private String roleUser;
+    @Value("${app.security.role.customer}")
+    private String roleCustomer;
     @Value("${app.security.role.admin}")
     private String roleAdmin;
     @Value("${app.security.role.prefix}")
@@ -17,8 +17,8 @@ public class SecurityProperties {
     @Value("${app.security.forbid.redirect.page}")
     private String forbidRedirectPage;
 
-    public String getRoleUser() {
-        return rolePrefix + roleUser;
+    public String getRoleCustomer() {
+        return rolePrefix + roleCustomer;
     }
 
     public String getRoleAdmin() {

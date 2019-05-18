@@ -64,25 +64,25 @@
     </changeSet>
 
     <changeSet author="alexei.st.erofeev@gmail.com" id="ARTICLE_POPULATE_ID_1">
-        <insert tableName="articles">
+        <insert tableName="article">
             <column name="id" value="1"/>
             <column name="title" value="first article"/>
             <column name="user_id" value="1"/>
             <column name="content" value="my first ARTICLE!! user_1"/>
         </insert>
-        <insert tableName="articles">
+        <insert tableName="article">
             <column name="id" value="2"/>
             <column name="title" value="second article"/>
             <column name="user_id" value="1"/>
             <column name="content" value="my second ARTICLE!! user_1"/>
         </insert>
-        <insert tableName="articles">
+        <insert tableName="article">
             <column name="id" value="3"/>
             <column name="title" value="third article"/>
             <column name="user_id" value="1"/>
             <column name="content" value="my third ARTICLE!! user_1"/>
         </insert>
-        <insert tableName="articles">
+        <insert tableName="article">
             <column name="id" value="4"/>
             <column name="title" value="article from user with id 3"/>
             <column name="user_id" value="3"/>
@@ -91,22 +91,22 @@
     </changeSet>
 
     <changeSet author="alexei.st.erofeev@gmail.com" id="COMMENT_POPULATE_ID_1">
-        <insert tableName="comments">
+        <insert tableName="comment">
             <column name="id" value="1"/>
             <column name="user_id" value="1"/>
             <column name="content" value="my first comment!! user_1"/>
         </insert>
-        <insert tableName="comments">
+        <insert tableName="comment">
             <column name="id" value="2"/>
             <column name="user_id" value="1"/>
             <column name="content" value="my second comment!! user_1"/>
         </insert>
-        <insert tableName="comments">
+        <insert tableName="comment">
             <column name="id" value="3"/>
             <column name="user_id" value="1"/>
             <column name="content" value="my third comment!! user_1"/>
         </insert>
-        <insert tableName="comments">
+        <insert tableName="comment">
             <column name="id" value="4"/>
             <column name="user_id" value="3"/>
             <column name="content" value="my first comment!! user_3"/>
@@ -114,27 +114,27 @@
     </changeSet>
 
     <changeSet author="alexei.st.erofeev@gmail.com" id="ARTICLE_COMMENT_POPULATE_ID_1">
-        <insert tableName="articles_comments">
+        <insert tableName="article_comment">
             <column name="article_id" value="1"/>
             <column name="comment_id" value="1"/>
         </insert>
-        <insert tableName="articles_comments">
+        <insert tableName="article_comment">
             <column name="article_id" value="1"/>
             <column name="comment_id" value="2"/>
         </insert>
-        <insert tableName="articles_comments">
+        <insert tableName="article_comment">
             <column name="article_id" value="1"/>
             <column name="comment_id" value="3"/>
         </insert>
-        <insert tableName="articles_comments">
+        <insert tableName="article_comment">
             <column name="article_id" value="1"/>
             <column name="comment_id" value="4"/>
         </insert>
-        <insert tableName="articles_comments">
+        <insert tableName="article_comment">
             <column name="article_id" value="2"/>
             <column name="comment_id" value="2"/>
         </insert>
-        <insert tableName="articles_comments">
+        <insert tableName="article_comment">
             <column name="article_id" value="3"/>
             <column name="comment_id" value="4"/>
         </insert>
