@@ -9,4 +9,6 @@ public interface CommentConverter {
     List<CommentDTO> toListDTO(List<Comment> comments);
 
     CommentDTO toDTO(Comment comment);
+
+    Comment fromDTO(CommentDTO commentDTO);
 }

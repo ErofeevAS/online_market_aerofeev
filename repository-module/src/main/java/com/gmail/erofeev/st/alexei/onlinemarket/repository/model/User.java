@@ -1,5 +1,9 @@
 package com.gmail.erofeev.st.alexei.onlinemarket.repository.model;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -9,16 +13,20 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
-@Table(name = "users")
+@Table
+@SQLDelete(sql = "UPDATE user SET deleted = '1' WHERE id = ? and undeletable='0'")
+@Where(clause = "deleted = '0'")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
+    @Column(name = "id")
     private Long id;
     @Column(name = "lastname")
     private String lastName;
@@ -32,13 +40,23 @@ public class User {
     private String password;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id", nullable = false)
-    private Role role;
+    private Role role = new Role();
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<Article> articles;
+    private List<Article> articles = new ArrayList<>();
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Comment> comments = new ArrayList<>();
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Comment> reviews = new ArrayList<>();
     @Column
     private Boolean deleted;
+    @Column
+    private Boolean undeletable = false;
+    @OneToOne(
+            fetch = FetchType.LAZY,
+            mappedBy = "user",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    private Profile profile;
 
     public User() {
     }
@@ -121,6 +139,49 @@ public class User {
 
     public void setComments(List<Comment> comments) {
         this.comments = comments;
+    }
+
+    public List<Comment> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Comment> reviews) {
+        this.reviews = reviews;
+    }
+
+    public Boolean getUndeletable() {
+        return undeletable;
+    }
+
+    public void setUndeletable(Boolean undeletable) {
+        this.undeletable = undeletable;
+    }
+
+    public Profile getProfile() {
+        return profile;
+    }
+
+    public void setProfile(Profile profile) {
+        this.profile = profile;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return id.equals(user.id) &&
+                Objects.equals(lastName, user.lastName) &&
+                Objects.equals(firstName, user.firstName) &&
+                Objects.equals(patronymic, user.patronymic) &&
+                Objects.equals(email, user.email) &&
+                Objects.equals(password, user.password) &&
+                Objects.equals(deleted, user.deleted);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, lastName, firstName, patronymic, email, password, deleted);
     }
 
     @Override

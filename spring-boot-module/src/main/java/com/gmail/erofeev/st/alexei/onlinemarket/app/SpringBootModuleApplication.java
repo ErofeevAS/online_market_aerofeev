@@ -12,7 +12,6 @@ import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServic
                 "com.gmail.erofeev.st.alexei.onlinemarket.service",
                 "com.gmail.erofeev.st.alexei.onlinemarket.repository"
         })
-
 @EntityScan( basePackages = {"com.gmail.erofeev.st.alexei.onlinemarket.repository"} )
 public class SpringBootModuleApplication {
 

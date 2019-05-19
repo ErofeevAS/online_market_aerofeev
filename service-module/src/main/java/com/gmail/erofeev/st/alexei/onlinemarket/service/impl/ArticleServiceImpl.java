@@ -1,11 +1,15 @@
 package com.gmail.erofeev.st.alexei.onlinemarket.service.impl;
 
 import com.gmail.erofeev.st.alexei.onlinemarket.repository.ArticleRepository;
+import com.gmail.erofeev.st.alexei.onlinemarket.repository.UserRepository;
 import com.gmail.erofeev.st.alexei.onlinemarket.repository.model.Article;
+import com.gmail.erofeev.st.alexei.onlinemarket.repository.model.User;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.ArticleService;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.converter.ArticleConverter;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ArticleDTO;
+import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ArticleRestDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.PageDTO;
+import com.gmail.erofeev.st.alexei.onlinemarket.service.model.SearchingFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -16,71 +20,120 @@ import java.util.List;
 @Service
 public class ArticleServiceImpl implements ArticleService {
     private static final Logger logger = LoggerFactory.getLogger(ArticleServiceImpl.class);
+    private static final String SUCCESSFUL_DELETE_MESSAGE = "success";
     private final ArticleRepository articleRepository;
     private final ArticleConverter articleConverter;
+    private final UserRepository userRepository;
 
-    public ArticleServiceImpl(ArticleRepository articleRepository, ArticleConverter articleConverter) {
+    public ArticleServiceImpl(ArticleRepository articleRepository, ArticleConverter articleConverter, UserRepository userRepository) {
         this.articleRepository = articleRepository;
         this.articleConverter = articleConverter;
+        this.userRepository = userRepository;
     }
 
     @Override
     @Transactional
-    public PageDTO<ArticleDTO> getArticles(Integer page, Integer amount) {
-        Long amountOfArticles = articleRepository.getAmountOfEntity();
-        List<Article> articles = articleRepository.getEntities(page, amount);
-        for (Article article : articles) {
-            article.getUser();
-            article.getComments();
+    public PageDTO<ArticleDTO> getArticles(Integer page, Integer amount, SearchingFilter searchingFilter) {
+        if (searchingFilter.getTag() != null) {
+            Integer amountOfEntity = articleRepository.getAmountOfEntity();
+            int maxPages = getMaxPages(amountOfEntity, amount);
+            int offset = getOffset(page, maxPages, amount);
+            List<Article> articles = articleRepository.getEntitiesByTag(offset, amount, searchingFilter.getTag());
+            List<ArticleDTO> articleDTOList = articleConverter.toListDTO(articles);
+            return getPageDTO(articleDTOList, maxPages);
         }
-        List<ArticleDTO> articleDTOList = articleConverter.toListDTO(articles);
-        PageDTO<ArticleDTO> pageDTO = new PageDTO<>();
-//        pageDTO.setAmountOfPages(amountOfArticles);
-//        pageDTO.setList(articleDTOList);
-        return pageDTO;
-    }
-
-    @Override
-    public ArticleDTO getArticleById(Long id) {
-//        try (Connection connection = articleRepository.getConnection()) {
-//            connection.setAutoCommit(false);
-//            try {
-//                Article article = articleRepository.findArticleById(connection, id);
-//                ArticleDTO articleDTO = articleConverter.toDTO(article);
-//                connection.commit();
-//                return articleDTO;
-//            } catch (SQLException e) {
-//                connection.rollback();
-//                logger.error(e.getMessage(), e);
-//                throw new ServiceException(String.format("Can't get article with id: %s", id), e);
-//            }
-//        } catch (SQLException e) {
-//            logger.error(e.getMessage(), e);
-//            throw new ServiceException("Can't establish connection to database.", e);
-//        }
-        return null;
+        if (searchingFilter.getKeyWord() == null) {
+            Integer amountOfEntity = articleRepository.getAmountOfEntity();
+            int maxPages = getMaxPages(amountOfEntity, amount);
+            int offset = getOffset(page, maxPages, amount);
+            List<Article> articles = articleRepository.getEntities(offset, amount);
+            List<ArticleDTO> articleDTOList = articleConverter.toListDTO(articles);
+            return getPageDTO(articleDTOList, maxPages);
+        } else {
+            Integer amountOfEntity = articleRepository.getAmountOfArticlesWithKeyWord(searchingFilter.getKeyWord());
+            int maxPages = getMaxPages(amountOfEntity, amount);
+            int offset = getOffset(page, maxPages, amount);
+            List<Article> articles = articleRepository.getArticlesFilteredByTitle(offset, amount, searchingFilter.getKeyWord());
+            List<ArticleDTO> articleDTOList = articleConverter.toListDTO(articles);
+            return getPageDTO(articleDTOList, maxPages);
+        }
     }
 
     @Override
     @Transactional
-    public ArticleDTO getArticleByIdHiber(Long id) {
+    public ArticleDTO getArticleById(Long id) {
         Article article = articleRepository.findById(id);
         return articleConverter.toDTO(article);
     }
 
     @Override
     @Transactional
-    public List<ArticleDTO> getAll() {
+    public List<ArticleDTO> getArticles() {
         List<Article> articles = articleRepository.findAll();
         return articleConverter.toListDTO(articles);
     }
 
-    private int getOffset(int page, int amount) {
+    @Override
+    @Transactional
+    public List<ArticleRestDTO> getRestArticles() {
+        List<Article> articles = articleRepository.findAll();
+        return articleConverter.toListRestDTO(articles);
+    }
+
+    @Override
+    @Transactional
+    public String delete(Long id) {
+        Article article = articleRepository.findById(id);
+        articleRepository.remove(article);
+        return SUCCESSFUL_DELETE_MESSAGE;
+    }
+
+    @Override
+    @Transactional
+    public void add(ArticleDTO articleDTO) {
+        Long userId = articleDTO.getUser().getId();
+        User user = userRepository.findById(userId);
+        Article article = articleConverter.fromDTO(articleDTO);
+        article.setUser(user);
+        articleRepository.persist(article);
+    }
+
+    @Override
+    @Transactional
+    public Integer getAmountOfArticlesWithKeyWord(String keyWord) {
+        return articleRepository.getAmountOfArticlesWithKeyWord(keyWord);
+    }
+
+    @Override
+    @Transactional
+    public PageDTO<ArticleDTO> getArticlesByTag(int page, int amount, String tagName) {
+        Integer amountOfEntity = articleRepository.getAmountOfArticlesWithSameTag(tagName);
+        int maxPages = getMaxPages(amountOfEntity, amount);
+        int offset = getOffset(page, maxPages, amount);
+        List<Article> articles = articleRepository.getArticlesFilteredByTitle(offset, amount, tagName);
+        List<ArticleDTO> articleDTOList = articleConverter.toListDTO(articles);
+        PageDTO<ArticleDTO> pageDTO = new PageDTO<>();
+        pageDTO.setList(articleDTOList);
+        pageDTO.setAmountOfPages(maxPages);
+        return pageDTO;
+    }
+
+    private int getOffset(int page, int maxPages, int amount) {
+        if (page > maxPages) {
+            page = maxPages;
+        }
         return (page - 1) * amount;
     }
 
-    private Integer getAmountOfPages(int amountOfDisplayedArticles, int amountOfArticles) {
-        amountOfDisplayedArticles = Math.abs(amountOfDisplayedArticles);
-        return (Math.round(amountOfArticles / amountOfDisplayedArticles) + 1);
+    private int getMaxPages(int amountOfEntity, int amountOfDisplayedEntities) {
+        int maxPages = (Math.round(amountOfEntity / amountOfDisplayedEntities) + 1);
+        return maxPages;
+    }
+
+    private PageDTO<ArticleDTO> getPageDTO(List<ArticleDTO> articleDTOList, Integer maxPages) {
+        PageDTO<ArticleDTO> pageDTO = new PageDTO<>();
+        pageDTO.setList(articleDTOList);
+        pageDTO.setAmountOfPages(maxPages);
+        return pageDTO;
     }
 }

@@ -10,19 +10,23 @@ public class SecurityProperties {
     private String roleCustomer;
     @Value("${app.security.role.admin}")
     private String roleAdmin;
-    @Value("${app.security.role.prefix}")
-    private String rolePrefix;
+    @Value("${app.security.role.securerestapi}")
+    private String roleSecureRestApi;
     @Value("${app.security.bcrypt.strength}")
     private String bcryptRounds;
     @Value("${app.security.forbid.redirect.page}")
     private String forbidRedirectPage;
+    @Value("${app.security.start.admin.page}")
+    private String startAdminPage;
+    @Value("${app.security.start.customer.page}")
+    private String startCustomerPage;
 
     public String getRoleCustomer() {
-        return rolePrefix + roleCustomer;
+        return  roleCustomer;
     }
 
     public String getRoleAdmin() {
-        return rolePrefix + roleAdmin;
+        return  roleAdmin;
     }
 
     public int getBcryptRounds() {
@@ -31,6 +35,18 @@ public class SecurityProperties {
 
     public String getForbidRedirectPage() {
         return forbidRedirectPage;
+    }
+
+    public String getRoleSecureRestApi() {
+        return roleSecureRestApi;
+    }
+
+    public String getStartAdminPage() {
+        return startAdminPage;
+    }
+
+    public String getStartCustomerPage() {
+        return startCustomerPage;
     }
 }
 

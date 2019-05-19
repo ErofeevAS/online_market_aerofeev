@@ -54,9 +54,9 @@ public class AppAuthenticationSuccessHandler implements AuthenticationSuccessHan
             }
         }
         if (isAdmin) {
-            return "/users";
+            return securityProperties.getStartAdminPage();
         } else if (isCustomer) {
-            return "/articles";
+            return securityProperties.getStartCustomerPage();
         } else {
             logger.error("role not defined");
             throw new IllegalStateException("role not defined");

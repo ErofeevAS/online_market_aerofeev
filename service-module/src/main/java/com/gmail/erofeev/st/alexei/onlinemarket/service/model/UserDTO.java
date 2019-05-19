@@ -17,14 +17,16 @@ public class UserDTO {
     @Pattern(regexp = "^[A-Za-z_]{1,20}$", message = "must be from 1 to 20, only English letters")
     private String firstName;
     @Pattern(regexp = "^[A-Za-z_]{0,40}$", message = "must be from 1 to 40, only English letters")
-    private String patronymic;
+    private String patronymic = "";
     private String password;
+    private String oldPassword;
     @NotNull
     @NotEmpty
     @Email
     private String email;
     private RoleDTO role;
-    private Boolean deleted;
+    private Boolean deleted = false;
+    private ProfileDTO profile;
 
     public UserDTO() {
     }
@@ -105,6 +107,22 @@ public class UserDTO {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public ProfileDTO getProfile() {
+        return profile;
+    }
+
+    public void setProfile(ProfileDTO profile) {
+        this.profile = profile;
+    }
+
+    public String getOldPassword() {
+        return oldPassword;
+    }
+
+    public void setOldPassword(String oldPassword) {
+        this.oldPassword = oldPassword;
     }
 
     @Override

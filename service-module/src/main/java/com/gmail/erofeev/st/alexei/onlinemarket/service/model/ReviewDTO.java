@@ -7,27 +7,10 @@ public class ReviewDTO {
     private UserDTO user;
     private String content;
     private Timestamp date;
-    private Boolean deleted;
-    private Boolean hided;
+    private Boolean deleted = false;
+    private Boolean hided = false;
 
     public ReviewDTO() {
-    }
-
-    public ReviewDTO(Long id, UserDTO user, String content, Timestamp date, Boolean deleted, Boolean hided) {
-        this.id = id;
-        this.user = user;
-        this.content = content;
-        this.date = date;
-        this.deleted = deleted;
-        this.hided = hided;
-    }
-
-    public ReviewDTO(UserDTO user, String content, Timestamp date, Boolean deleted, Boolean hided) {
-        this.user = user;
-        this.content = content;
-        this.date = date;
-        this.deleted = deleted;
-        this.hided = hided;
     }
 
     public Long getId() {

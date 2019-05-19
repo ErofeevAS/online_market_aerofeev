@@ -29,7 +29,14 @@ public class ReviewConverterImpl implements ReviewConverter {
         Timestamp date = review.getDate();
         Boolean deleted = review.getDeleted();
         Boolean hided = review.getHided();
-        return new ReviewDTO(id, user, content, date, deleted, hided);
+        ReviewDTO reviewDTO = new ReviewDTO();
+        reviewDTO.setId(id);
+        reviewDTO.setContent(content);
+        reviewDTO.setUser(user);
+        reviewDTO.setDate(date);
+        reviewDTO.setDeleted(deleted);
+        reviewDTO.setHided(hided);
+        return reviewDTO;
     }
 
     @Override

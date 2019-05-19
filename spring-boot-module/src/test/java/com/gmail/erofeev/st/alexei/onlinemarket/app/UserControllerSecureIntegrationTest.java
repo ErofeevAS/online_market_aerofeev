@@ -21,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserControllerSecureIntegrationTest {
     private static final String ROLE_ADMIN = "Administrator";
-    private static final String ROLE_CUSTOMER = "CUSTOMER";
+    private static final String ROLE_CUSTOMER = "Customer";
     @Autowired
     private MockMvc mockMvc;
 
@@ -63,7 +63,7 @@ public class UserControllerSecureIntegrationTest {
     public void shouldGetThreeTestUserFromUsersPage() throws Exception {
         mockMvc.perform(get("/users"))
                 .andExpect(status().isOk())
-                .andExpect(xpath("//*[@id='user']").nodeCount(3));
+                .andExpect(xpath("//*[@id='user']").nodeCount(4));
     }
 
     @Test

@@ -20,11 +20,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ReviewControllerSecureIntegrationTest {
+    private static final String ROLE_ADMIN = "Administrator";
+    private static final String ROLE_CUSTOMER = "Customer";
     @Autowired
     MockMvc mockMvc;
 
     @Test
-    @WithMockUser(roles = "Administrator")
+    @WithMockUser(roles = ROLE_ADMIN)
     public void shouldSucceedWith200ForReviewsPage() throws Exception {
         mockMvc.perform(get("/reviews").param("page", "1").param("size", "10"))
                 .andExpect(status().isOk())
@@ -32,7 +34,7 @@ public class ReviewControllerSecureIntegrationTest {
     }
 
     @Test
-    @WithMockUser(roles = "Sale")
+    @WithMockUser(roles = ROLE_CUSTOMER)
     public void shouldAccessDenyForNotAdminForReviewsPage() throws Exception {
         mockMvc.perform(get("/reviews").param("page", "1").param("size", "10"))
                 .andExpect(status().isFound())
@@ -40,7 +42,7 @@ public class ReviewControllerSecureIntegrationTest {
     }
 
     @Test
-    @WithMockUser(roles = "Administrator")
+    @WithMockUser(roles = ROLE_ADMIN)
     public void shouldGetFourTestReviewsFromReviewsPage() throws Exception {
         mockMvc.perform(get("/reviews"))
                 .andExpect(status().isOk())
@@ -48,7 +50,7 @@ public class ReviewControllerSecureIntegrationTest {
     }
 
     @Test
-    @WithMockUser(roles = "Administrator")
+    @WithMockUser(roles = ROLE_ADMIN)
     public void shouldRedirectToReviewsPageAfterDelete() throws Exception {
         mockMvc.perform(post("/reviews/1/delete"))
                 .andExpect(status().isFound())
@@ -56,7 +58,7 @@ public class ReviewControllerSecureIntegrationTest {
     }
 
     @Test
-    @WithMockUser(roles = "Sale")
+    @WithMockUser(roles = ROLE_CUSTOMER)
     public void shouldAccessDenyForNotAdminForDelete() throws Exception {
         mockMvc.perform(post("/reviews/1/delete"))
                 .andExpect(status().isFound())

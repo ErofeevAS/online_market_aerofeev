@@ -1,5 +1,6 @@
 package com.gmail.erofeev.st.alexei.onlinemarket.service.converter.impl;
 
+import com.gmail.erofeev.st.alexei.onlinemarket.repository.model.Article;
 import com.gmail.erofeev.st.alexei.onlinemarket.repository.model.Comment;
 import com.gmail.erofeev.st.alexei.onlinemarket.repository.model.User;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.converter.CommentConverter;
@@ -33,14 +34,26 @@ public class CommentConverterImpl implements CommentConverter {
         String content = comment.getContent();
         Timestamp date = comment.getDate();
         boolean hided = comment.isHided();
-//        List<Comment> children = comment.getChildren();
         CommentDTO commentDTO = new CommentDTO();
         commentDTO.setId(id);
         commentDTO.setContent(content);
         commentDTO.setUser(userDTO);
         commentDTO.setDate(date);
         commentDTO.setHided(hided);
-
         return commentDTO;
+    }
+
+    @Override
+    public Comment fromDTO(CommentDTO commentDTO) {
+        String content = commentDTO.getContent();
+        Timestamp date = commentDTO.getDate();
+        Long articleId = commentDTO.getArticleId();
+        Comment comment = new Comment();
+        comment.setContent(content);
+        comment.setDate(date);
+        Article article = new Article();
+        article.setId(articleId);
+        comment.setArticle(article);
+        return comment;
     }
 }

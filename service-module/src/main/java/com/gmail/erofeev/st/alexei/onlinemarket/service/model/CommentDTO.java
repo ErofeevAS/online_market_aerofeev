@@ -1,17 +1,15 @@
 package com.gmail.erofeev.st.alexei.onlinemarket.service.model;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
 
 public class CommentDTO {
     private Long id;
+    private Long articleId;
     private UserDTO user;
     private String content;
     private Timestamp date;
-    private boolean isDeleted;
-    private boolean isHided;
-    private List<CommentDTO> children = new ArrayList<>();
+    private boolean isDeleted = false;
+    private boolean isHided = false;
 
     public Long getId() {
         return id;
@@ -61,24 +59,24 @@ public class CommentDTO {
         isHided = hided;
     }
 
-    public List<CommentDTO> getChildren() {
-        return children;
+    public Long getArticleId() {
+        return articleId;
     }
 
-    public void setChildren(List<CommentDTO> children) {
-        this.children = children;
+    public void setArticleId(Long articleId) {
+        this.articleId = articleId;
     }
 
     @Override
     public String toString() {
         return "CommentDTO{" +
                 "id=" + id +
+                ", articleId=" + articleId +
                 ", user=" + user +
                 ", content='" + content + '\'' +
                 ", date=" + date +
                 ", isDeleted=" + isDeleted +
                 ", isHided=" + isHided +
-                ", children=" + children +
                 '}';
     }
 }

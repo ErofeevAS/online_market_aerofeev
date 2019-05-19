@@ -7,7 +7,7 @@
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet author="alexei.st.erofeev@gmail.com" id="USER_TABLE_1">
-        <createTable tableName="users">
+        <createTable tableName="user">
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -39,7 +39,7 @@
     </changeSet>
 
     <changeSet author="alexei.st.erofeev@gmail.com" id="ROLE_TABLE_1">
-        <createTable tableName="roles">
+        <createTable tableName="role">
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -51,14 +51,14 @@
 
     <changeSet author="alexei.st.erofeev@gmail.com" id="USER_ROLE_ID_1">
         <addForeignKeyConstraint baseColumnNames="role_id"
-                                 baseTableName="users"
+                                 baseTableName="user"
                                  constraintName="fk_user_role_id"
                                  deferrable="false"
                                  initiallyDeferred="false"
                                  onDelete="NO ACTION"
                                  onUpdate="NO ACTION"
                                  referencedColumnNames="id"
-                                 referencedTableName="roles"/>
+                                 referencedTableName="role"/>
     </changeSet>
 
     <changeSet author="alexei.st.erofeev@gmail.com" id="ARTICLE_TABLE_1">
@@ -72,7 +72,10 @@
             <column name="user_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="content" type="varchar(500)">
+            <column name="short_content" type="varchar(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="content" type="varchar(1000)">
                 <constraints nullable="false"/>
             </column>
             <column name="date" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
@@ -96,7 +99,7 @@
                                  onDelete="NO ACTION"
                                  onUpdate="NO ACTION"
                                  referencedColumnNames="id"
-                                 referencedTableName="users"/>
+                                 referencedTableName="user"/>
     </changeSet>
 
     <changeSet author="alexei.st.erofeev@gmail.com" id="COMMENT_TABLE_1">
@@ -107,7 +110,7 @@
             <column name="user_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="content" type="varchar(500)">
+            <column name="content" type="varchar(200)">
                 <constraints nullable="false"/>
             </column>
             <column name="date" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
@@ -131,7 +134,7 @@
                                  onDelete="NO ACTION"
                                  onUpdate="NO ACTION"
                                  referencedColumnNames="id"
-                                 referencedTableName="users"/>
+                                 referencedTableName="user"/>
     </changeSet>
 
     <changeSet author="alexei.st.erofeev@gmail.com" id="ARTICLE_COMMENT_TABLE_1">
@@ -171,7 +174,7 @@
     </changeSet>
 
     <changeSet author="alexei.st.erofeev@gmail.com" id="REVIEW_TABLE_1">
-        <createTable tableName="reviews">
+        <createTable tableName="review">
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -195,14 +198,14 @@
 
     <changeSet author="alexei.st.erofeev@gmail.com" id="REVIEW_USER_ID_1">
         <addForeignKeyConstraint baseColumnNames="user_id"
-                                 baseTableName="reviews"
+                                 baseTableName="review"
                                  constraintName="fk_review_user_id"
                                  deferrable="false"
                                  initiallyDeferred="false"
                                  onDelete="NO ACTION"
                                  onUpdate="NO ACTION"
                                  referencedColumnNames="id"
-                                 referencedTableName="users"/>
+                                 referencedTableName="user"/>
     </changeSet>
 
 </databaseChangeLog>

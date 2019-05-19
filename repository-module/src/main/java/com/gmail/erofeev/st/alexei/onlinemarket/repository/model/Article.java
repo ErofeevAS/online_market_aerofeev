@@ -3,6 +3,7 @@ package com.gmail.erofeev.st.alexei.onlinemarket.repository.model;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -10,16 +11,19 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "article")
-@SQLDelete(sql = "UPDATE articles SET deleted = '1' WHERE id = ?")
+@SQLDelete(sql = "UPDATE article SET deleted = true WHERE id = ?")
 @Where(clause = "deleted = '0'")
 public class Article {
     @Id
@@ -30,7 +34,9 @@ public class Article {
     private String title;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private User user = new User();
+    @Column(name = "short_content")
+    private String shortContent;
     @Column
     private String content;
     @Column
@@ -40,7 +46,10 @@ public class Article {
     @Column(name = "hided")
     private boolean isHided;
     @OneToMany(mappedBy = "article", fetch = FetchType.LAZY)
+    @OrderBy("date")
     private List<Comment> comments = new ArrayList<>();
+    @ManyToMany(mappedBy = "articles", cascade = CascadeType.ALL)
+    private List<Tag> tags = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -104,6 +113,40 @@ public class Article {
 
     public void setComments(List<Comment> comments) {
         this.comments = comments;
+    }
+
+    public String getShortContent() {
+        return shortContent;
+    }
+
+    public void setShortContent(String shortContent) {
+        this.shortContent = shortContent;
+    }
+
+    public List<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Article article = (Article) o;
+        return isDeleted == article.isDeleted &&
+                isHided == article.isHided &&
+                id.equals(article.id) &&
+                Objects.equals(title, article.title) &&
+                Objects.equals(content, article.content) &&
+                Objects.equals(date, article.date);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, content, date, isDeleted, isHided);
     }
 
     @Override

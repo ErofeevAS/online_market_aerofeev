@@ -6,32 +6,54 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet author="alexei.st.erofeev@gmail.com" id="COMMENT_POPULATE_ID_2">
-        <sql dbms="mysql"
-             endDelimiter="\nGO"
-             splitStatements="true"
-             stripComments="true">update  comment set comment_parent_id='1'  where id in('2','4');
-        </sql>
-
-        <sql dbms="mysql"
-             endDelimiter="\nGO"
-             splitStatements="true"
-             stripComments="true">update  comment set comment_parent_id='2'  where id in('3');
-        </sql>
+    <changeSet author="alexei.st.erofeev@gmail.com" id="TAG_POPULATE_ID_1">
+        <insert tableName="tag">
+            <column name="id" value="1"/>
+            <column name="name" value="test_tag"/>
+        </insert>
+        <insert tableName="tag">
+            <column name="id" value="2"/>
+            <column name="name" value="politic"/>
+        </insert>
+        <insert tableName="tag">
+            <column name="id" value="3"/>
+            <column name="name" value="world"/>
+        </insert>
+        <insert tableName="tag">
+            <column name="id" value="4"/>
+            <column name="name" value="humor"/>
+        </insert>
     </changeSet>
 
-    <changeSet author="alexei.st.erofeev@gmail.com" id="COMMENT_CHILD_COMMENT_ID_POPULATE_ID_2">
-        <insert tableName="comment_child_comment">
-            <column name="comment_id" value="1"/>
-            <column name="child_comment_id" value="2"/>
+    <changeSet author="alexei.st.erofeev@gmail.com" id="ARTICLE_TAG_POPULATE_ID_1">
+        <insert tableName="article_tag">
+            <column name="article_id" value="1"/>
+            <column name="tag_id" value="1"/>
         </insert>
-        <insert tableName="comment_child_comment">
-            <column name="comment_id" value="1"/>
-            <column name="child_comment_id" value="4"/>
+        <insert tableName="article_tag">
+            <column name="article_id" value="1"/>
+            <column name="tag_id" value="2"/>
         </insert>
-        <insert tableName="comment_child_comment">
-            <column name="comment_id" value="2"/>
-            <column name="child_comment_id" value="3"/>
+        <insert tableName="article_tag">
+            <column name="article_id" value="1"/>
+            <column name="tag_id" value="3"/>
+        </insert>
+        <insert tableName="article_tag">
+            <column name="article_id" value="1"/>
+            <column name="tag_id" value="4"/>
+        </insert>
+
+        <insert tableName="article_tag">
+            <column name="article_id" value="2"/>
+            <column name="tag_id" value="2"/>
+        </insert>
+        <insert tableName="article_tag">
+            <column name="article_id" value="3"/>
+            <column name="tag_id" value="3"/>
+        </insert>
+        <insert tableName="article_tag">
+            <column name="article_id" value="4"/>
+            <column name="tag_id" value="4"/>
         </insert>
 
     </changeSet>

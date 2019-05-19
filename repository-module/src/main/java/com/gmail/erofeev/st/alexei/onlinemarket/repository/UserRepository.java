@@ -5,9 +5,7 @@ import com.gmail.erofeev.st.alexei.onlinemarket.repository.model.User;
 import java.sql.Connection;
 import java.util.List;
 
-public interface UserRepository extends GenericRepository {
-    List<User> getUsers(Connection connection, int offset, int amount);
-
+public interface UserRepository extends GenericRepository<Long, User> {
     User save(Connection connection, User user);
 
     User findUserByEmail(Connection connection, String email);
@@ -18,5 +16,5 @@ public interface UserRepository extends GenericRepository {
 
     void update(Connection connection, String email, String encodePassword);
 
-    User findUserById(Connection connection, Long id);
+    User findByEmail(String email);
 }

@@ -1,9 +1,11 @@
 package com.gmail.erofeev.st.alexei.onlinemarket.repository.model;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -15,6 +17,8 @@ import java.util.Objects;
 
 @Entity
 @Table
+@SQLDelete(sql = "UPDATE comment SET deleted = '1' WHERE id = ?")
+@Where(clause = "deleted = '0'")
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +26,7 @@ public class Comment {
     private Long id;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private User user = new User();
     @Column
     private String content;
     @Column
@@ -33,11 +37,7 @@ public class Comment {
     private boolean isHided;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "article_id", nullable = false)
-    private Article article;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "comment_parent_id",
-            foreignKey = @ForeignKey(name = "fk_id_comment_parent_id"))
-    private Comment parent;
+    private Article article = new Article();
 
     public Long getId() {
         return id;
@@ -95,25 +95,21 @@ public class Comment {
         this.article = article;
     }
 
-    public Comment getParent() {
-        return parent;
-    }
-
-    public void setParent(Comment parent) {
-        this.parent = parent;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Comment comment = (Comment) o;
-        return Objects.equals(id, comment.id);
+        return isDeleted == comment.isDeleted &&
+                isHided == comment.isHided &&
+                id.equals(comment.id) &&
+                Objects.equals(content, comment.content) &&
+                Objects.equals(date, comment.date);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(id, content, date, isDeleted, isHided);
     }
 
     @Override
@@ -124,8 +120,7 @@ public class Comment {
                 ", content='" + content + '\'' +
                 ", date=" + date +
                 ", isDeleted=" + isDeleted +
-                ", isHided=" + isHided +
-//                ", children=" + children +
+                ", isHided=" + isHided +//
                 '}';
     }
 }

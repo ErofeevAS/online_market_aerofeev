@@ -8,11 +8,13 @@ public class ArticleDTO {
     private Long id;
     private String title;
     private UserDTO user;
+    private String shortContent;
     private String content;
     private Timestamp date;
-    private boolean isDeleted;
-    private boolean isHided;
+    private boolean isDeleted = false;
+    private boolean isHided = false;
     private List<CommentDTO> comments = new ArrayList<>();
+    private List<TagDTO> tags = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -76,6 +78,22 @@ public class ArticleDTO {
 
     public void setComments(List<CommentDTO> comments) {
         this.comments = comments;
+    }
+
+    public String getShortContent() {
+        return shortContent;
+    }
+
+    public void setShortContent(String shortContent) {
+        this.shortContent = shortContent;
+    }
+
+    public List<TagDTO> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<TagDTO> tags) {
+        this.tags = tags;
     }
 
     @Override
