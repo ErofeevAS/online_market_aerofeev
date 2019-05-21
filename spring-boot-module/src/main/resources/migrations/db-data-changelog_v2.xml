@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet author="alexei.st.erofeev@gmail.com" id="TAG_POPULATE_ID_1">
+        <insert tableName="tag">
+            <column name="id" value="1"/>
+            <column name="name" value="test_tag"/>
+        </insert>
+        <insert tableName="tag">
+            <column name="id" value="2"/>
+            <column name="name" value="politic"/>
+        </insert>
+        <insert tableName="tag">
+            <column name="id" value="3"/>
+            <column name="name" value="world"/>
+        </insert>
+        <insert tableName="tag">
+            <column name="id" value="4"/>
+            <column name="name" value="humor"/>
+        </insert>
+    </changeSet>
+
+    <changeSet author="alexei.st.erofeev@gmail.com" id="ARTICLE_TAG_POPULATE_ID_1">
+        <insert tableName="article_tag">
+            <column name="article_id" value="1"/>
+            <column name="tag_id" value="1"/>
+        </insert>
+        <insert tableName="article_tag">
+            <column name="article_id" value="1"/>
+            <column name="tag_id" value="2"/>
+        </insert>
+        <insert tableName="article_tag">
+            <column name="article_id" value="1"/>
+            <column name="tag_id" value="3"/>
+        </insert>
+        <insert tableName="article_tag">
+            <column name="article_id" value="1"/>
+            <column name="tag_id" value="4"/>
+        </insert>
+
+        <insert tableName="article_tag">
+            <column name="article_id" value="2"/>
+            <column name="tag_id" value="2"/>
+        </insert>
+        <insert tableName="article_tag">
+            <column name="article_id" value="3"/>
+            <column name="tag_id" value="3"/>
+        </insert>
+        <insert tableName="article_tag">
+            <column name="article_id" value="4"/>
+            <column name="tag_id" value="4"/>
+        </insert>
+
+    </changeSet>
+
+
+
+</databaseChangeLog>

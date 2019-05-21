@@ -4,5 +4,5 @@ public enum RolesNameEnum {
     ROLE_Administrator,
     ROLE_Sale,
     ROLE_Customer,
-    ROLE_SECURE_API
+    ROLE_SECURE_REST_API
 }

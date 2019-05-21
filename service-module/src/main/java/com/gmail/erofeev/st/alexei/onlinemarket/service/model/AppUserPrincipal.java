@@ -18,6 +18,10 @@ public class AppUserPrincipal implements UserDetails {
         grantedAuthorities.add(new SimpleGrantedAuthority(user.getRole().getName()));
     }
 
+    public UserDTO getUser() {
+        return user;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return grantedAuthorities;

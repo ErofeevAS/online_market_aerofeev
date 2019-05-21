@@ -8,44 +8,23 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.Query;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class UserRepositoryImpl extends GenericRepositoryImpl implements UserRepository {
+public class UserRepositoryImpl extends GenericRepositoryImpl<Long, User> implements UserRepository {
     private static final Logger logger = LoggerFactory.getLogger(UserRepositoryImpl.class);
 
     @Override
-    public List<User> getUsers(Connection connection, int offset, int amount) {
-        List<User> users = new ArrayList<>();
-        String sql = "SELECT users.id as user_id,lastname,firstname,patronymic,email,`password`,deleted, roles.id as role_id,roles.`name` as role_name" +
-                " FROM users" +
-                " JOIN roles ON users.role_id = roles.id where users.deleted=false ORDER BY lastname,firstname,patronymic LIMIT ?,?";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setInt(1, offset);
-            preparedStatement.setInt(2, amount);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                User user = getUser(resultSet);
-                users.add(user);
-            }
-            return users;
-        } catch (SQLException e) {
-            logger.error(e.getMessage(), e);
-            throw new RepositoryException("Can't get users", e);
-        }
-    }
-
-    @Override
     public User findUserByEmail(Connection connection, String email) {
-        String sql = "SELECT users.id as user_id,lastname,firstname,patronymic,email,password,deleted, roles.id as role_id,roles.name as role_name" +
-                " FROM users" +
-                " JOIN roles ON users.role_id = roles.id   where users.email=?";
+        String sql = "SELECT user.id as user_id,lastname,firstname,patronymic,email,password,deleted, role.id as role_id,role.name as role_name" +
+                " FROM user" +
+                " JOIN role ON user.role_id = role.id   where user.email=?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, email);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -64,7 +43,7 @@ public class UserRepositoryImpl extends GenericRepositoryImpl implements UserRep
     @Override
     public void delete(Connection connection, List<Long> usersIdForDelete) {
         String subSql = getSQLParameters(usersIdForDelete.size());
-        String sql = "UPDATE users SET deleted=true WHERE id IN " + subSql + " and undeletable=false ";
+        String sql = "UPDATE user SET deleted=true WHERE id IN " + subSql + " and undeletable=false ";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             int counter = 1;
             for (Long id : usersIdForDelete) {
@@ -80,7 +59,7 @@ public class UserRepositoryImpl extends GenericRepositoryImpl implements UserRep
 
     @Override
     public void update(Connection connection, Long id, Long roleId) {
-        String sql = "UPDATE users SET role_id=? WHERE id=? and undeletable=false ";
+        String sql = "UPDATE user SET role_id=? WHERE id=? and undeletable=false ";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setLong(1, roleId);
             preparedStatement.setLong(2, id);
@@ -93,7 +72,7 @@ public class UserRepositoryImpl extends GenericRepositoryImpl implements UserRep
 
     @Override
     public void update(Connection connection, String email, String encodePassword) {
-        String sql = "UPDATE users SET password=? WHERE email=? and undeletable=false ";
+        String sql = "UPDATE user SET password=? WHERE email=? and undeletable=false ";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, encodePassword);
             preparedStatement.setString(2, email);
@@ -105,30 +84,17 @@ public class UserRepositoryImpl extends GenericRepositoryImpl implements UserRep
     }
 
     @Override
-    public User findUserById(Connection connection, Long id) {
-        String sql =
-                "SELECT users.id as user_id,lastname,firstname,patronymic,email,password,deleted, roles.id as role_id,roles.name as role_name" +
-                        " FROM users" +
-                        " JOIN roles ON users.role_id = roles.id   where users.id=?";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setLong(1, id);
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                if (resultSet.next()) {
-                    return getUser(resultSet);
-                } else {
-                    return null;
-                }
-            }
-        } catch (SQLException e) {
-            logger.error(e.getMessage(), e);
-            throw new RepositoryException(String.format("Can't find user with id: %s :", id), e);
-        }
+    public User findByEmail(String email) {
+        String query = "select u from " + entityClass.getName() + " u where u.email = :email";
+        Query q = entityManager.createQuery(query, User.class);
+        q.setParameter("email", email);
+        return (User) q.getSingleResult();
     }
 
     @Override
     public User save(Connection connection, User user) {
         String email = user.getEmail();
-        String sql = "INSERT INTO users (lastname,firstname,patronymic,email,password,role_id) values(?,?,?,?,?,?)";
+        String sql = "INSERT INTO user (lastname,firstname,patronymic,email,password,role_id) values(?,?,?,?,?,?)";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, user.getLastName());
             preparedStatement.setString(2, user.getFirstName());

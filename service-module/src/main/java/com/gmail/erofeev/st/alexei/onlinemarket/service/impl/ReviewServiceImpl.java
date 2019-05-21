@@ -5,6 +5,7 @@ import com.gmail.erofeev.st.alexei.onlinemarket.repository.model.Review;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.ReviewService;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.converter.ReviewConverter;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.exception.ServiceException;
+import com.gmail.erofeev.st.alexei.onlinemarket.service.model.PageDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ReviewDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ReviewsListWrapper;
 import org.slf4j.Logger;
@@ -12,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -31,62 +33,25 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public Integer getAmount(int amountOfDisplayedReview) {
-        try (Connection connection = reviewRepository.getConnection()) {
-            connection.setAutoCommit(false);
-            try {
-                Integer amount = reviewRepository.getAmount(connection, "reviews");
-                amount = (Math.round(amount / amountOfDisplayedReview) + 1);
-                connection.commit();
-                return amount;
-            } catch (SQLException e) {
-                connection.rollback();
-                logger.error(e.getMessage(), e);
-                throw new ServiceException("Can't get amount of reviews from repository.", e);
-            }
-        } catch (SQLException e) {
-            logger.error(e.getMessage(), e);
-            throw new ServiceException("Can't establish connection to database.", e);
-        }
+    @Transactional
+    public PageDTO<ReviewDTO> getReviews(int page, int amount) {
+        Integer amountOfEntity = reviewRepository.getAmountOfEntity();
+        int maxPages = getMaxPages(amount, amountOfEntity);
+        int offset = getOffset(page, maxPages, amount);
+        List<Review> reviews = reviewRepository.getEntities(offset, amount);
+        List<ReviewDTO> reviewDTOList = reviewConverter.toListDTO(reviews);
+        PageDTO<ReviewDTO> pageDTO = new PageDTO<>();
+        pageDTO.setList(reviewDTOList);
+        pageDTO.setAmountOfPages(maxPages);
+        return pageDTO;
     }
 
     @Override
-    public List<ReviewDTO> getReviews(int page, int amount) {
-        try (Connection connection = reviewRepository.getConnection()) {
-            connection.setAutoCommit(false);
-            try {
-                int offset = (page - 1) * amount;
-                List<Review> reviews = reviewRepository.getReviews(connection, offset, amount);
-                List<ReviewDTO> reviewDTOList = reviewConverter.toListDTO(reviews);
-                connection.commit();
-                return reviewDTOList;
-            } catch (SQLException e) {
-                connection.rollback();
-                logger.error(e.getMessage(), e);
-                throw new ServiceException("Can't get reviews from repository.", e);
-            }
-        } catch (SQLException e) {
-            logger.error(e.getMessage(), e);
-            throw new ServiceException("Can't establish connection to database.", e);
-        }
-    }
-
-    @Override
+    @Transactional
     public void delete(Long id) {
-        try (Connection connection = reviewRepository.getConnection()) {
-            connection.setAutoCommit(false);
-            try {
-                reviewRepository.delete(connection, id);
-                connection.commit();
-            } catch (SQLException e) {
-                connection.rollback();
-                logger.error(e.getMessage(), e);
-                throw new ServiceException(String.format("Can't delete review with id: %s :", id), e);
-            }
-        } catch (SQLException e) {
-            logger.error(e.getMessage(), e);
-            throw new ServiceException("Can't establish connection to database.", e);
-        }
+        Review review = reviewRepository.findById(id);
+        review.setDeleted(true);
+        reviewRepository.merge(review);
     }
 
     @Override
@@ -95,7 +60,7 @@ public class ReviewServiceImpl implements ReviewService {
         try (Connection connection = reviewRepository.getConnection()) {
             connection.setAutoCommit(false);
             try {
-                reviewRepository.updateHidedFields(connection, mapIdHided);
+                reviewRepository.updateHiddenFieldsByIds(connection, mapIdHided);
                 connection.commit();
             } catch (SQLException e) {
                 connection.rollback();
@@ -112,12 +77,23 @@ public class ReviewServiceImpl implements ReviewService {
         Map<Long, Boolean> reviewIdHidedMap = new HashMap<>();
         for (ReviewDTO review : reviewsDTO) {
             Long id = review.getId();
-            Boolean hided = review.getHided();
+            Boolean hided = review.getHidden();
             if (hided == null) {
                 hided = false;
             }
             reviewIdHidedMap.put(id, hided);
         }
         return reviewIdHidedMap;
+    }
+
+    private int getMaxPages(int amount, Integer amountOfEntity) {
+        return Math.round(amountOfEntity / amount) + 1;
+    }
+
+    private int getOffset(int page, int maxPages, int amount) {
+        if (page > maxPages) {
+            page = maxPages;
+        }
+        return (page - 1) * amount;
     }
 }

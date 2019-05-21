@@ -1,10 +1,15 @@
 package com.gmail.erofeev.st.alexei.onlinemarket.controller;
 
-import com.gmail.erofeev.st.alexei.onlinemarket.controller.util.PageSizeValidator;
 import com.gmail.erofeev.st.alexei.onlinemarket.controller.util.Paginator;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.UserService;
+import com.gmail.erofeev.st.alexei.onlinemarket.service.model.AppUserPrincipal;
+import com.gmail.erofeev.st.alexei.onlinemarket.service.model.PageDTO;
+import com.gmail.erofeev.st.alexei.onlinemarket.service.model.PasswordDTO;
+import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ProfileViewDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,26 +26,20 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
-    private final Paginator paginator;
-    private final PageSizeValidator pageSizeValidator;
 
     @Autowired
-    public UserController(UserService userService, Paginator paginator, PageSizeValidator pageSizeValidator) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.paginator = paginator;
-        this.pageSizeValidator = pageSizeValidator;
     }
 
     @GetMapping("/users")
     public String getUsers(Model model,
                            @RequestParam(defaultValue = "1", required = false) String page,
                            @RequestParam(defaultValue = "10", required = false) String size) {
-        int intPage = pageSizeValidator.validatePage(page);
-        int intSize = pageSizeValidator.validateSize(size);
-        Integer maxPage = userService.getAmount(intSize);
-        paginator.validate(intPage, maxPage, intSize);
-        List<UserDTO> users = userService.getUsers(paginator.getPage(), paginator.getSize());
-        model.addAttribute("users", users);
+        Paginator paginator = new Paginator(page, size);
+        PageDTO<UserDTO> pageDTO = userService.findAll(paginator.getPage(), paginator.getSize());
+        paginator.setMaxPage(pageDTO.getAmountOfPages());
+        model.addAttribute("users", pageDTO.getList());
         model.addAttribute("paginator", paginator);
         model.addAttribute("updatedUser", new UserDTO());
         return "users";
@@ -86,6 +85,39 @@ public class UserController {
     public String changePassword(@RequestParam Long userId) {
         UserDTO userById = userService.findUserById(userId);
         userService.changePassword(userById);
+        return "redirect:/users";
+    }
+
+    @GetMapping("/users/{id}/profile")
+    public String getProfile(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        AppUserPrincipal principal = (AppUserPrincipal) authentication.getPrincipal();
+        Long id = principal.getUser().getId();
+        ProfileViewDTO profileView = userService.getProfileView(id);
+        model.addAttribute("profileView", profileView);
+        PasswordDTO passwordDTO = new PasswordDTO();
+        passwordDTO.setId(id);
+        model.addAttribute("passwordDTO", passwordDTO);
+        return "profile";
+    }
+
+    @PostMapping("/users/{id}/profile")
+    public String updateProfile(@PathVariable Long id,
+                                @ModelAttribute("profileView") @Valid ProfileViewDTO profileView,
+                                BindingResult bindingResult,
+                                Model model) {
+        if (bindingResult.hasErrors()) {
+            return "profile";
+        }
+        userService.updateProfile(id, profileView);
+        model.addAttribute("info", "profile was update");
+        return "profile";
+    }
+
+    @PostMapping("/users/{id}/changepassword")
+    public String changePasswordForUser(@PathVariable Long id,
+                                        @ModelAttribute("passwordDTO") @Valid PasswordDTO passwordDTO) {
+        userService.changeOldPassword(id, passwordDTO);
         return "redirect:/users";
     }
 }

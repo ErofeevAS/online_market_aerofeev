@@ -23,9 +23,9 @@ public class PasswordServiceImpl implements PasswordService {
     @Override
     public String generatePassword(int length) {
         char[] pattern = (charactersPatter + digitsPatter).toCharArray();
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         for (int i = 0; i < length; i++) {
-            char randomChar = pattern[secureRandom.nextInt(pattern.length + 1)];
+            char randomChar = pattern[secureRandom.nextInt(pattern.length)];
             buffer.append(randomChar);
         }
         return buffer.toString();

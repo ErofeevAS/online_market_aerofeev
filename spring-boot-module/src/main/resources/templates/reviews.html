@@ -44,9 +44,9 @@
                            th:value="${review.id}" form="hideForm"/>
 
                     <input type="checkbox"
-                           th:checked="${review.hided}"
-                           th:value="${review.hided}"
-                           th:field="${reviewsChanges.reviews[__${number.index}__].hided}"
+                           th:checked="${review.hidden}"
+                           th:value="${review.hidden}"
+                           th:field="${reviewsChanges.reviews[__${number.index}__].hidden}"
                            form="hideForm"/>
                 </td>
             </form>
@@ -62,7 +62,7 @@
     </tfoot>
 </table>
 
-<div th:insert="~{fragments/paginator :: paginator(content='/reviews')}"></div>
+<div th:insert="~{fragments/paginator :: paginator(content='reviews')}"></div>
 <div th:insert="~{fragments/footer :: footer}"></div>
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"

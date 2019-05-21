@@ -12,18 +12,36 @@ public class Paginator {
     private int maxPage;
     private int size;
     private final List<String> droppedListValues = asList("2", "5", "10", "20");
+
     private String url;
 
-    public Paginator(int current, int maxPage, int size) {
-        this.setMaxPage(maxPage);
-        this.setPage(current);
-        this.setSize(size);
+    public Paginator(String stringPage, String stringSize) {
+        validatePage(stringPage);
+        validateSize(stringSize);
     }
 
-    public void validate(int current, int maxPage, int size) {
-        this.setMaxPage(maxPage);
-        this.setPage(current);
-        this.setSize(size);
+    public int validatePage(String stringPage) {
+        try {
+            page = Integer.parseInt(stringPage);
+        } catch (NumberFormatException e) {
+            page = 1;
+        }
+        if (page < 1) {
+            page = 1;
+        }
+        return page;
+    }
+
+    public int validateSize(String stringSize) {
+        try {
+            size = Integer.parseInt(stringSize);
+        } catch (NumberFormatException e) {
+            size = 10;
+        }
+        if (size > 100 || size < 1) {
+            size = 10;
+        }
+        return size;
     }
 
     public Paginator() {
@@ -34,9 +52,6 @@ public class Paginator {
     }
 
     public void setPage(int page) {
-        if (page > maxPage) {
-            page = maxPage;
-        }
         this.page = page;
     }
 

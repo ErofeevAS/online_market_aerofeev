@@ -45,4 +45,3 @@ public class RedirectControllerTest {
                 .andExpect(redirectedUrl("/login"));
     }
 }
-

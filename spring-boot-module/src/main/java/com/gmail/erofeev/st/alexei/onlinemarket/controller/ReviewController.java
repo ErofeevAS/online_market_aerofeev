@@ -1,8 +1,8 @@
 package com.gmail.erofeev.st.alexei.onlinemarket.controller;
 
-import com.gmail.erofeev.st.alexei.onlinemarket.controller.util.PageSizeValidator;
 import com.gmail.erofeev.st.alexei.onlinemarket.controller.util.Paginator;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.ReviewService;
+import com.gmail.erofeev.st.alexei.onlinemarket.service.model.PageDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ReviewDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ReviewsListWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,35 +14,24 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.List;
-
 @Controller
 public class ReviewController {
-
     private final ReviewService reviewService;
-    private final Paginator paginator;
-    private final PageSizeValidator pageSizeValidator;
 
     @Autowired
-    public ReviewController(ReviewService reviewService, Paginator paginator, PageSizeValidator pageSizeValidator) {
+    public ReviewController(ReviewService reviewService) {
         this.reviewService = reviewService;
-        this.paginator = paginator;
-        this.pageSizeValidator = pageSizeValidator;
     }
 
     @GetMapping("/reviews")
     public String getReviews(Model model,
                              @RequestParam(defaultValue = "1", required = false) String page,
-                             @RequestParam(defaultValue = "10", required = false) String size,
-                             HttpServletRequest request) {
-        int intPage = pageSizeValidator.validatePage(page);
-        int intSize = pageSizeValidator.validateSize(size);
-        Integer maxPage = reviewService.getAmount(intSize);
-        paginator.validate(intPage, maxPage, intSize);
+                             @RequestParam(defaultValue = "10", required = false) String size) {
+        Paginator paginator = new Paginator(page, size);
+        PageDTO<ReviewDTO> pageDTO = reviewService.getReviews(paginator.getPage(), paginator.getSize());
+        paginator.setMaxPage(pageDTO.getAmountOfPages());
         model.addAttribute("paginator", paginator);
-        List<ReviewDTO> reviews = reviewService.getReviews(paginator.getPage(), paginator.getSize());
-        ReviewsListWrapper reviewsChanges = new ReviewsListWrapper(reviews);
+        ReviewsListWrapper reviewsChanges = new ReviewsListWrapper(pageDTO.getList());
         model.addAttribute("reviewsChanges", reviewsChanges);
         return "reviews";
     }

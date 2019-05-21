@@ -7,17 +7,28 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.sql.DataSource;
+import java.lang.reflect.ParameterizedType;
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.List;
 
 @Repository
-public class GenericRepositoryImpl implements GenericRepository {
+public abstract class GenericRepositoryImpl<I, T> implements GenericRepository<I, T> {
     private static final Logger logger = LoggerFactory.getLogger(GenericRepositoryImpl.class);
     @Autowired
     private DataSource dataSource;
+    protected Class<T> entityClass;
+    @PersistenceContext
+    protected EntityManager entityManager;
+
+    public GenericRepositoryImpl() {
+        ParameterizedType genericSuperClass = (ParameterizedType) getClass().getGenericSuperclass();
+        this.entityClass = (Class<T>) genericSuperClass.getActualTypeArguments()[1];
+    }
 
     @Override
     public Connection getConnection() {
@@ -30,16 +41,45 @@ public class GenericRepositoryImpl implements GenericRepository {
     }
 
     @Override
-    public Integer getAmount(Connection connection, String tableName) {
-        String sql = "SELECT COUNT(*) FROM " + tableName + " WHERE deleted = false";
-        try (Statement statement = connection.createStatement()) {
-            try (ResultSet resultSet = statement.executeQuery(sql)) {
-                resultSet.next();
-                return resultSet.getInt(1);
-            }
-        } catch (SQLException e) {
-            logger.error(e.getMessage(), e);
-            throw new RepositoryException(String.format("Can't get amount of %s", tableName), e);
-        }
+    public void persist(T entity) {
+        entityManager.persist(entity);
+    }
+
+    @Override
+    public void merge(T entity) {
+        entityManager.merge(entity);
+    }
+
+    @Override
+    public void remove(T entity) {
+        entityManager.remove(entity);
+    }
+
+    @Override
+    public T findById(I id) {
+        return entityManager.find(entityClass, id);
+    }
+
+    @Override
+    public List<T> findAll() {
+        String query = "from " + entityClass.getName();
+        Query q = entityManager.createQuery(query);
+        return q.getResultList();
+    }
+
+    @Override
+    public Integer getAmountOfEntity() {
+        String query = "select count(e) from " + entityClass.getName() + " e";
+        Query q = entityManager.createQuery(query);
+        return ((Number) q.getSingleResult()).intValue();
+    }
+
+    @Override
+    public List<T> getEntities(Integer offset, Integer amount) {
+        String query = "from " + entityClass.getName() + " e";
+        Query q = entityManager.createQuery(query);
+        q.setFirstResult(offset);
+        q.setMaxResults(amount);
+        return q.getResultList();
     }
 }

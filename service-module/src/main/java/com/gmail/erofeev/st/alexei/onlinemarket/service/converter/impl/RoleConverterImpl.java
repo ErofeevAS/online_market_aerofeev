@@ -8,22 +8,21 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class RoleConverterImpl implements RoleConverter {
-    private final String ROLE_PREFIX = "ROLE_";
 
     @Override
     public RoleDTO toRoleDTO(Role role) {
         if (role != null) {
             Long roleId = role.getId();
-            String roleName = ROLE_PREFIX + role.getName();
+            String roleName = role.getName();
             return new RoleDTO(roleId, roleName);
         }
-        return null;
+        return new RoleDTO();
     }
 
     @Override
     public Role fromRoleDTO(RoleDTO role) {
         Long roleId = role.getId();
-        String roleName = role.getName().split(ROLE_PREFIX)[1];
+        String roleName = role.getName();
         return new Role(roleId, roleName);
     }
 }

@@ -7,7 +7,7 @@
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet author="alexei.st.erofeev@gmail.com" id="USER_TABLE_1">
-        <createTable tableName="users">
+        <createTable tableName="user">
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -39,7 +39,7 @@
     </changeSet>
 
     <changeSet author="alexei.st.erofeev@gmail.com" id="ROLE_TABLE_1">
-        <createTable tableName="roles">
+        <createTable tableName="role">
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -51,18 +51,18 @@
 
     <changeSet author="alexei.st.erofeev@gmail.com" id="USER_ROLE_ID_1">
         <addForeignKeyConstraint baseColumnNames="role_id"
-                                 baseTableName="users"
+                                 baseTableName="user"
                                  constraintName="fk_user_role_id"
                                  deferrable="false"
                                  initiallyDeferred="false"
                                  onDelete="NO ACTION"
                                  onUpdate="NO ACTION"
                                  referencedColumnNames="id"
-                                 referencedTableName="roles"/>
+                                 referencedTableName="role"/>
     </changeSet>
 
     <changeSet author="alexei.st.erofeev@gmail.com" id="ARTICLE_TABLE_1">
-        <createTable tableName="articles">
+        <createTable tableName="article">
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -72,7 +72,10 @@
             <column name="user_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="content" type="varchar(500)">
+            <column name="short_content" type="varchar(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="content" type="varchar(1000)">
                 <constraints nullable="false"/>
             </column>
             <column name="date" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
@@ -81,7 +84,7 @@
             <column defaultValueBoolean="false" name="deleted" type="boolean">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueBoolean="false" name="hided" type="boolean">
+            <column defaultValueBoolean="false" name="hidden" type="boolean">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -89,25 +92,25 @@
 
     <changeSet author="alexei.st.erofeev@gmail.com" id="ARTICLE_USER_ID_1">
         <addForeignKeyConstraint baseColumnNames="user_id"
-                                 baseTableName="articles"
+                                 baseTableName="article"
                                  constraintName="fk_article_user_id"
                                  deferrable="false"
                                  initiallyDeferred="false"
                                  onDelete="NO ACTION"
                                  onUpdate="NO ACTION"
                                  referencedColumnNames="id"
-                                 referencedTableName="users"/>
+                                 referencedTableName="user"/>
     </changeSet>
 
     <changeSet author="alexei.st.erofeev@gmail.com" id="COMMENT_TABLE_1">
-        <createTable tableName="comments">
+        <createTable tableName="comment">
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="user_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="content" type="varchar(500)">
+            <column name="content" type="varchar(200)">
                 <constraints nullable="false"/>
             </column>
             <column name="date" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
@@ -116,7 +119,7 @@
             <column defaultValueBoolean="false" name="deleted" type="boolean">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueBoolean="false" name="hided" type="boolean">
+            <column defaultValueBoolean="false" name="hidden" type="boolean">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -124,18 +127,18 @@
 
     <changeSet author="alexei.st.erofeev@gmail.com" id="COMMENT_USER_ID_1">
         <addForeignKeyConstraint baseColumnNames="user_id"
-                                 baseTableName="comments"
+                                 baseTableName="comment"
                                  constraintName="fk_comment_user_id"
                                  deferrable="false"
                                  initiallyDeferred="false"
                                  onDelete="NO ACTION"
                                  onUpdate="NO ACTION"
                                  referencedColumnNames="id"
-                                 referencedTableName="users"/>
+                                 referencedTableName="user"/>
     </changeSet>
 
-    <changeSet author="alexei.st.erofeev@gmail.com" id="ARTICLE_COMMENTS_TABLE_1">
-        <createTable tableName="articles_comments">
+    <changeSet author="alexei.st.erofeev@gmail.com" id="ARTICLE_COMMENT_TABLE_1">
+        <createTable tableName="article_comment">
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -150,28 +153,28 @@
 
     <changeSet author="alexei.st.erofeev@gmail.com" id="ARTICLE_COMMENT_ID_1">
         <addForeignKeyConstraint baseColumnNames="article_id"
-                                 baseTableName="articles_comments"
+                                 baseTableName="article_comment"
                                  constraintName="fk_article_comment_id"
                                  deferrable="false"
                                  initiallyDeferred="false"
                                  onDelete="NO ACTION"
                                  onUpdate="NO ACTION"
                                  referencedColumnNames="id"
-                                 referencedTableName="articles"/>
+                                 referencedTableName="article"/>
 
         <addForeignKeyConstraint baseColumnNames="comment_id"
-                                 baseTableName="articles_comments"
+                                 baseTableName="article_comment"
                                  constraintName="fk_comment_article_id"
                                  deferrable="false"
                                  initiallyDeferred="false"
                                  onDelete="NO ACTION"
                                  onUpdate="NO ACTION"
                                  referencedColumnNames="id"
-                                 referencedTableName="comments"/>
+                                 referencedTableName="comment"/>
     </changeSet>
 
     <changeSet author="alexei.st.erofeev@gmail.com" id="REVIEW_TABLE_1">
-        <createTable tableName="reviews">
+        <createTable tableName="review">
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -187,7 +190,7 @@
             <column defaultValueBoolean="false" name="deleted" type="boolean">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueBoolean="false" name="hided" type="boolean">
+            <column defaultValueBoolean="false" name="hidden" type="boolean">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -195,14 +198,14 @@
 
     <changeSet author="alexei.st.erofeev@gmail.com" id="REVIEW_USER_ID_1">
         <addForeignKeyConstraint baseColumnNames="user_id"
-                                 baseTableName="reviews"
+                                 baseTableName="review"
                                  constraintName="fk_review_user_id"
                                  deferrable="false"
                                  initiallyDeferred="false"
                                  onDelete="NO ACTION"
                                  onUpdate="NO ACTION"
                                  referencedColumnNames="id"
-                                 referencedTableName="users"/>
+                                 referencedTableName="user"/>
     </changeSet>
 
 </databaseChangeLog>

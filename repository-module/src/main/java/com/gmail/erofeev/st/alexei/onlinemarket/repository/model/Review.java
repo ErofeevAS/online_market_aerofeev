@@ -1,14 +1,40 @@
 package com.gmail.erofeev.st.alexei.onlinemarket.repository.model;
 
-import java.sql.Timestamp;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import java.sql.Timestamp;
+import java.util.Objects;
+
+@Entity
+@Table
+@SQLDelete(sql = "UPDATE review SET deleted = '1' WHERE id = ?")
+@Where(clause = "deleted = '0'")
 public class Review {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column
     private Long id;
-    private User user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user = new User();
+    @Column
     private String content;
+    @Column
     private Timestamp date;
+    @Column
     private Boolean deleted;
-    private Boolean hided;
+    @Column
+    private Boolean hidden;
 
     public Review() {
     }
@@ -16,7 +42,7 @@ public class Review {
     public Review(Long id, Boolean deleted, Boolean hided) {
         this.id = id;
         this.deleted = deleted;
-        this.hided = hided;
+        this.hidden = hided;
     }
 
     public Review(Long id, User user, String content, Timestamp date, boolean deleted, boolean hided) {
@@ -25,7 +51,7 @@ public class Review {
         this.content = content;
         this.date = date;
         this.deleted = deleted;
-        this.hided = hided;
+        this.hidden = hided;
     }
 
     public Long getId() {
@@ -68,14 +94,30 @@ public class Review {
         this.deleted = deleted;
     }
 
-    public Boolean getHided() {
-        return hided;
+    public Boolean getHidden() {
+        return hidden;
     }
 
-    public void setHided(Boolean hided) {
-        this.hided = hided;
+    public void setHidden(Boolean hidden) {
+        this.hidden = hidden;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Review review = (Review) o;
+        return id.equals(review.id) &&
+                Objects.equals(content, review.content) &&
+                Objects.equals(date, review.date) &&
+                Objects.equals(deleted, review.deleted) &&
+                Objects.equals(hidden, review.hidden);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, content, date, deleted, hidden);
+    }
 
     @Override
     public String toString() {
@@ -85,9 +127,7 @@ public class Review {
                 ", content='" + content + '\'' +
                 ", date=" + date +
                 ", deleted=" + deleted +
-                ", hided=" + hided +
+                ", hidden=" + hidden +
                 '}';
     }
 }
-
-
