@@ -33,8 +33,8 @@ public class Comment {
     private Timestamp date;
     @Column(name = "deleted")
     private boolean isDeleted;
-    @Column(name = "hided")
-    private boolean isHided;
+    @Column(name = "hidden")
+    private boolean isHidden;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "article_id", nullable = false)
     private Article article = new Article();
@@ -79,12 +79,12 @@ public class Comment {
         isDeleted = deleted;
     }
 
-    public boolean isHided() {
-        return isHided;
+    public boolean isHidden() {
+        return isHidden;
     }
 
-    public void setHided(boolean hided) {
-        isHided = hided;
+    public void setHidden(boolean hidden) {
+        isHidden = hidden;
     }
 
     public Article getArticle() {
@@ -101,7 +101,7 @@ public class Comment {
         if (o == null || getClass() != o.getClass()) return false;
         Comment comment = (Comment) o;
         return isDeleted == comment.isDeleted &&
-                isHided == comment.isHided &&
+                isHidden == comment.isHidden &&
                 id.equals(comment.id) &&
                 Objects.equals(content, comment.content) &&
                 Objects.equals(date, comment.date);
@@ -109,7 +109,7 @@ public class Comment {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, content, date, isDeleted, isHided);
+        return Objects.hash(id, content, date, isDeleted, isHidden);
     }
 
     @Override
@@ -120,7 +120,7 @@ public class Comment {
                 ", content='" + content + '\'' +
                 ", date=" + date +
                 ", isDeleted=" + isDeleted +
-                ", isHided=" + isHided +//
+                ", isHidden=" + isHidden +//
                 '}';
     }
 }

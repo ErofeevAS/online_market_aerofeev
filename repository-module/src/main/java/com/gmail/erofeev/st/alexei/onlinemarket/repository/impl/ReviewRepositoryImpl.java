@@ -17,11 +17,11 @@ public class ReviewRepositoryImpl extends GenericRepositoryImpl<Long, Review> im
     private static final Logger logger = LoggerFactory.getLogger(ReviewRepositoryImpl.class);
 
     @Override
-    public void updateHidedFields(Connection connection, Map<Long, Boolean> mapIdHided) {
-        String sql = "UPDATE review SET hided = ? WHERE id = ? ";
+    public void updateHiddenFieldsByIds(Connection connection, Map<Long, Boolean> hiddenForId) {
+        String sql = "UPDATE review SET hidden = ? WHERE id = ? ";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            for (Long id : mapIdHided.keySet()) {
-                boolean hided = mapIdHided.get(id);
+            for (Long id : hiddenForId.keySet()) {
+                boolean hided = hiddenForId.get(id);
                 preparedStatement.setBoolean(1, hided);
                 preparedStatement.setLong(2, id);
                 preparedStatement.addBatch();
@@ -29,7 +29,7 @@ public class ReviewRepositoryImpl extends GenericRepositoryImpl<Long, Review> im
             preparedStatement.executeBatch();
         } catch (SQLException e) {
             logger.error(e.getMessage(), e);
-            throw new RepositoryException(String.format("Database exception during updating hided field in reviews with ids: %s", mapIdHided), e);
+            throw new RepositoryException(String.format("Database exception during updating hided field in reviews with ids: %s", hiddenForId), e);
         }
     }
 }

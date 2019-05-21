@@ -60,7 +60,7 @@ public class ReviewServiceImpl implements ReviewService {
         try (Connection connection = reviewRepository.getConnection()) {
             connection.setAutoCommit(false);
             try {
-                reviewRepository.updateHidedFields(connection, mapIdHided);
+                reviewRepository.updateHiddenFieldsByIds(connection, mapIdHided);
                 connection.commit();
             } catch (SQLException e) {
                 connection.rollback();
@@ -77,7 +77,7 @@ public class ReviewServiceImpl implements ReviewService {
         Map<Long, Boolean> reviewIdHidedMap = new HashMap<>();
         for (ReviewDTO review : reviewsDTO) {
             Long id = review.getId();
-            Boolean hided = review.getHided();
+            Boolean hided = review.getHidden();
             if (hided == null) {
                 hided = false;
             }

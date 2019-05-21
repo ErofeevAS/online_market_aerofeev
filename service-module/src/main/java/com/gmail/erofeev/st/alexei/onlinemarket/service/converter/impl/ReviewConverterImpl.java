@@ -28,14 +28,14 @@ public class ReviewConverterImpl implements ReviewConverter {
         String content = review.getContent();
         Timestamp date = review.getDate();
         Boolean deleted = review.getDeleted();
-        Boolean hided = review.getHided();
+        Boolean hided = review.getHidden();
         ReviewDTO reviewDTO = new ReviewDTO();
         reviewDTO.setId(id);
         reviewDTO.setContent(content);
         reviewDTO.setUser(user);
         reviewDTO.setDate(date);
         reviewDTO.setDeleted(deleted);
-        reviewDTO.setHided(hided);
+        reviewDTO.setHidden(hided);
         return reviewDTO;
     }
 
@@ -43,7 +43,7 @@ public class ReviewConverterImpl implements ReviewConverter {
     public Review fromDTO(ReviewDTO reviewDTO) {
         Long id = reviewDTO.getId();
         Boolean deleted = reviewDTO.getDeleted();
-        Boolean hided = reviewDTO.getHided();
+        Boolean hided = reviewDTO.getHidden();
         return new Review(id, deleted, hided);
     }
 

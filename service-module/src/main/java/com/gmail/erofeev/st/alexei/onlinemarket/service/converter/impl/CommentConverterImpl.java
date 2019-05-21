@@ -33,13 +33,13 @@ public class CommentConverterImpl implements CommentConverter {
         UserDTO userDTO = userConverter.toDTO(user);
         String content = comment.getContent();
         Timestamp date = comment.getDate();
-        boolean hided = comment.isHided();
+        boolean hided = comment.isHidden();
         CommentDTO commentDTO = new CommentDTO();
         commentDTO.setId(id);
         commentDTO.setContent(content);
         commentDTO.setUser(userDTO);
         commentDTO.setDate(date);
-        commentDTO.setHided(hided);
+        commentDTO.setHidden(hided);
         return commentDTO;
     }
 

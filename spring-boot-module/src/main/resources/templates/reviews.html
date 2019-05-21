@@ -44,9 +44,9 @@
                            th:value="${review.id}" form="hideForm"/>
 
                     <input type="checkbox"
-                           th:checked="${review.hided}"
-                           th:value="${review.hided}"
-                           th:field="${reviewsChanges.reviews[__${number.index}__].hided}"
+                           th:checked="${review.hidden}"
+                           th:value="${review.hidden}"
+                           th:field="${reviewsChanges.reviews[__${number.index}__].hidden}"
                            form="hideForm"/>
                 </td>
             </form>

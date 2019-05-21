@@ -34,7 +34,7 @@ public class Review {
     @Column
     private Boolean deleted;
     @Column
-    private Boolean hided;
+    private Boolean hidden;
 
     public Review() {
     }
@@ -42,7 +42,7 @@ public class Review {
     public Review(Long id, Boolean deleted, Boolean hided) {
         this.id = id;
         this.deleted = deleted;
-        this.hided = hided;
+        this.hidden = hided;
     }
 
     public Review(Long id, User user, String content, Timestamp date, boolean deleted, boolean hided) {
@@ -51,7 +51,7 @@ public class Review {
         this.content = content;
         this.date = date;
         this.deleted = deleted;
-        this.hided = hided;
+        this.hidden = hided;
     }
 
     public Long getId() {
@@ -94,12 +94,12 @@ public class Review {
         this.deleted = deleted;
     }
 
-    public Boolean getHided() {
-        return hided;
+    public Boolean getHidden() {
+        return hidden;
     }
 
-    public void setHided(Boolean hided) {
-        this.hided = hided;
+    public void setHidden(Boolean hidden) {
+        this.hidden = hidden;
     }
 
     @Override
@@ -111,12 +111,12 @@ public class Review {
                 Objects.equals(content, review.content) &&
                 Objects.equals(date, review.date) &&
                 Objects.equals(deleted, review.deleted) &&
-                Objects.equals(hided, review.hided);
+                Objects.equals(hidden, review.hidden);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, content, date, deleted, hided);
+        return Objects.hash(id, content, date, deleted, hidden);
     }
 
     @Override
@@ -127,7 +127,7 @@ public class Review {
                 ", content='" + content + '\'' +
                 ", date=" + date +
                 ", deleted=" + deleted +
-                ", hided=" + hided +
+                ", hidden=" + hidden +
                 '}';
     }
 }

@@ -12,7 +12,7 @@ public class ArticleDTO {
     private String content;
     private Timestamp date;
     private boolean isDeleted = false;
-    private boolean isHided = false;
+    private boolean isHidden = false;
     private List<CommentDTO> comments = new ArrayList<>();
     private List<TagDTO> tags = new ArrayList<>();
 
@@ -64,12 +64,12 @@ public class ArticleDTO {
         isDeleted = deleted;
     }
 
-    public boolean isHided() {
-        return isHided;
+    public boolean isHidden() {
+        return isHidden;
     }
 
-    public void setHided(boolean hided) {
-        isHided = hided;
+    public void setHidden(boolean hidden) {
+        isHidden = hidden;
     }
 
     public List<CommentDTO> getComments() {
@@ -105,7 +105,7 @@ public class ArticleDTO {
                 ", content='" + content + '\'' +
                 ", date=" + date +
                 ", isDeleted=" + isDeleted +
-                ", isHided=" + isHided +
+                ", isHidden=" + isHidden +
                 ", comments=" + comments +
                 '}';
     }

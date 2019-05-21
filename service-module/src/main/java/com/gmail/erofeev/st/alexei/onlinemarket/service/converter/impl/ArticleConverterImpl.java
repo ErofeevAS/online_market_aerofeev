@@ -46,7 +46,7 @@ public class ArticleConverterImpl implements ArticleConverter {
         String content = article.getContent();
         User user = article.getUser();
         boolean deleted = article.isDeleted();
-        boolean hided = article.isHided();
+        boolean hided = article.isHidden();
         List<Comment> comments = article.getComments();
         List<CommentDTO> commentDTOList = commentConverter.toListDTO(comments);
         UserDTO userDTO = userConverter.toDTO(user);
@@ -61,7 +61,7 @@ public class ArticleConverterImpl implements ArticleConverter {
         articleDTO.setDate(date);
         articleDTO.setContent(content);
         articleDTO.setDeleted(deleted);
-        articleDTO.setHided(hided);
+        articleDTO.setHidden(hided);
         articleDTO.setUser(userDTO);
         return articleDTO;
     }

@@ -45,10 +45,10 @@ public class AppAuthenticationSuccessHandler implements AuthenticationSuccessHan
         boolean isCustomer = false;
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         for (GrantedAuthority authority : authorities) {
-            if (authority.getAuthority().equals(securityProperties.getRoleAdmin())) {
+            if (authority.getAuthority().equals(securityProperties.getRoleAdminWithPrefix())) {
                 isAdmin = true;
                 break;
-            } else if (authority.getAuthority().equals(securityProperties.getRoleCustomer())) {
+            } else if (authority.getAuthority().equals(securityProperties.getRoleCustomerWithPrefix())) {
                 isCustomer = true;
                 break;
             }

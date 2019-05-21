@@ -1,5 +1,6 @@
 package com.gmail.erofeev.st.alexei.onlinemarket.config.security.rest;
 
+import com.gmail.erofeev.st.alexei.onlinemarket.config.properties.SecurityProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
@@ -16,15 +17,17 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 public class RestApiSecurityConfigurer extends WebSecurityConfigurerAdapter {
     private final PasswordEncoder passwordEncoder;
     private final UserDetailsService userDetailsService;
+    private final SecurityProperties securityProperties;
 
     @Autowired
     @Qualifier("apiAccessDeniedHandler")
     private AccessDeniedHandler apiAccessDeniedHandler;
 
     @Autowired
-    public RestApiSecurityConfigurer(PasswordEncoder passwordEncoder, UserDetailsService userDetailsService) {
+    public RestApiSecurityConfigurer(PasswordEncoder passwordEncoder, UserDetailsService userDetailsService, SecurityProperties securityProperties) {
         this.passwordEncoder = passwordEncoder;
         this.userDetailsService = userDetailsService;
+        this.securityProperties = securityProperties;
     }
 
     @Override
@@ -37,10 +40,8 @@ public class RestApiSecurityConfigurer extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.antMatcher("/api/v1/**")
                 .authorizeRequests()
-                .antMatchers("/api/v1/users")
-                .hasRole("SECURE_REST_API")
-                .antMatchers("/api/v1/articles")
-                .hasRole("SECURE_REST_API")
+                .antMatchers("/api/v1/users", "/api/v1/articles")
+                .hasRole(securityProperties.getRoleSecureRestApi())
                 .and()
                 .httpBasic()
                 .and()

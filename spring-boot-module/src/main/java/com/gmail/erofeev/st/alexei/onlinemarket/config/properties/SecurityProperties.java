@@ -5,7 +5,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class SecurityProperties {
-
+    @Value("${app.security.role.prefix}")
+    private String prefix;
     @Value("${app.security.role.customer}")
     private String roleCustomer;
     @Value("${app.security.role.admin}")
@@ -21,12 +22,16 @@ public class SecurityProperties {
     @Value("${app.security.start.customer.page}")
     private String startCustomerPage;
 
-    public String getRoleCustomer() {
-        return  roleCustomer;
+    public String getRoleCustomerWithPrefix() {
+        return prefix + roleCustomer;
     }
 
-    public String getRoleAdmin() {
-        return  roleAdmin;
+    public String getRoleAdminWithPrefix() {
+        return prefix + roleAdmin;
+    }
+
+    public String getRoleSecureRestApiWithPrefix() {
+        return prefix + roleSecureRestApi;
     }
 
     public int getBcryptRounds() {
@@ -35,6 +40,18 @@ public class SecurityProperties {
 
     public String getForbidRedirectPage() {
         return forbidRedirectPage;
+    }
+
+    public String getPrefix() {
+        return prefix;
+    }
+
+    public String getRoleCustomer() {
+        return roleCustomer;
+    }
+
+    public String getRoleAdmin() {
+        return roleAdmin;
     }
 
     public String getRoleSecureRestApi() {

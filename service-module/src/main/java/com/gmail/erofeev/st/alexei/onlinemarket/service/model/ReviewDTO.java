@@ -8,7 +8,7 @@ public class ReviewDTO {
     private String content;
     private Timestamp date;
     private Boolean deleted = false;
-    private Boolean hided = false;
+    private Boolean hidden = false;
 
     public ReviewDTO() {
     }
@@ -53,12 +53,12 @@ public class ReviewDTO {
         this.deleted = deleted;
     }
 
-    public Boolean getHided() {
-        return hided;
+    public Boolean getHidden() {
+        return hidden;
     }
 
-    public void setHided(Boolean hided) {
-        this.hided = hided;
+    public void setHidden(Boolean hidden) {
+        this.hidden = hidden;
     }
 
     @Override
@@ -69,7 +69,7 @@ public class ReviewDTO {
                 ", content='" + content + '\'' +
                 ", date=" + date +
                 ", deleted=" + deleted +
-                ", hided=" + hided +
+                ", hidden=" + hidden +
                 '}';
     }
 }

@@ -9,7 +9,7 @@ public class CommentDTO {
     private String content;
     private Timestamp date;
     private boolean isDeleted = false;
-    private boolean isHided = false;
+    private boolean isHidden = false;
 
     public Long getId() {
         return id;
@@ -51,12 +51,12 @@ public class CommentDTO {
         isDeleted = deleted;
     }
 
-    public boolean isHided() {
-        return isHided;
+    public boolean isHidden() {
+        return isHidden;
     }
 
-    public void setHided(boolean hided) {
-        isHided = hided;
+    public void setHidden(boolean hidden) {
+        isHidden = hidden;
     }
 
     public Long getArticleId() {
@@ -76,7 +76,7 @@ public class CommentDTO {
                 ", content='" + content + '\'' +
                 ", date=" + date +
                 ", isDeleted=" + isDeleted +
-                ", isHided=" + isHided +
+                ", isHidden=" + isHidden +
                 '}';
     }
 }

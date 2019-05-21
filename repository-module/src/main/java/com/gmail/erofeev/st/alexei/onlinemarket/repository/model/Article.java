@@ -43,8 +43,8 @@ public class Article {
     private Timestamp date;
     @Column(name = "deleted")
     private boolean isDeleted;
-    @Column(name = "hided")
-    private boolean isHided;
+    @Column(name = "hidden")
+    private boolean isHidden;
     @OneToMany(mappedBy = "article", fetch = FetchType.LAZY)
     @OrderBy("date")
     private List<Comment> comments = new ArrayList<>();
@@ -99,12 +99,12 @@ public class Article {
         isDeleted = deleted;
     }
 
-    public boolean isHided() {
-        return isHided;
+    public boolean isHidden() {
+        return isHidden;
     }
 
-    public void setHided(boolean hided) {
-        isHided = hided;
+    public void setHidden(boolean hidden) {
+        isHidden = hidden;
     }
 
     public List<Comment> getComments() {
@@ -137,7 +137,7 @@ public class Article {
         if (o == null || getClass() != o.getClass()) return false;
         Article article = (Article) o;
         return isDeleted == article.isDeleted &&
-                isHided == article.isHided &&
+                isHidden == article.isHidden &&
                 id.equals(article.id) &&
                 Objects.equals(title, article.title) &&
                 Objects.equals(content, article.content) &&
@@ -146,7 +146,7 @@ public class Article {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, content, date, isDeleted, isHided);
+        return Objects.hash(id, title, content, date, isDeleted, isHidden);
     }
 
     @Override
@@ -158,7 +158,7 @@ public class Article {
                 ", content='" + content + '\'' +
                 ", date=" + date +
                 ", isDeleted=" + isDeleted +
-                ", isHided=" + isHided +
+                ", isHidden=" + isHidden +
                 '}';
     }
 }

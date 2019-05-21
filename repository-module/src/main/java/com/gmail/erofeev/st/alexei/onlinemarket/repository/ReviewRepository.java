@@ -6,5 +6,5 @@ import java.sql.Connection;
 import java.util.Map;
 
 public interface ReviewRepository extends GenericRepository<Long, Review> {
-    void updateHidedFields(Connection connection, Map<Long, Boolean> mapIdHided);
+    void updateHiddenFieldsByIds(Connection connection, Map<Long, Boolean> hiddenForId);
 }

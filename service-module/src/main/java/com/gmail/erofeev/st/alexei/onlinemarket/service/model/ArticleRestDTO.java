@@ -9,7 +9,7 @@ public class ArticleRestDTO {
     private String content;
     private Timestamp date;
     private boolean isDeleted = false;
-    private boolean isHided = false;
+    private boolean isHidden = false;
     private String authorLastName;
     private String authorFirstName;
     private String authorEmail;
@@ -54,12 +54,12 @@ public class ArticleRestDTO {
         isDeleted = deleted;
     }
 
-    public boolean isHided() {
-        return isHided;
+    public boolean isHidden() {
+        return isHidden;
     }
 
-    public void setHided(boolean hided) {
-        isHided = hided;
+    public void setHidden(boolean hidden) {
+        isHidden = hidden;
     }
 
     public String getAuthorLastName() {
