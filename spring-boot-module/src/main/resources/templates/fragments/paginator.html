@@ -18,25 +18,33 @@
         <span th:text="${paginator.page} + '/' +${paginator.maxPage} "></span>
     </span>
 
-    <a th:href="@{''+${content}(page='1',size=${paginator.size})}">|&lt;</a>
-    <a th:href="@{''+${content}(page=${paginator.page}-1,size=${paginator.size})}">&lt;</a>
+    <a th:href="@{__${#httpServletRequest.requestURI}__(page='1',size=${paginator.size},    keyWord=${#httpServletRequest.getParameter('keyWord')})}">|&lt;</a>
+    <a th:href="@{__${#httpServletRequest.requestURI}__(page=${paginator.page}-1,size=${paginator.size},
+    keyWord=${#httpServletRequest.getParameter('keyWord')})}">&lt;</a>
     <span th:each="pageNumber:${#numbers.sequence(1,paginator.maxPage)}">
-        <a th:href="@{''+${content}(page=${pageNumber},size=${paginator.size})}" th:text="${pageNumber}"></a>
+        <a th:href="@{__${#httpServletRequest.requestURI}__(page=${pageNumber},size=${paginator.size},        keyWord=${#httpServletRequest.getParameter('keyWord')})}"
+           th:text="${pageNumber}"></a>
     </span>
-    <a th:href="@{''+${content}(page=${paginator.page}+1,size=${paginator.size})}">&gt;</a>
-    <a th:href="@{''+${content}(page=${paginator.maxPage},size=${paginator.size})}">&gt;|</a>
+    <a th:href="@{__${#httpServletRequest.requestURI}__(page=${paginator.page}+1,size=${paginator.size},    keyWord=${#httpServletRequest.getParameter('keyWord')})}">&gt;</a>
+    <a th:href="@{__${#httpServletRequest.requestURI}__(page=${paginator.maxPage},size=${paginator.size},    keyWord=${#httpServletRequest.getParameter('keyWord')})}">&gt;|</a>
 
     <script th:inline="javascript">
         function selectAmount(size) {
             var size = document.getElementById(size);
-            var url = new URL(window.location.href.split('?')[0]);
-            var queryString = url.search;
+            var urlWithoutParameters = new URL(window.location.href.split('?')[0]);
+            var currentUrl = new URL(window.location.href);
+            urlsp = currentUrl.searchParams;
+            var keyWord = (urlsp.get("keyWord"));
+            var queryString = urlWithoutParameters.search;
             var searchParams = new URLSearchParams(queryString);
             searchParams.append('page', '1');
             searchParams.append('size', size.value);
-            url.search = searchParams.toString();
-            var new_url = url.toString();
-            window.location.replace(url);
+            if (keyWord !== null) {
+                searchParams.append('keyWord', keyWord);
+            }
+            urlWithoutParameters.search = searchParams.toString();
+            var new_url = urlWithoutParameters.toString();
+            window.location.replace(urlWithoutParameters);
         }
     </script>
 </div>

@@ -19,7 +19,7 @@ import java.util.Objects;
 
 @Entity
 @Table
-@SQLDelete(sql = "UPDATE tag SET deleted = '1' WHERE id = ?")
+@SQLDelete(sql = "UPDATE tag SET deleted = true WHERE id = ?")
 @Where(clause = "deleted = '0'")
 public class Tag {
     @Id

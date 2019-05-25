@@ -35,8 +35,6 @@ public class Article {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user = new User();
-    @Column(name = "short_content")
-    private String shortContent;
     @Column
     private String content;
     @Column
@@ -113,14 +111,6 @@ public class Article {
 
     public void setComments(List<Comment> comments) {
         this.comments = comments;
-    }
-
-    public String getShortContent() {
-        return shortContent;
-    }
-
-    public void setShortContent(String shortContent) {
-        this.shortContent = shortContent;
     }
 
     public List<Tag> getTags() {

@@ -16,11 +16,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
-@Repository
 public abstract class GenericRepositoryImpl<I, T> implements GenericRepository<I, T> {
     private static final Logger logger = LoggerFactory.getLogger(GenericRepositoryImpl.class);
-    @Autowired
-    private DataSource dataSource;
     protected Class<T> entityClass;
     @PersistenceContext
     protected EntityManager entityManager;
@@ -28,16 +25,6 @@ public abstract class GenericRepositoryImpl<I, T> implements GenericRepository<I
     public GenericRepositoryImpl() {
         ParameterizedType genericSuperClass = (ParameterizedType) getClass().getGenericSuperclass();
         this.entityClass = (Class<T>) genericSuperClass.getActualTypeArguments()[1];
-    }
-
-    @Override
-    public Connection getConnection() {
-        try {
-            return dataSource.getConnection();
-        } catch (SQLException e) {
-            logger.error(e.getMessage(), e);
-            throw new RepositoryException(String.format("Can't get connection to datasource: %s", e.getMessage()), e);
-        }
     }
 
     @Override

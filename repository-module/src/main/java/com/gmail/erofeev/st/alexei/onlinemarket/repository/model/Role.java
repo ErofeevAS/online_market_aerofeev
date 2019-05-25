@@ -21,8 +21,8 @@ public class Role {
     private Long id;
     @Column
     private String name;
-    @OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
-    private List<User> users = new ArrayList<>();
+//    @OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
+//    private List<User> users = new ArrayList<>();
 
     public Role() {
     }
@@ -52,13 +52,6 @@ public class Role {
         this.name = name;
     }
 
-    public List<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(List<User> users) {
-        this.users = users;
-    }
 
     @Override
     public boolean equals(Object o) {

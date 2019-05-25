@@ -42,8 +42,20 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/adduser", "/users/**", "/reviews/**")
                 .hasRole(securityProperties.getRoleAdmin())
-                .antMatchers("/articles/**", "**/profile/*")
-                .hasRole(securityProperties.getRoleCustomer())
+
+                .antMatchers("/articles/new")
+                .hasAnyRole(securityProperties.getRoleSale())
+
+                .antMatchers("/articles/**")
+                .hasAnyRole(
+                        securityProperties.getRoleCustomer(),
+                        securityProperties.getRoleSale())
+
+                .antMatchers("/profile/**")
+                .hasAnyRole(
+                        securityProperties.getRoleAdmin(),
+                        securityProperties.getRoleCustomer(),
+                        securityProperties.getRoleSale())
                 .antMatchers("/403", "/about", "/login")
                 .permitAll()
                 .and()

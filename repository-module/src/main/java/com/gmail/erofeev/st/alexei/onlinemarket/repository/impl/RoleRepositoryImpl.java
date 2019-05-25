@@ -11,9 +11,9 @@ public class RoleRepositoryImpl extends GenericRepositoryImpl<Long, Role> implem
 
     @Override
     public Role findRoleByName(String roleName) {
-        String query = "select r from " + entityClass.getName() + " r where r.name = :name";
-        Query q = entityManager.createQuery(query);
-        q.setParameter("name", roleName);
-        return (Role) q.getSingleResult();
+        String hql = "select r from Role r where r.name = :name";
+        Query query = entityManager.createQuery(hql);
+        query.setParameter("name", roleName);
+        return (Role) query.getSingleResult();
     }
 }

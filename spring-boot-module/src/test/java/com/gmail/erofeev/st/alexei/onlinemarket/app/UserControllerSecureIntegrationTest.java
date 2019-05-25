@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -22,11 +23,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class UserControllerSecureIntegrationTest {
     private static final String ROLE_ADMIN = "Administrator";
     private static final String ROLE_CUSTOMER = "Customer";
+    private static final String ROLE_SALE = "Sale";
     @Autowired
     private MockMvc mockMvc;
 
     @Test
-    @WithMockUser(roles = ROLE_ADMIN)
+    @WithUserDetails("admin@gmail.com")
     public void shouldSucceedWith200ForUsersPage() throws Exception {
         mockMvc.perform(get("/users"))
                 .andExpect(status().isOk())
@@ -37,9 +39,9 @@ public class UserControllerSecureIntegrationTest {
     @Test
     @WithMockUser(roles = ROLE_ADMIN)
     public void shouldSucceedRedirectOnUsersPageAfterChangePassword() throws Exception {
-        mockMvc.perform(post("/users/changepassword").param("userId", "1"))
+        mockMvc.perform(post("/profile/changepassword").param("userId", "1"))
                 .andExpect(status().isFound())
-                .andExpect(redirectedUrl("/users"));
+                .andExpect(redirectedUrl("/profile"));
     }
 
     @Test
@@ -60,10 +62,10 @@ public class UserControllerSecureIntegrationTest {
 
     @Test
     @WithMockUser(roles = ROLE_ADMIN)
-    public void shouldGetThreeTestUserFromUsersPage() throws Exception {
+    public void shouldGetFiveTestUserFromUsersPage() throws Exception {
         mockMvc.perform(get("/users"))
                 .andExpect(status().isOk())
-                .andExpect(xpath("//*[@id='user']").nodeCount(4));
+                .andExpect(xpath("//*[@id='user']").nodeCount(5));
     }
 
     @Test
@@ -90,4 +92,30 @@ public class UserControllerSecureIntegrationTest {
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl("/users"));
     }
+
+    @Test
+    @WithUserDetails("admin@gmail.com")
+    public void shouldSucceedWith200ForProfilePage() throws Exception {
+        mockMvc.perform(get("/profile"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("profile"));
+
+    }
+
+    @Test
+    @WithUserDetails("sale@gmail.com")
+    public void shouldSucceedWith200ForProfilePageForSale() throws Exception {
+        mockMvc.perform(get("/profile"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("profile"));
+    }
+
+    @Test
+    @WithUserDetails("user@gmail.com")
+    public void shouldSucceedWith200ForProfilePageForCustomer() throws Exception {
+        mockMvc.perform(get("/profile"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("profile"));
+    }
+
 }

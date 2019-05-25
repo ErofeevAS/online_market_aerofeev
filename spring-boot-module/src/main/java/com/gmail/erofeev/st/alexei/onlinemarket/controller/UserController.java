@@ -81,18 +81,9 @@ public class UserController {
         }
     }
 
-    @PostMapping("/users/changepassword")
-    public String changePassword(@RequestParam Long userId) {
-        UserDTO userById = userService.findUserById(userId);
-        userService.changePassword(userById);
-        return "redirect:/users";
-    }
-
-    @GetMapping("/users/{id}/profile")
-    public String getProfile(Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        AppUserPrincipal principal = (AppUserPrincipal) authentication.getPrincipal();
-        Long id = principal.getUser().getId();
+    @GetMapping("/profile")
+    public String getProfile(Model model, Authentication authentication) {
+        Long id = getSecureUserId(authentication);
         ProfileViewDTO profileView = userService.getProfileView(id);
         model.addAttribute("profileView", profileView);
         PasswordDTO passwordDTO = new PasswordDTO();
@@ -101,24 +92,40 @@ public class UserController {
         return "profile";
     }
 
-    @PostMapping("/users/{id}/profile")
-    public String updateProfile(@PathVariable Long id,
-                                @ModelAttribute("profileView") @Valid ProfileViewDTO profileView,
+    @PostMapping("/profile")
+    public String updateProfile(@ModelAttribute("profileView") @Valid ProfileViewDTO profileView,
                                 BindingResult bindingResult,
-                                Model model) {
+                                Model model,
+                                Authentication authentication) {
+        PasswordDTO passwordDTO = new PasswordDTO();
+        model.addAttribute("passwordDTO", passwordDTO);
         if (bindingResult.hasErrors()) {
             return "profile";
         }
+        Long id = getSecureUserId(authentication);
         userService.updateProfile(id, profileView);
         model.addAttribute("info", "profile was update");
         return "profile";
     }
 
-    @PostMapping("/users/{id}/changepassword")
-    public String changePasswordForUser(@PathVariable Long id,
-                                        @ModelAttribute("passwordDTO") @Valid PasswordDTO passwordDTO) {
+    @PostMapping("/profile/changepassword")
+    public String changePasswordForUser(
+            Model model,
+            @ModelAttribute("passwordDTO") @Valid PasswordDTO passwordDTO,
+            Authentication authentication) {
+        Long id = getSecureUserId(authentication);
         userService.changeOldPassword(id, passwordDTO);
-        return "redirect:/users";
+        ProfileViewDTO profileView = userService.getProfileView(id);
+        model.addAttribute("profileView", profileView);
+        model.addAttribute("passwordDTO", passwordDTO);
+        model.addAttribute("infoPassword", "password was changed");
+        return "profile";
+    }
+
+    private Long getSecureUserId(Authentication authentication) {
+        authentication = SecurityContextHolder.getContext().getAuthentication();
+        AppUserPrincipal principal = (AppUserPrincipal) authentication.getPrincipal();
+        return principal.getUser().getId();
     }
 }
 

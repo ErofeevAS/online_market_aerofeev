@@ -4,7 +4,6 @@ import com.gmail.erofeev.st.alexei.onlinemarket.repository.ReviewRepository;
 import com.gmail.erofeev.st.alexei.onlinemarket.repository.model.Review;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.ReviewService;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.converter.ReviewConverter;
-import com.gmail.erofeev.st.alexei.onlinemarket.service.exception.ServiceException;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.PageDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ReviewDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ReviewsListWrapper;
@@ -14,8 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,21 +52,12 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public void updateHidedFields(ReviewsListWrapper newReviewsList) {
-        Map<Long, Boolean> mapIdHided = getMapIdHided(newReviewsList.getReviews());
-        try (Connection connection = reviewRepository.getConnection()) {
-            connection.setAutoCommit(false);
-            try {
-                reviewRepository.updateHiddenFieldsByIds(connection, mapIdHided);
-                connection.commit();
-            } catch (SQLException e) {
-                connection.rollback();
-                logger.error(e.getMessage(), e);
-                throw new ServiceException(String.format("Can't update  hided fields for reviews with ids: %s", mapIdHided.keySet()), e);
-            }
-        } catch (SQLException e) {
-            logger.error(e.getMessage(), e);
-            throw new ServiceException("Can't establish connection to database.", e);
+    @Transactional
+    public void updateHiddenFields(ReviewsListWrapper newReviewsList) {
+        Map<Long, Boolean> mapHiddenForId = getMapIdHided(newReviewsList.getReviews());
+        for (Long id : mapHiddenForId.keySet()) {
+            Boolean hidden = mapHiddenForId.get(id);
+            reviewRepository.updateHiddenById(id, hidden);
         }
     }
 

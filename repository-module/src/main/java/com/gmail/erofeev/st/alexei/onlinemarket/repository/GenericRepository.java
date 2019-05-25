@@ -1,10 +1,8 @@
 package com.gmail.erofeev.st.alexei.onlinemarket.repository;
 
-import java.sql.Connection;
 import java.util.List;
 
 public interface GenericRepository<I, T> {
-    Connection getConnection();
 
     void persist(T entity);
 

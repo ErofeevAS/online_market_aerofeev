@@ -1,16 +1,15 @@
 package com.gmail.erofeev.st.alexei.onlinemarket.service.model;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ArticleDTO {
+    private static final int SHORT_CONTENT_LENGTH = 200;
     private Long id;
     private String title;
     private UserDTO user;
-    private String shortContent;
     private String content;
-    private Timestamp date;
+    private String date;
     private boolean isDeleted = false;
     private boolean isHidden = false;
     private List<CommentDTO> comments = new ArrayList<>();
@@ -48,11 +47,11 @@ public class ArticleDTO {
         this.content = content;
     }
 
-    public Timestamp getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Timestamp date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
@@ -81,11 +80,11 @@ public class ArticleDTO {
     }
 
     public String getShortContent() {
-        return shortContent;
-    }
-
-    public void setShortContent(String shortContent) {
-        this.shortContent = shortContent;
+        if (content.length() < SHORT_CONTENT_LENGTH) {
+            return content;
+        } else {
+            return content.substring(0, SHORT_CONTENT_LENGTH) + "...";
+        }
     }
 
     public List<TagDTO> getTags() {

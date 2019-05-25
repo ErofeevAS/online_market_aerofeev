@@ -64,7 +64,7 @@ public class RestArticlesControllerTest {
     @WithMockUser(roles = ROLE_SECURE_REST_API)
     public void deleteArticleById() throws Exception {
         String url = "/api/v1/articles/1";
-        MvcResult mvcResult = mvc.perform(delete(url))
+        mvc.perform(delete(url))
                 .andExpect(content().string("success"))
                 .andExpect(status().isOk()).andReturn();
     }

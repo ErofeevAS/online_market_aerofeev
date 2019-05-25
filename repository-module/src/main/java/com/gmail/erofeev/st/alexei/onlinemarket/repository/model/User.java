@@ -21,7 +21,7 @@ import java.util.Objects;
 
 @Entity
 @Table
-@SQLDelete(sql = "UPDATE user SET deleted = '1' WHERE id = ? and undeletable='0'")
+@SQLDelete(sql = "UPDATE user SET deleted = true WHERE id = ? and undeletable='0'")
 @Where(clause = "deleted = '0'")
 public class User {
     @Id
@@ -59,6 +59,10 @@ public class User {
     private Profile profile;
 
     public User() {
+    }
+
+    public void addArticle(Article article) {
+        articles.add(article);
     }
 
     public Long getId() {

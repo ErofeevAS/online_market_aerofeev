@@ -44,7 +44,7 @@ public class ReviewController {
 
     @PostMapping("/reviews/update")
     public String updateReviews(@ModelAttribute("reviewsChanges") ReviewsListWrapper reviewsChanges) {
-        reviewService.updateHidedFields(reviewsChanges);
+        reviewService.updateHiddenFields(reviewsChanges);
         return "redirect:/reviews";
     }
 }

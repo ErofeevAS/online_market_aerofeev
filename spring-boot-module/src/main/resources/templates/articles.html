@@ -13,7 +13,7 @@
     <div class="row" th:insert="~{fragments/navbar :: navbar}">
     </div>
 
-    <form class="form-inline md-form mr-auto mb-4" action="#" th:action="@{/articles/}" th:object="${searchingFilter}"
+    <form class="form-inline md-form mr-auto mb-4" action="#" th:action="@{__${#httpServletRequest.requestURI}__}" th:object="${searchingFilter}"
           method="get">
         <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search"
                th:field="${searchingFilter.keyWord}"/>
@@ -23,13 +23,13 @@
     <div class="row">
         <th:block th:each="article,number : ${articles}">
             <div class="col-sm-4" id="article">
-                <form action="#" th:action="@{/articles/{id}(id=${article.id})}" method="post" id="articleDetail">
+                <form action="#" th:action="@{/articles/{id}(id=${article.id})}" method="get" id="articleDetail">
                     <h2 th:text="${article.title}"></h2>
                     <p th:text="${article.getUser().getFullName()}"></p>
                     <p th:text="${article.date}"></p>
-                    <p th:text="${article.content}"></p>
+                    <p th:text="${article.getShortContent()}"></p>
                     <th:block th:each="tag : ${article.tags}">
-                        <a th:href="@{/articles/ (tag=${tag.id})}" th:text="${tag.name}"
+                        <a th:href="@{/articles/tag/{tag} (tag=${tag.id})}" th:text="${tag.name}"
                            class="badge badge-default">tags</a>
                     </th:block>
                     <button type="submit" class="btn btn-outline-primary">

@@ -13,7 +13,7 @@
 <div class="container col-md-6 col-lg-5 ml-auto d-flex align-items-center mt-4 mt-md-0">
     <div class="row">
         <div class="col-ml-6">
-            <form th:action="@{/users/{id}/profile(id=${profileView.id})}" th:object="${profileView}" method="post">
+            <form th:action="@{/profile}" th:object="${profileView}" method="post">
 
                 <div class="alert alert-info" th:if="${info}" th:text="${info}">
 
@@ -58,7 +58,8 @@
 
 
             </form>
-            <form th:action="@{/users/{id}/changepassword(id=${profileView.id})}" th:object="${passwordDTO}" method="post">
+            <div class="alert alert-info" th:if="${infoPassword}" th:text="${infoPassword}"></div>
+            <form th:action="@{/profile/changepassword}" th:object="${passwordDTO}" method="post">
                 <div class="form-group">
                     <label>old password</label>:
                     <input type="password" th:field="*{oldPassword}" class="form-control" autofocus="autofocus"

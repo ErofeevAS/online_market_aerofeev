@@ -17,7 +17,7 @@ import java.util.Objects;
 
 @Entity
 @Table
-@SQLDelete(sql = "UPDATE review SET deleted = '1' WHERE id = ?")
+@SQLDelete(sql = "UPDATE review SET deleted = true WHERE id = ?")
 @Where(clause = "deleted = '0'")
 public class Review {
     @Id
