@@ -43,7 +43,7 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
                 .antMatchers("/adduser", "/users/**", "/reviews/**")
                 .hasRole(securityProperties.getRoleAdmin())
 
-                .antMatchers("/articles/new")
+                .antMatchers("/articles/new","/items/**")
                 .hasAnyRole(securityProperties.getRoleSale())
 
                 .antMatchers("/articles/**")

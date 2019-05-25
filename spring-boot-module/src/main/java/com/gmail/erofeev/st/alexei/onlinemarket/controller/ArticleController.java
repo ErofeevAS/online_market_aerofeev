@@ -151,5 +151,4 @@ public class ArticleController {
         AppUserPrincipal principal = (AppUserPrincipal) authentication.getPrincipal();
         return principal.getUser().getId();
     }
-
 }

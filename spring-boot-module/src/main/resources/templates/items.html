@@ -13,35 +13,38 @@
     <div class="row" th:insert="~{fragments/navbar :: navbar}">
     </div>
 
-    <form class="form-inline md-form mr-auto mb-4" action="#" th:action="@{__${#httpServletRequest.requestURI}__}"
-          th:object="${searchingFilter}"
-          method="get">
-        <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search"
-               th:field="${searchingFilter.keyWord}"/>
-        <button class="btn aqua-gradient btn-rounded btn-sm my-0" type="submit">Search</button>
-    </form>
-
     <div class="row">
-        <th:block th:each="article,number : ${articles}">
+        <th:block th:each="item,number : ${items}">
             <div class="col-sm-4" id="article">
-                <form action="#" th:action="@{/articles/{id}(id=${article.id})}" method="get" id="articleDetail">
-                    <h2 th:text="${article.title}"></h2>
-                    <p th:text="${article.getUser().getFullName()}"></p>
-                    <p th:text="${article.date}"></p>
-                    <p th:text="${article.getShortContent()}"></p>
-                    <th:block th:each="tag : ${article.tags}">
-                        <a th:href="@{/articles/tag/{tag} (tag=${tag.id})}" th:text="${tag.name}"
-                           class="badge badge-default">tags</a>
-                    </th:block>
+                <form action="#" th:action="@{/items/{id}(id=${item.id})}" method="get"
+                      th:id="${'itemDetails' +number.index}"></form>
+                <h2 th:text="${item.id}"></h2>
+                <h2 th:text="${item.name}"></h2>
+                <p th:text="${item.uniqueNumber}"></p>
+                <p th:text="${item.price}"></p>
+                <p th:text="${item.shortDescription}"></p>
+                <button type="submit" class="btn btn-outline-primary" th:form="${'itemDetails' +number.index}">
+                    view details
+                </button>
+
+                <form action="#" th:action="@{/items/{id}/delete(id=${item.id})}" method="post">
+                    <input type="hidden" th:value="${item.id}" name="id">
                     <button type="submit" class="btn btn-outline-primary">
-                        view details
+                        delete
+                    </button>
+                </form>
+
+                <form action="#" th:action="@{/items/{id}/copy(id=${item.id})}" method="post">
+                    <input type="hidden" th:value="${item.id}" name="id">
+                    <button type="submit" class="btn btn-outline-primary">
+                        copy
                     </button>
                 </form>
             </div>
         </th:block>
     </div>
 
-    <div th:insert="~{fragments/paginator :: paginator(content='/articles')}"></div>
+    <div th:insert="~{fragments/paginator :: paginator}"></div>
     <div class="row" th:insert="~{fragments/footer :: footer}">
     </div>
 

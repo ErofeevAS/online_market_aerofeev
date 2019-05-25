@@ -47,6 +47,8 @@ public class User {
     private List<Comment> comments = new ArrayList<>();
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Comment> reviews = new ArrayList<>();
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Item> items = new ArrayList<>();
     @Column
     private Boolean deleted;
     @Column
@@ -167,6 +169,14 @@ public class User {
 
     public void setProfile(Profile profile) {
         this.profile = profile;
+    }
+
+    public List<Item> getItems() {
+        return items;
+    }
+
+    public void setItems(List<Item> items) {
+        this.items = items;
     }
 
     @Override

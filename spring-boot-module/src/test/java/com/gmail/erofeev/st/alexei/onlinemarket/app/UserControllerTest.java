@@ -17,8 +17,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserControllerTest {
-    private static final String ROLE_ADMIN = "Administrator";
-    private static final String ROLE_CUSTOMER = "Customer";
     @Autowired
     MockMvc mockMvc;
 

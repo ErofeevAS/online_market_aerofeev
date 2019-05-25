@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.List;
 
+import static com.gmail.erofeev.st.alexei.onlinemarket.controller.util.RoleConstant.ROLE_SECURE_REST_API;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -26,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class RestArticlesControllerTest {
-    private static final String ROLE_SECURE_REST_API = "SECURE_REST_API";
+
     @Autowired
     MockMvc mvc;
     @Autowired

@@ -11,19 +11,23 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static com.gmail.erofeev.st.alexei.onlinemarket.controller.util.RoleConstant.REDIRECT_PAGE;
+import static com.gmail.erofeev.st.alexei.onlinemarket.controller.util.RoleConstant.ROLE_ADMIN;
+import static com.gmail.erofeev.st.alexei.onlinemarket.controller.util.RoleConstant.ROLE_CUSTOMER;
+import static com.gmail.erofeev.st.alexei.onlinemarket.controller.util.RoleConstant.ROLE_SALE;
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.xpath;
 
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleControllerSecureIntegrationTest {
-    private static final String ROLE_ADMIN = "Administrator";
-    private static final String ROLE_CUSTOMER = "Customer";
-    private static final String ROLE_SALE = "Sale";
-    private static final String REDIRECT_PAGE = "/403";
 
     @Autowired
     private MockMvc mockMvc;

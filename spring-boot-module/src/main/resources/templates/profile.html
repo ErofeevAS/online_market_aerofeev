@@ -8,9 +8,12 @@
 <title>Registration page</title>
 </head>
 <body>
-<div th:insert="~{fragments/header :: header}"></div>
-<div th:insert="~{fragments/navbar :: navbar}"></div>
-<div class="container col-md-6 col-lg-5 ml-auto d-flex align-items-center mt-4 mt-md-0">
+
+<div class="container align-items-center">
+    <div class="row" th:insert="~{fragments/header :: header}">
+    </div>
+    <div class="row" th:insert="~{fragments/navbar :: navbar}">
+    </div>
     <div class="row">
         <div class="col-ml-6">
             <form th:action="@{/profile}" th:object="${profileView}" method="post">
@@ -19,7 +22,7 @@
 
                 </div>
                 <div class="alert alert-danger" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">
-                Name Error
+                    Name Error
                 </div>
                 <div class="form-group">
                     <label>last name</label>:
@@ -28,7 +31,7 @@
                 </div>
 
                 <div class="alert alert-danger" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">
-                Name Error
+                    Name Error
                 </div>
                 <div class="form-group">
                     <label>first name</label>:
@@ -36,9 +39,8 @@
                            th:placeholder="*{firstName}">
                 </div>
 
-
                 <div class="alert alert-danger" th:if="${#fields.hasErrors('address')}" th:errors="*{address}">
-                Name Error
+                    Name Error
                 </div>
                 <div class="form-group">
                     <label>address</label>:
@@ -47,7 +49,7 @@
                 </div>
 
                 <div class="alert alert-danger" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}">
-                Name Error
+                    Name Error
                 </div>
                 <div class="form-group">
                     <label>phone</label>:
@@ -55,7 +57,6 @@
                            th:placeholder="*{phone}">
                 </div>
                 <input type="submit" class="form-control btn btn-info" value="save changes">
-
 
             </form>
             <div class="alert alert-info" th:if="${infoPassword}" th:text="${infoPassword}"></div>
@@ -72,18 +73,15 @@
                            autofocus="autofocus"
                            placeholder="new password">
                 </div>
-
                 <input type="submit" class="form-control btn btn-info" value="change password">
-
-
             </form>
-
 
         </div>
     </div>
+    <div th:insert="~{fragments/footer :: footer}"></div>
 </div>
-</div>
-<div th:insert="~{fragments/footer :: footer}"></div>
+
+
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script>

@@ -48,7 +48,8 @@
     </div>
     <div class="row">
         <th:block th:each="tag,number : ${article.tags}">
-            <a th:href="@{/articles/tags/{id}/ (id=${tag.id})}" th:text="${tag.name}" class="badge badge-default">Default</a>
+            <a th:href="@{/articles/tag/{id} (id=${tag.id})}" th:text="${tag.name}"
+               class="badge badge-default">Default</a>
         </th:block>
     </div>
 
