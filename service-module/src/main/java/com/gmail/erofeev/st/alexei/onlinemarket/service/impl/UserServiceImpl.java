@@ -54,6 +54,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserDTO findUserByEmail(String email) {
         User user = userRepository.findByEmail(email);
+        logger.debug(String.format("User with email:%s was found", email));
         return userConverter.toDTO(user);
     }
 
@@ -61,7 +62,9 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void delete(List<Long> userIdsForDelete) {
         for (Long id : userIdsForDelete) {
-            userRepository.deleteUserById(id);
+            User user = userRepository.findById(id);
+            userRepository.remove(user);
+            logger.debug(String.format("User with id:%s was deleted", id));
         }
     }
 
@@ -80,8 +83,8 @@ public class UserServiceImpl implements UserService {
             profile.setUser(user);
             userRepository.persist(user);
             String message = String.format("Hello! %s. Your was registered on www.aerofeev-market.com  your password: %s", userDTO.getFullName(), password);
-//            mailService.send(email, "new password", message);
-            logger.info(String.format("User with email: %s and password: %s was saved", email, password));
+            mailService.send(email, "new password", message);
+            logger.debug(String.format("User with email: %s and password: %s was saved", email, password));
             return userConverter.toDTO(user);
         }
         return null;
@@ -89,16 +92,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void changePassword(UserDTO userDTO) {
-        String email = userDTO.getEmail();
-        User user = userRepository.findByEmail(email);
+    public void changePassword(Long id) {
+        User user = userRepository.findById(id);
         String password = passwordService.generatePassword(STANDARD_PASSWORD_LENGTH);
         String encodePassword = passwordEncoder.encode(password);
         user.setPassword(encodePassword);
         userRepository.merge(user);
-        String message = String.format("Hello! %s. Your password on www.aerofeev-market.com  was changed on %s", userDTO.getFullName(), password);
+        String message = String.format("Hello! %s. Your password on www.aerofeev-market.com  was changed on %s", user.getEmail(), password);
         logger.debug(message);
-        //        mailService.send(email, "new password", message);
+        String email = user.getEmail();
+        mailService.send(email, "new password", message);
     }
 
     @Override
@@ -117,13 +120,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserDTO findUserById(Long id) {
-        User user = userRepository.findById(id);
-        return userConverter.toDTO(user);
-    }
-
-    @Override
-    @Transactional
     public ProfileViewDTO getProfileView(Long id) {
         User user = userRepository.findById(id);
         return userConverter.toProfileViewDTO(user);
@@ -133,15 +129,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void updateProfile(Long id, ProfileViewDTO profileViewDTO) {
         User user = userRepository.findById(id);
-        String address = profileViewDTO.getAddress();
-        String firstName = profileViewDTO.getFirstName();
-        String phone = profileViewDTO.getPhone();
-        String lastName = profileViewDTO.getLastName();
-        Profile profile = user.getProfile();
-        profile.setAddress(address);
-        profile.setPhone(phone);
-        user.setLastName(lastName);
-        user.setFirstName(firstName);
+        updateUserFields(user, profileViewDTO);
         userRepository.merge(user);
     }
 
@@ -178,5 +166,17 @@ public class UserServiceImpl implements UserService {
             page = maxPages;
         }
         return (page - 1) * amount;
+    }
+
+    private void updateUserFields(User user, ProfileViewDTO profileViewDTO) {
+        String address = profileViewDTO.getAddress();
+        String firstName = profileViewDTO.getFirstName();
+        String phone = profileViewDTO.getPhone();
+        String lastName = profileViewDTO.getLastName();
+        Profile profile = user.getProfile();
+        profile.setAddress(address);
+        profile.setPhone(phone);
+        user.setLastName(lastName);
+        user.setFirstName(firstName);
     }
 }

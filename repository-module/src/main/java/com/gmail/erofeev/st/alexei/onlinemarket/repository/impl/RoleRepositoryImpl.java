@@ -8,7 +8,6 @@ import javax.persistence.Query;
 
 @Repository
 public class RoleRepositoryImpl extends GenericRepositoryImpl<Long, Role> implements RoleRepository {
-
     @Override
     public Role findRoleByName(String roleName) {
         String hql = "select r from Role r where r.name = :name";

@@ -21,9 +21,15 @@
                 <div th:if="${showDeleteButton}">
                     <form action="#" th:action="@{{articleId}/update(articleId=${article.id})}" method="post"
                           th:object="${editedArticle}">
+                        <div class="alert alert-danger" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">
+                            Name Error
+                        </div>
                         <label for="article-title">article title</label>
                         <input th:value="${article.title}"
                                name="title" id="article-title"/>
+                        <div class="alert alert-danger" th:if="${#fields.hasErrors('content')}" th:errors="*{content}">
+                            Name Error
+                        </div>
                         <label for="content-textarena">article content</label>
                         <textarea th:text="${article.content}" class="form-control"
                                   name="content" id="content-textarena"></textarea>

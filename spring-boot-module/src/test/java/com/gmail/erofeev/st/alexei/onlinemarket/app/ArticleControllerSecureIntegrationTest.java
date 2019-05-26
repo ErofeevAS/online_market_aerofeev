@@ -11,10 +11,11 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static com.gmail.erofeev.st.alexei.onlinemarket.controller.util.RoleConstant.REDIRECT_PAGE;
-import static com.gmail.erofeev.st.alexei.onlinemarket.controller.util.RoleConstant.ROLE_ADMIN;
-import static com.gmail.erofeev.st.alexei.onlinemarket.controller.util.RoleConstant.ROLE_CUSTOMER;
-import static com.gmail.erofeev.st.alexei.onlinemarket.controller.util.RoleConstant.ROLE_SALE;
+import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.CUSTOMER_EMAIL;
+import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.REDIRECT_URL;
+import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.ROLE_ADMIN;
+import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.ROLE_CUSTOMER;
+import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.ROLE_SALE;
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -33,7 +34,7 @@ public class ArticleControllerSecureIntegrationTest {
     private MockMvc mockMvc;
 
     @Test
-    @WithUserDetails("user@gmail.com")
+    @WithUserDetails(CUSTOMER_EMAIL)
     public void shouldSucceedWith200ForArticlesPageForCustomer() throws Exception {
         mockMvc.perform(get("/articles"))
                 .andExpect(status().isOk())
@@ -42,9 +43,9 @@ public class ArticleControllerSecureIntegrationTest {
     }
 
     @Test
-    @WithMockUser(roles = ROLE_CUSTOMER)
+    @WithUserDetails(CUSTOMER_EMAIL)
     public void shouldSucceedRedirectOnArticlePage() throws Exception {
-        mockMvc.perform(post("/articles/1"))
+        mockMvc.perform(get("/articles/1"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("article"));
     }
@@ -62,7 +63,7 @@ public class ArticleControllerSecureIntegrationTest {
     public void shouldForbidAccess() throws Exception {
         mockMvc.perform(get("/articles"))
                 .andExpect(status().isFound())
-                .andExpect(redirectedUrl(REDIRECT_PAGE));
+                .andExpect(redirectedUrl(REDIRECT_URL));
     }
 
     @Test
@@ -111,6 +112,6 @@ public class ArticleControllerSecureIntegrationTest {
     public void shouldNotHaveAccessToNewArticlePageForCustomer() throws Exception {
         mockMvc.perform(get("/articles/new"))
                 .andExpect(status().isFound())
-                .andExpect(redirectedUrl(REDIRECT_PAGE));
+                .andExpect(redirectedUrl(REDIRECT_URL));
     }
 }

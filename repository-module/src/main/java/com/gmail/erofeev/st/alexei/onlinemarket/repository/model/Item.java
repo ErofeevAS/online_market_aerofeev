@@ -32,6 +32,8 @@ public class Item {
     private BigDecimal price;
     @Column
     private String description;
+    @Column
+    private Boolean deleted = false;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
@@ -45,12 +47,13 @@ public class Item {
                 Objects.equals(name, item.name) &&
                 Objects.equals(uniqueNumber, item.uniqueNumber) &&
                 Objects.equals(price, item.price) &&
-                Objects.equals(description, item.description);
+                Objects.equals(description, item.description) &&
+                Objects.equals(deleted, item.deleted);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, uniqueNumber, price, description);
+        return Objects.hash(id, name, uniqueNumber, price, description, deleted);
     }
 
     public Long getId() {
@@ -99,5 +102,13 @@ public class Item {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
     }
 }

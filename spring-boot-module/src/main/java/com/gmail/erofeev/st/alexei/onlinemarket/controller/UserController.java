@@ -24,7 +24,6 @@ import java.util.List;
 
 @Controller
 public class UserController {
-
     private final UserService userService;
 
     @Autowired
@@ -120,6 +119,12 @@ public class UserController {
         model.addAttribute("passwordDTO", passwordDTO);
         model.addAttribute("infoPassword", "password was changed");
         return "profile";
+    }
+
+    @PostMapping("/users/changepassword")
+    public String changePasswordForRandomPassword(@RequestParam(name = "userId") Long id) {
+        userService.changePassword(id);
+        return "users";
     }
 
     private Long getSecureUserId(Authentication authentication) {

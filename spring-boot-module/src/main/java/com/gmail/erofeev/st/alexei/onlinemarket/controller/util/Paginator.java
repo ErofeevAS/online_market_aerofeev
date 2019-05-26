@@ -12,7 +12,6 @@ public class Paginator {
     private int maxPage;
     private int size;
     private final List<String> droppedListValues = asList("2", "5", "10", "20");
-
     private String url;
 
     public Paginator(String stringPage, String stringSize) {

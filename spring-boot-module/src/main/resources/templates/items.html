@@ -28,14 +28,14 @@
                 </button>
 
                 <form action="#" th:action="@{/items/{id}/delete(id=${item.id})}" method="post">
-                    <input type="hidden" th:value="${item.id}" name="id">
+                    <input type="hidden" th:value="${item.id}" name="id"/>
                     <button type="submit" class="btn btn-outline-primary">
                         delete
                     </button>
                 </form>
 
                 <form action="#" th:action="@{/items/{id}/copy(id=${item.id})}" method="post">
-                    <input type="hidden" th:value="${item.id}" name="id">
+                    <input type="hidden" th:value="${item.id}" name="id"/>
                     <button type="submit" class="btn btn-outline-primary">
                         copy
                     </button>

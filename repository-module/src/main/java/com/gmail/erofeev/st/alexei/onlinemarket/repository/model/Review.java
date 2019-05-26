@@ -26,7 +26,7 @@ public class Review {
     private Long id;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private User user = new User();
+    private User user;
     @Column
     private String content;
     @Column
@@ -35,24 +35,6 @@ public class Review {
     private Boolean deleted;
     @Column
     private Boolean hidden;
-
-    public Review() {
-    }
-
-    public Review(Long id, Boolean deleted, Boolean hided) {
-        this.id = id;
-        this.deleted = deleted;
-        this.hidden = hided;
-    }
-
-    public Review(Long id, User user, String content, Timestamp date, boolean deleted, boolean hided) {
-        this.id = id;
-        this.user = user;
-        this.content = content;
-        this.date = date;
-        this.deleted = deleted;
-        this.hidden = hided;
-    }
 
     public Long getId() {
         return id;

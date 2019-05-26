@@ -134,5 +134,4 @@ public class ArticleConverterImpl implements ArticleConverter {
         article.setTitle(title);
         return article;
     }
-
 }

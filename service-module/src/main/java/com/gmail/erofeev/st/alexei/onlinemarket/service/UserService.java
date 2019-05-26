@@ -15,11 +15,9 @@ public interface UserService {
 
     UserDTO register(UserDTO user);
 
-    void changePassword(UserDTO user);
+    void changePassword(Long id);
 
     PageDTO<UserDTO> findAll(int page, int amount);
-
-    UserDTO findUserById(Long id);
 
     void updateRole(Long id, String roleName);
 

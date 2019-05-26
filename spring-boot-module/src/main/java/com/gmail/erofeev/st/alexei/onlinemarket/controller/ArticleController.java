@@ -92,10 +92,9 @@ public class ArticleController {
 
     @PostMapping("/articles/{id}/new")
     public String saveNewComment(@ModelAttribute("newComment") CommentDTO commentDTO,
-                                 @PathVariable Long id) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        AppUserPrincipal principal = (AppUserPrincipal) authentication.getPrincipal();
-        Long userId = principal.getUser().getId();
+                                 @PathVariable Long id,
+                                 Authentication authentication) {
+        Long userId = getSecureUserId(authentication);
         commentService.save(userId, commentDTO);
         return "redirect:/articles/" + id;
     }
@@ -118,11 +117,10 @@ public class ArticleController {
     }
 
     @PostMapping("/articles/new")
-    public String createArticle(
-            Model model,
-            @ModelAttribute("article") @Valid NewArticleDTO article,
-            BindingResult bindingResult,
-            Authentication authentication) {
+    public String createArticle(Model model,
+                                @ModelAttribute("article") @Valid NewArticleDTO article,
+                                BindingResult bindingResult,
+                                Authentication authentication) {
         if (bindingResult.hasErrors()) {
             return "newArticle";
         }
@@ -139,9 +137,9 @@ public class ArticleController {
     public String updateArticle(@PathVariable Long id,
                                 @ModelAttribute("editedArticle") @Validated NewArticleDTO article,
                                 BindingResult bindingResult) {
-//        if (bindingResult.hasErrors()) {
-//            return "redirect:/articles/" + id;
-//        }
+        if (bindingResult.hasErrors()) {
+            return "redirect:/articles/" + id;
+        }
         articleService.update(article);
         return "redirect:/articles/" + id;
     }

@@ -35,13 +35,6 @@ public class UserControllerTest {
     }
 
     @Test
-    public void correctLoginTestForAdmin() throws Exception {
-        mockMvc.perform(formLogin().user("admin@gmail.com").password("admin"))
-                .andExpect(status().isFound())
-                .andExpect(redirectedUrl("/users"));
-    }
-
-    @Test
     public void wrongLoginTestForUser() throws Exception {
         mockMvc.perform(formLogin().user("wrong@gmail.com").password("wrong_password"))
                 .andExpect(status().isFound())

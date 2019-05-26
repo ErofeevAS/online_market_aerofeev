@@ -7,6 +7,7 @@ import com.gmail.erofeev.st.alexei.onlinemarket.repository.model.User;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.ArticleService;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.converter.ArticleConverter;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.converter.DateTimeConverter;
+import com.gmail.erofeev.st.alexei.onlinemarket.service.exception.ServiceException;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ArticleDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ArticleRestDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.NewArticleDTO;
@@ -51,21 +52,21 @@ public class ArticleServiceImpl implements ArticleService {
             List<Article> articles = articleRepository.getEntities(offset, amount);
             List<ArticleDTO> articleDTOList = articleConverter.toListDTO(articles);
             return getPageDTO(articleDTOList, maxPages);
-        } else if (keyWord == null && tag != null) {
+        } else if (keyWord == null) {
             Integer amountOfEntity = articleRepository.getAmountOfEntity();
             int maxPages = getMaxPages(amountOfEntity, amount);
             int offset = getOffset(page, maxPages, amount);
             List<Article> articles = articleRepository.getEntitiesByTag(offset, amount, searchingFilter.getTag());
             List<ArticleDTO> articleDTOList = articleConverter.toListDTO(articles);
             return getPageDTO(articleDTOList, maxPages);
-        } else if (keyWord != null && tag == null) {
+        } else if (tag == null) {
             Integer amountOfEntity = articleRepository.getAmountOfEntity();
             int maxPages = getMaxPages(amountOfEntity, amount);
             int offset = getOffset(page, maxPages, amount);
             List<Article> articles = articleRepository.getArticlesFilteredByKeyWord(offset, amount, keyWord);
             List<ArticleDTO> articleDTOList = articleConverter.toListDTO(articles);
             return getPageDTO(articleDTOList, maxPages);
-        } else if (keyWord != null && tag != null) {
+        } else {
             Integer amountOfEntity = articleRepository.getAmountOfArticlesWithKeyWord(searchingFilter.getKeyWord());
             int maxPages = getMaxPages(amountOfEntity, amount);
             int offset = getOffset(page, maxPages, amount);
@@ -73,13 +74,17 @@ public class ArticleServiceImpl implements ArticleService {
             List<ArticleDTO> articleDTOList = articleConverter.toListDTO(articles);
             return getPageDTO(articleDTOList, maxPages);
         }
-        return new PageDTO<ArticleDTO>();
     }
 
     @Override
     @Transactional
     public ArticleDTO getArticleById(Long id) {
         Article article = articleRepository.findById(id);
+        if (article == null) {
+            String message = String.format("Article with id:%s not found", id);
+            logger.error(message);
+            throw new ServiceException(message);
+        }
         return articleConverter.toDTO(article);
     }
 

@@ -37,6 +37,7 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = commentConverter.fromDTO(commentDTO);
         comment.setUser(user);
         commentRepository.persist(comment);
+        logger.debug(String.format("Comment: %s from user with id:%s was saved", comment.getContent(), userId));
     }
 
     @Override
@@ -44,5 +45,6 @@ public class CommentServiceImpl implements CommentService {
     public void deleteComment(Long id) {
         Comment comment = commentRepository.findById(id);
         commentRepository.remove(comment);
+        logger.debug(String.format("Comment with id:%s was deleted", id));
     }
 }

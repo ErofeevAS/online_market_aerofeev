@@ -47,8 +47,8 @@ public class ReviewServiceImpl implements ReviewService {
     @Transactional
     public void delete(Long id) {
         Review review = reviewRepository.findById(id);
-        review.setDeleted(true);
-        reviewRepository.merge(review);
+        reviewRepository.remove(review);
+        logger.debug(String.format("Review with id:%s was deleted", id));
     }
 
     @Override
@@ -58,6 +58,7 @@ public class ReviewServiceImpl implements ReviewService {
         for (Long id : mapHiddenForId.keySet()) {
             Boolean hidden = mapHiddenForId.get(id);
             reviewRepository.updateHiddenById(id, hidden);
+            logger.debug(String.format("Review with id:%s hidden field now is %s", id, hidden));
         }
     }
 

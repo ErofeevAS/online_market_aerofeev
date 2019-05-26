@@ -9,7 +9,6 @@ import java.util.List;
 
 @Repository
 public class ItemRepositoryImpl extends GenericRepositoryImpl<Long, Item> implements ItemRepository {
-
     @Override
     public List<Item> findItems(Integer offset, Integer amount) {
         String hql = "select i from Item i ORDER BY i.name asc ";
