@@ -3,6 +3,7 @@ package com.gmail.erofeev.st.alexei.onlinemarket.service.converter;
 import com.gmail.erofeev.st.alexei.onlinemarket.repository.model.Article;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ArticleDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ArticleRestDTO;
+import com.gmail.erofeev.st.alexei.onlinemarket.service.model.NewArticleDTO;
 
 import java.util.List;
 
@@ -18,4 +19,6 @@ public interface ArticleConverter {
     Article fromRestDTO(ArticleRestDTO articleRestDTO);
 
     Article fromDTO(ArticleDTO articleDTO);
+
+    Article toArticle(NewArticleDTO newArticleDTO);
 }

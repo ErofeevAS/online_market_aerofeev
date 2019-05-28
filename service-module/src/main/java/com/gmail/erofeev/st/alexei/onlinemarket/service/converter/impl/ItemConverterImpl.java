@@ -1,0 +1,133 @@
+package com.gmail.erofeev.st.alexei.onlinemarket.service.converter.impl;
+
+import com.gmail.erofeev.st.alexei.onlinemarket.repository.model.Item;
+import com.gmail.erofeev.st.alexei.onlinemarket.repository.model.User;
+import com.gmail.erofeev.st.alexei.onlinemarket.service.converter.ItemConverter;
+import com.gmail.erofeev.st.alexei.onlinemarket.service.converter.UserConverter;
+import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ItemDTO;
+import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ItemRestDTO;
+import com.gmail.erofeev.st.alexei.onlinemarket.service.model.UserDTO;
+import org.springframework.stereotype.Component;
+
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static java.util.UUID.randomUUID;
+
+@Component
+public class ItemConverterImpl implements ItemConverter {
+    private static final int SHORT_DESCRIPTION_LENGTH = 200;
+    private static final String SUFFIX_FOR_COPY = " -copy ";
+    private final UserConverter userConverter;
+
+    public ItemConverterImpl(UserConverter userConverter) {
+        this.userConverter = userConverter;
+    }
+
+    @Override
+    public ItemDTO toDTO(Item item) {
+        ItemDTO itemDTO = new ItemDTO();
+        itemDTO.setId(item.getId());
+        itemDTO.setName(item.getName());
+        itemDTO.setPrice(item.getPrice());
+        String description = item.getDescription();
+        itemDTO.setDescription(description);
+        itemDTO.setUniqueNumber(item.getUniqueNumber());
+        User user = item.getUser();
+        UserDTO userDTO = userConverter.toDTO(user);
+        itemDTO.setUser(userDTO);
+        String shortDescription = description;
+        if (shortDescription.length() > SHORT_DESCRIPTION_LENGTH) {
+            shortDescription = description.substring(0, SHORT_DESCRIPTION_LENGTH);
+        }
+        itemDTO.setShortDescription(shortDescription);
+        return itemDTO;
+    }
+
+    @Override
+    public Item fromDTO(ItemDTO itemDTO) {
+        Long id = itemDTO.getId();
+        String name = itemDTO.getName();
+        BigDecimal price = itemDTO.getPrice();
+        String description = itemDTO.getDescription();
+        String uniqueNumber = itemDTO.getUniqueNumber();
+        UserDTO userDTO = itemDTO.getUser();
+        User user = userConverter.fromDTO(userDTO);
+        Item item = new Item();
+        item.setUser(user);
+        item.setId(id);
+        item.setName(name);
+        item.setPrice(price);
+        item.setDescription(description);
+        item.setUniqueNumber(uniqueNumber);
+        return item;
+    }
+
+    @Override
+    public List<ItemDTO> toListDTO(List<Item> items) {
+        return items.stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public ItemRestDTO toRestDTO(Item item) {
+        Long id = item.getId();
+        String description = item.getDescription();
+        String name = item.getName();
+        String uniqueNumber = item.getUniqueNumber();
+        BigDecimal price = item.getPrice();
+        ItemRestDTO itemRestDTO = new ItemRestDTO();
+        itemRestDTO.setId(id);
+        itemRestDTO.setDescription(description);
+        itemRestDTO.setName(name);
+        itemRestDTO.setUniqueNumber(uniqueNumber);
+        itemRestDTO.setPrice(price);
+        return itemRestDTO;
+    }
+
+    @Override
+    public Item fromRestDTO(ItemRestDTO itemRestDTO) {
+        Long id = itemRestDTO.getId();
+        String description = itemRestDTO.getDescription();
+        String name = itemRestDTO.getName();
+        String uniqueNumber = itemRestDTO.getUniqueNumber();
+        BigDecimal price = itemRestDTO.getPrice();
+        Item item = new Item();
+        item.setId(id);
+        item.setDescription(description);
+        item.setName(name);
+        item.setUniqueNumber(uniqueNumber);
+        item.setPrice(price);
+        return item;
+    }
+
+    @Override
+    public List<ItemRestDTO> toListRestDTO(List<Item> items) {
+        return items.stream()
+                .map(this::toRestDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Item copyItem(Item item) {
+        Item copyOfItem = new Item();
+        copyOfItem.setUniqueNumber(randomUUID().toString());
+        String nameForCopy = getNameForCopy(item.getName());
+        copyOfItem.setName(nameForCopy);
+        copyOfItem.setDescription(item.getDescription());
+        copyOfItem.setPrice(item.getPrice());
+        copyOfItem.setUser(item.getUser());
+        return copyOfItem;
+    }
+
+    private String getNameForCopy(String originalName) {
+        Date date = new Date();
+        Timestamp timestamp = new Timestamp(date.getTime());
+        String nameWithoutSuffixOfCopy = originalName.split(SUFFIX_FOR_COPY)[0];
+        return nameWithoutSuffixOfCopy + SUFFIX_FOR_COPY + timestamp.toString();
+    }
+}

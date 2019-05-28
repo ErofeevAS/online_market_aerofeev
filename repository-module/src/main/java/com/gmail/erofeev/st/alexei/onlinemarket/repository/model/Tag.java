@@ -19,7 +19,7 @@ import java.util.Objects;
 
 @Entity
 @Table
-@SQLDelete(sql = "UPDATE tag SET deleted = '1' WHERE id = ?")
+@SQLDelete(sql = "UPDATE tag SET deleted = true WHERE id = ?")
 @Where(clause = "deleted = '0'")
 public class Tag {
     @Id
@@ -28,7 +28,7 @@ public class Tag {
     private Long id;
     @Column
     private String name;
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(
             name = "article_tag",
             joinColumns = {@JoinColumn(name = "tag_id")},

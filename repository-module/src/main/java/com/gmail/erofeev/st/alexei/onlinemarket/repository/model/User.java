@@ -21,7 +21,7 @@ import java.util.Objects;
 
 @Entity
 @Table
-@SQLDelete(sql = "UPDATE user SET deleted = '1' WHERE id = ? and undeletable='0'")
+@SQLDelete(sql = "UPDATE user SET deleted = true WHERE id = ? and undeletable='0'")
 @Where(clause = "deleted = '0'")
 public class User {
     @Id
@@ -41,12 +41,14 @@ public class User {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id", nullable = false)
     private Role role = new Role();
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Article> articles = new ArrayList<>();
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<Comment> reviews = new ArrayList<>();
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Review> reviews = new ArrayList<>();
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Item> items = new ArrayList<>();
     @Column
     private Boolean deleted;
     @Column
@@ -59,6 +61,10 @@ public class User {
     private Profile profile;
 
     public User() {
+    }
+
+    public void addArticle(Article article) {
+        articles.add(article);
     }
 
     public Long getId() {
@@ -141,11 +147,11 @@ public class User {
         this.comments = comments;
     }
 
-    public List<Comment> getReviews() {
+    public List<Review> getReviews() {
         return reviews;
     }
 
-    public void setReviews(List<Comment> reviews) {
+    public void setReviews(List<Review> reviews) {
         this.reviews = reviews;
     }
 
@@ -163,6 +169,14 @@ public class User {
 
     public void setProfile(Profile profile) {
         this.profile = profile;
+    }
+
+    public List<Item> getItems() {
+        return items;
+    }
+
+    public void setItems(List<Item> items) {
+        this.items = items;
     }
 
     @Override

@@ -12,6 +12,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
 
+import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.REST_API_ALL_URL;
+import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.REST_API_ARTICLES_URL;
+import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.REST_API_ITEMS_URL;
+import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.REST_API_USERS_URL;
+
 @Configuration
 @Order(1)
 public class RestApiSecurityConfigurer extends WebSecurityConfigurerAdapter {
@@ -38,9 +43,9 @@ public class RestApiSecurityConfigurer extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.antMatcher("/api/v1/**")
+        http.antMatcher(REST_API_ALL_URL)
                 .authorizeRequests()
-                .antMatchers("/api/v1/users", "/api/v1/articles")
+                .antMatchers(REST_API_USERS_URL, REST_API_ARTICLES_URL, REST_API_ITEMS_URL)
                 .hasRole(securityProperties.getRoleSecureRestApi())
                 .and()
                 .httpBasic()

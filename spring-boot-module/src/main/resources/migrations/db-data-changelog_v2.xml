@@ -42,7 +42,6 @@
             <column name="article_id" value="1"/>
             <column name="tag_id" value="4"/>
         </insert>
-
         <insert tableName="article_tag">
             <column name="article_id" value="2"/>
             <column name="tag_id" value="2"/>
@@ -55,9 +54,24 @@
             <column name="article_id" value="4"/>
             <column name="tag_id" value="4"/>
         </insert>
+        <insert tableName="article_tag">
+            <column name="article_id" value="5"/>
+            <column name="tag_id" value="4"/>
+        </insert>
+        <insert tableName="article_tag">
+            <column name="article_id" value="6"/>
+            <column name="tag_id" value="4"/>
+        </insert>
+        <insert tableName="article_tag">
+            <column name="article_id" value="7"/>
+            <column name="tag_id" value="4"/>
+        </insert>
+        <insert tableName="article_tag">
+            <column name="article_id" value="8"/>
+            <column name="tag_id" value="4"/>
+        </insert>
 
     </changeSet>
-
 
 
 </databaseChangeLog>

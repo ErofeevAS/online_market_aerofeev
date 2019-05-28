@@ -17,8 +17,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserControllerTest {
-    private static final String ROLE_ADMIN = "Administrator";
-    private static final String ROLE_CUSTOMER = "Customer";
     @Autowired
     MockMvc mockMvc;
 
@@ -34,13 +32,6 @@ public class UserControllerTest {
         mockMvc.perform(get("/reviews"))
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl("http://localhost/login"));
-    }
-
-    @Test
-    public void correctLoginTestForAdmin() throws Exception {
-        mockMvc.perform(formLogin().user("admin@gmail.com").password("admin"))
-                .andExpect(status().isFound())
-                .andExpect(redirectedUrl("/users"));
     }
 
     @Test

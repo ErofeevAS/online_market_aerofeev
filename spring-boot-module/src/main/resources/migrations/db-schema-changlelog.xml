@@ -72,9 +72,6 @@
             <column name="user_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="short_content" type="varchar(200)">
-                <constraints nullable="false"/>
-            </column>
             <column name="content" type="varchar(1000)">
                 <constraints nullable="false"/>
             </column>

@@ -5,7 +5,6 @@ import java.sql.Timestamp;
 public class ArticleRestDTO {
     private Long id;
     private String title;
-    private String shortContent;
     private String content;
     private Timestamp date;
     private boolean isDeleted = false;
@@ -84,13 +83,5 @@ public class ArticleRestDTO {
 
     public void setAuthorEmail(String authorEmail) {
         this.authorEmail = authorEmail;
-    }
-
-    public String getShortContent() {
-        return shortContent;
-    }
-
-    public void setShortContent(String shortContent) {
-        this.shortContent = shortContent;
     }
 }

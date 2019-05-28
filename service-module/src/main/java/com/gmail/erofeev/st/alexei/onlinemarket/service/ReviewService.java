@@ -10,5 +10,5 @@ public interface ReviewService {
 
     void delete(Long id);
 
-    void updateHidedFields(ReviewsListWrapper reviewsChanges);
+    void updateHiddenFields(ReviewsListWrapper reviewsChanges);
 }

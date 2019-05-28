@@ -9,7 +9,9 @@ public interface ArticleRepository extends GenericRepository<Long, Article> {
 
     Integer getAmountOfArticlesWithSameTag(String tagName);
 
-    List<Article> getArticlesFilteredByTitle(int offset, Integer amount, String keyWord);
+    List<Article> getArticlesFilteredByKeyWord(int offset, Integer amount, String keyWord);
 
     List<Article> getEntitiesByTag(int offset, Integer amount, String tag);
+
+    List<Article> getEntitiesByTagAndKeyword(int offset, Integer amount, String tagId, String keyWord);
 }

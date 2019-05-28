@@ -1,5 +1,6 @@
 package com.gmail.erofeev.st.alexei.onlinemarket.controller;
 
+import com.gmail.erofeev.st.alexei.onlinemarket.controller.util.RequestParamsValidator;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.ArticleService;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.AppUserPrincipal;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ArticleDTO;
@@ -24,9 +25,11 @@ import java.util.List;
 public class RestArticlesController {
 
     private final ArticleService articleService;
+    private final RequestParamsValidator requestParamsValidator;
 
-    public RestArticlesController(ArticleService articleService) {
+    public RestArticlesController(ArticleService articleService, RequestParamsValidator requestParamsValidator) {
         this.articleService = articleService;
+        this.requestParamsValidator = requestParamsValidator;
     }
 
     @GetMapping
@@ -35,13 +38,15 @@ public class RestArticlesController {
     }
 
     @GetMapping("/{id}")
-    public ArticleDTO getArticles(@PathVariable Long id) {
-        return articleService.getArticleById(id);
+    public ArticleDTO getArticles(@PathVariable String id) {
+        Long articleId = requestParamsValidator.validateLong(id);
+        return articleService.getArticleById(articleId);
     }
 
     @DeleteMapping("/{id}")
-    public String deleteArticle(@PathVariable Long id) {
-        return articleService.delete(id);
+    public String deleteArticle(@PathVariable String id) {
+        Long articleId = requestParamsValidator.validateLong(id);
+        return articleService.delete(articleId);
     }
 
     @PostMapping

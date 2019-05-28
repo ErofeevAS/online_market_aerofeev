@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.List;
 
+import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.ROLE_SECURE_REST_API;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -26,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class RestArticlesControllerTest {
-    private static final String ROLE_SECURE_REST_API = "SECURE_REST_API";
+
     @Autowired
     MockMvc mvc;
     @Autowired
@@ -41,7 +42,7 @@ public class RestArticlesControllerTest {
         String content = mvcResult.getResponse().getContentAsString();
         List<ArticleRestDTO> articles = objectMapper.readValue(content, new TypeReference<List<ArticleRestDTO>>() {
         });
-        Assert.assertEquals(4, articles.size());
+        Assert.assertEquals(8, articles.size());
     }
 
     @Test
@@ -64,7 +65,7 @@ public class RestArticlesControllerTest {
     @WithMockUser(roles = ROLE_SECURE_REST_API)
     public void deleteArticleById() throws Exception {
         String url = "/api/v1/articles/1";
-        MvcResult mvcResult = mvc.perform(delete(url))
+        mvc.perform(delete(url))
                 .andExpect(content().string("success"))
                 .andExpect(status().isOk()).andReturn();
     }

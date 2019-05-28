@@ -34,9 +34,7 @@ public class Article {
     private String title;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private User user = new User();
-    @Column(name = "short_content")
-    private String shortContent;
+    private User user;
     @Column
     private String content;
     @Column
@@ -45,10 +43,10 @@ public class Article {
     private boolean isDeleted;
     @Column(name = "hidden")
     private boolean isHidden;
-    @OneToMany(mappedBy = "article", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "article", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("date")
     private List<Comment> comments = new ArrayList<>();
-    @ManyToMany(mappedBy = "articles", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "articles", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private List<Tag> tags = new ArrayList<>();
 
     public Long getId() {
@@ -113,14 +111,6 @@ public class Article {
 
     public void setComments(List<Comment> comments) {
         this.comments = comments;
-    }
-
-    public String getShortContent() {
-        return shortContent;
-    }
-
-    public void setShortContent(String shortContent) {
-        this.shortContent = shortContent;
     }
 
     public List<Tag> getTags() {

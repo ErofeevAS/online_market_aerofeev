@@ -43,8 +43,12 @@ public class ReviewConverterImpl implements ReviewConverter {
     public Review fromDTO(ReviewDTO reviewDTO) {
         Long id = reviewDTO.getId();
         Boolean deleted = reviewDTO.getDeleted();
-        Boolean hided = reviewDTO.getHidden();
-        return new Review(id, deleted, hided);
+        Boolean hidden = reviewDTO.getHidden();
+        Review review = new Review();
+        review.setId(id);
+        review.setDeleted(deleted);
+        review.setHidden(hidden);
+        return review;
     }
 
     @Override
