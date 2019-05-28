@@ -4,14 +4,13 @@ import com.gmail.erofeev.st.alexei.onlinemarket.controller.util.DateTimeLocaleUt
 import com.gmail.erofeev.st.alexei.onlinemarket.controller.util.Paginator;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.ArticleService;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.CommentService;
-import com.gmail.erofeev.st.alexei.onlinemarket.service.model.AppUserPrincipal;
+import com.gmail.erofeev.st.alexei.onlinemarket.service.UserAuthenticationService;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ArticleDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.CommentDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.NewArticleDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.PageDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.SearchingFilter;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -29,11 +28,13 @@ public class ArticleController {
     private final ArticleService articleService;
     private final CommentService commentService;
     private final DateTimeLocaleUtil dateTimeLocaleUtil;
+    private final UserAuthenticationService userAuthenticationService;
 
-    public ArticleController(ArticleService articleService, CommentService commentService, DateTimeLocaleUtil dateTimeLocaleUtil) {
+    public ArticleController(ArticleService articleService, CommentService commentService, DateTimeLocaleUtil dateTimeLocaleUtil, UserAuthenticationService userAuthenticationService) {
         this.articleService = articleService;
         this.commentService = commentService;
         this.dateTimeLocaleUtil = dateTimeLocaleUtil;
+        this.userAuthenticationService = userAuthenticationService;
     }
 
     @GetMapping("/articles")
@@ -76,7 +77,7 @@ public class ArticleController {
         ArticleDTO article = articleService.getArticleById(id);
         model.addAttribute("article", article);
         Long articleAuthorId = article.getUser().getId();
-        Long userId = getSecureUserId(authentication);
+        Long userId = userAuthenticationService.getSecureUserId(authentication);
         Boolean showDeleteButton = false;
         if (articleAuthorId == userId) {
             showDeleteButton = true;
@@ -94,7 +95,7 @@ public class ArticleController {
     public String saveNewComment(@ModelAttribute("newComment") CommentDTO commentDTO,
                                  @PathVariable Long id,
                                  Authentication authentication) {
-        Long userId = getSecureUserId(authentication);
+        Long userId = userAuthenticationService.getSecureUserId(authentication);
         commentService.save(userId, commentDTO);
         return "redirect:/articles/" + id;
     }
@@ -124,7 +125,7 @@ public class ArticleController {
         if (bindingResult.hasErrors()) {
             return "newArticle";
         }
-        Long userId = getSecureUserId(authentication);
+        Long userId = userAuthenticationService.getSecureUserId(authentication);
         article.setUserId(userId);
         articleService.createArticle(article);
         model.addAttribute("info", "article was created");
@@ -142,11 +143,5 @@ public class ArticleController {
         }
         articleService.update(article);
         return "redirect:/articles/" + id;
-    }
-
-    private Long getSecureUserId(Authentication authentication) {
-        authentication = SecurityContextHolder.getContext().getAuthentication();
-        AppUserPrincipal principal = (AppUserPrincipal) authentication.getPrincipal();
-        return principal.getUser().getId();
     }
 }

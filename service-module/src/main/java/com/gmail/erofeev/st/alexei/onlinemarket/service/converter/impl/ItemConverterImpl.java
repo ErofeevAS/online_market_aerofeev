@@ -13,8 +13,9 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
+
+import static java.util.UUID.randomUUID;
 
 @Component
 public class ItemConverterImpl implements ItemConverter {
@@ -28,20 +29,16 @@ public class ItemConverterImpl implements ItemConverter {
 
     @Override
     public ItemDTO toDTO(Item item) {
-        Long id = item.getId();
-        String name = item.getName();
-        BigDecimal price = item.getPrice();
+        ItemDTO itemDTO = new ItemDTO();
+        itemDTO.setId(item.getId());
+        itemDTO.setName(item.getName());
+        itemDTO.setPrice(item.getPrice());
         String description = item.getDescription();
-        String uniqueNumber = item.getUniqueNumber();
+        itemDTO.setDescription(description);
+        itemDTO.setUniqueNumber(item.getUniqueNumber());
         User user = item.getUser();
         UserDTO userDTO = userConverter.toDTO(user);
-        ItemDTO itemDTO = new ItemDTO();
         itemDTO.setUser(userDTO);
-        itemDTO.setId(id);
-        itemDTO.setName(name);
-        itemDTO.setPrice(price);
-        itemDTO.setDescription(description);
-        itemDTO.setUniqueNumber(uniqueNumber);
         String shortDescription = description;
         if (shortDescription.length() > SHORT_DESCRIPTION_LENGTH) {
             shortDescription = description.substring(0, SHORT_DESCRIPTION_LENGTH);
@@ -105,7 +102,6 @@ public class ItemConverterImpl implements ItemConverter {
         item.setName(name);
         item.setUniqueNumber(uniqueNumber);
         item.setPrice(price);
-        item.setDeleted(false);
         return item;
     }
 
@@ -118,17 +114,13 @@ public class ItemConverterImpl implements ItemConverter {
 
     @Override
     public Item copyItem(Item item) {
-        ItemDTO itemDTO = toDTO(item);
-        String uniqueNumber = UUID.randomUUID().toString();
-        itemDTO.setUniqueNumber(uniqueNumber);
-        String originalItemName = itemDTO.getName();
-        String nameForCopy = getNameForCopy(originalItemName);
-        itemDTO.setName(nameForCopy);
-        Item copyOfItem = fromDTO(itemDTO);
-        copyOfItem.setDeleted(false);
-        copyOfItem.setId(null);
-        User user = item.getUser();
-        copyOfItem.setUser(user);
+        Item copyOfItem = new Item();
+        copyOfItem.setUniqueNumber(randomUUID().toString());
+        String nameForCopy = getNameForCopy(item.getName());
+        copyOfItem.setName(nameForCopy);
+        copyOfItem.setDescription(item.getDescription());
+        copyOfItem.setPrice(item.getPrice());
+        copyOfItem.setUser(item.getUser());
         return copyOfItem;
     }
 
