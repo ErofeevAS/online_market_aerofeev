@@ -69,7 +69,6 @@ public class ArticleController {
         return "articles";
     }
 
-
     @GetMapping("/articles/{id}")
     public String getArticleAfterUpdateComment(@PathVariable Long id,
                                                Model model,
@@ -122,6 +121,8 @@ public class ArticleController {
                                 @ModelAttribute("article") @Valid NewArticleDTO article,
                                 BindingResult bindingResult,
                                 Authentication authentication) {
+        String currentDateTime = dateTimeLocaleUtil.getCurrentTimeInDateTimeLocaleFormat();
+        model.addAttribute("currentDate", currentDateTime);
         if (bindingResult.hasErrors()) {
             return "newArticle";
         }
@@ -132,7 +133,6 @@ public class ArticleController {
         model.addAttribute("article", article);
         return "newArticle";
     }
-
 
     @PostMapping("/articles/{id}/update")
     public String updateArticle(@PathVariable Long id,

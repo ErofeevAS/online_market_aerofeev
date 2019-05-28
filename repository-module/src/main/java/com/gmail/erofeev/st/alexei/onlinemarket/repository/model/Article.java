@@ -37,14 +37,14 @@ public class Article {
     private User user;
     @Column
     private String content;
-    @Column
-    private Timestamp date;
+    @Column(name = "created_date")
+    private Timestamp createdDate;
     @Column(name = "deleted")
-    private boolean isDeleted;
+    private boolean isDeleted = false;
     @Column(name = "hidden")
-    private boolean isHidden;
+    private boolean isHidden = false;
     @OneToMany(mappedBy = "article", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @OrderBy("date")
+    @OrderBy("created_date")
     private List<Comment> comments = new ArrayList<>();
     @ManyToMany(mappedBy = "articles", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private List<Tag> tags = new ArrayList<>();
@@ -81,12 +81,12 @@ public class Article {
         this.content = content;
     }
 
-    public Timestamp getDate() {
-        return date;
+    public Timestamp getCreatedDate() {
+        return createdDate;
     }
 
-    public void setDate(Timestamp date) {
-        this.date = date;
+    public void setCreatedDate(Timestamp createdDate) {
+        this.createdDate = createdDate;
     }
 
     public boolean isDeleted() {
@@ -131,12 +131,12 @@ public class Article {
                 id.equals(article.id) &&
                 Objects.equals(title, article.title) &&
                 Objects.equals(content, article.content) &&
-                Objects.equals(date, article.date);
+                Objects.equals(createdDate, article.createdDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, content, date, isDeleted, isHidden);
+        return Objects.hash(id, title, content, createdDate, isDeleted, isHidden);
     }
 
     @Override
@@ -146,7 +146,7 @@ public class Article {
                 ", title='" + title + '\'' +
                 ", user=" + user +
                 ", content='" + content + '\'' +
-                ", date=" + date +
+                ", createdDate=" + createdDate +
                 ", isDeleted=" + isDeleted +
                 ", isHidden=" + isHidden +
                 '}';

@@ -156,9 +156,9 @@ public class ArticleServiceImpl implements ArticleService {
     public void update(NewArticleDTO articleDTO) {
         Long id = articleDTO.getId();
         Article article = articleRepository.findById(id);
-        String date = articleDTO.getDate();
+        String date = articleDTO.getCreatedDate();
         Timestamp timestamp = dateTimeConverter.convertDateTimeLocaleToTimeStamp(date);
-        article.setDate(timestamp);
+        article.setCreatedDate(timestamp);
         String content = articleDTO.getContent();
         article.setContent(content);
         String title = articleDTO.getTitle();

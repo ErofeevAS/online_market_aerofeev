@@ -48,4 +48,5 @@ public class ItemRestDTO {
     public void setDescription(String description) {
         this.description = description;
     }
+
 }

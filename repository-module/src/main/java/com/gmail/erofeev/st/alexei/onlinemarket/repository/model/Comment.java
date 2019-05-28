@@ -29,8 +29,8 @@ public class Comment {
     private User user = new User();
     @Column
     private String content;
-    @Column
-    private Timestamp date;
+    @Column(name = "created_date")
+    private Timestamp createdDate;
     @Column(name = "deleted")
     private boolean isDeleted;
     @Column(name = "hidden")
@@ -63,12 +63,12 @@ public class Comment {
         this.content = content;
     }
 
-    public Timestamp getDate() {
-        return date;
+    public Timestamp getCreatedDate() {
+        return createdDate;
     }
 
-    public void setDate(Timestamp date) {
-        this.date = date;
+    public void setCreatedDate(Timestamp createdDate) {
+        this.createdDate = createdDate;
     }
 
     public boolean isDeleted() {
@@ -104,12 +104,12 @@ public class Comment {
                 isHidden == comment.isHidden &&
                 id.equals(comment.id) &&
                 Objects.equals(content, comment.content) &&
-                Objects.equals(date, comment.date);
+                Objects.equals(createdDate, comment.createdDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, content, date, isDeleted, isHidden);
+        return Objects.hash(id, content, createdDate, isDeleted, isHidden);
     }
 
     @Override
@@ -118,7 +118,7 @@ public class Comment {
                 "id=" + id +
                 ", user=" + user +
                 ", content='" + content + '\'' +
-                ", date=" + date +
+                ", createdDate=" + createdDate +
                 ", isDeleted=" + isDeleted +
                 ", isHidden=" + isHidden +//
                 '}';

@@ -9,13 +9,13 @@
 </head>
 <body>
 
-<div class="container align-items-center">
+<div class="container">
     <div class="row" th:insert="~{fragments/header :: header}">
     </div>
     <div class="row" th:insert="~{fragments/navbar :: navbar}">
     </div>
-    <div class="row">
-        <div class="col-ml-6">
+    <div>
+        <div class="col-ml-6" >
             <form th:action="@{/profile}" th:object="${profileView}" method="post">
 
                 <div class="alert alert-info" th:if="${info}" th:text="${info}">

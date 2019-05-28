@@ -8,9 +8,8 @@ import com.gmail.erofeev.st.alexei.onlinemarket.service.model.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class ReviewConverterImpl implements ReviewConverter {
@@ -23,40 +22,30 @@ public class ReviewConverterImpl implements ReviewConverter {
 
     @Override
     public ReviewDTO toDTO(Review review) {
-        Long id = review.getId();
-        UserDTO user = userConverter.toDTO(review.getUser());
-        String content = review.getContent();
-        Timestamp date = review.getDate();
-        Boolean deleted = review.getDeleted();
-        Boolean hided = review.getHidden();
         ReviewDTO reviewDTO = new ReviewDTO();
-        reviewDTO.setId(id);
-        reviewDTO.setContent(content);
+        reviewDTO.setId(review.getId());
+        reviewDTO.setContent(review.getContent());
+        reviewDTO.setCreatedDate(review.getCreatedDate());
+        reviewDTO.setDeleted(review.getDeleted());
+        reviewDTO.setHidden(review.getHidden());
+        UserDTO user = userConverter.toDTO(review.getUser());
         reviewDTO.setUser(user);
-        reviewDTO.setDate(date);
-        reviewDTO.setDeleted(deleted);
-        reviewDTO.setHidden(hided);
         return reviewDTO;
     }
 
     @Override
     public Review fromDTO(ReviewDTO reviewDTO) {
-        Long id = reviewDTO.getId();
-        Boolean deleted = reviewDTO.getDeleted();
-        Boolean hidden = reviewDTO.getHidden();
         Review review = new Review();
-        review.setId(id);
-        review.setDeleted(deleted);
-        review.setHidden(hidden);
+        review.setId(reviewDTO.getId());
+        review.setDeleted(reviewDTO.getDeleted());
+        review.setHidden(reviewDTO.getHidden());
         return review;
     }
 
     @Override
     public List<ReviewDTO> toListDTO(List<Review> reviews) {
-        List<ReviewDTO> reviewDTOList = new ArrayList<>(reviews.size());
-        for (Review review : reviews) {
-            reviewDTOList.add(toDTO(review));
-        }
-        return reviewDTOList;
+        return reviews.stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
     }
 }

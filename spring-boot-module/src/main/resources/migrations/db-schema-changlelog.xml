@@ -75,7 +75,7 @@
             <column name="content" type="varchar(1000)">
                 <constraints nullable="false"/>
             </column>
-            <column name="date" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+            <column name="created_date" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueBoolean="false" name="deleted" type="boolean">
@@ -110,7 +110,7 @@
             <column name="content" type="varchar(200)">
                 <constraints nullable="false"/>
             </column>
-            <column name="date" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+            <column name="created_date" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueBoolean="false" name="deleted" type="boolean">
@@ -181,7 +181,7 @@
             <column name="content" type="varchar(500)">
                 <constraints nullable="false"/>
             </column>
-            <column name="date" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+            <column name="created_date" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueBoolean="false" name="deleted" type="boolean">

@@ -12,11 +12,9 @@ import java.util.stream.Collectors;
 public class TagConverterImpl implements TagConverter {
     @Override
     public TagDTO toDTO(Tag tag) {
-        Long id = tag.getId();
-        String name = tag.getName();
         TagDTO tagDTO = new TagDTO();
-        tagDTO.setId(id);
-        tagDTO.setName(name);
+        tagDTO.setId(tag.getId());
+        tagDTO.setName(tag.getName());
         return tagDTO;
     }
 

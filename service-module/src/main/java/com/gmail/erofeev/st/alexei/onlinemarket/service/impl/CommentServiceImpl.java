@@ -33,7 +33,7 @@ public class CommentServiceImpl implements CommentService {
     public void save(Long userId, CommentDTO commentDTO) {
         User user = userRepository.findById(userId);
         Timestamp currentTime = new Timestamp((new Date()).getTime());
-        commentDTO.setDate(currentTime);
+        commentDTO.setCreatedDate(currentTime);
         Comment comment = commentConverter.fromDTO(commentDTO);
         comment.setUser(user);
         commentRepository.persist(comment);

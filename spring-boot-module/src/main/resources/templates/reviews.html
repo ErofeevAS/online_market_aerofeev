@@ -9,61 +9,69 @@
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"/>
 </head>
 <body>
-<div th:insert="~{fragments/header :: header}"></div>
-<div th:insert="~{fragments/navbar :: navbar}"></div>
+<div class="container">
+    <div class="row" th:insert="~{fragments/header :: header}">
+    </div>
+    <div class="row" th:insert="~{fragments/navbar :: navbar}">
+    </div>
 
-<table class="table table-striped">
-    <thead>
-    <tr>
-        <th> #</th>
-        <th> date</th>
-        <th> lastname</th>
-        <th> firstname</th>
-        <th> patronymic</th>
-        <th> context</th>
-        <th> for deleted</th>
-        <th> for hide</th>
-    </tr>
-    </thead>
-    <tbody>
-    <form action="#" th:action="@{/reviews/update}" th:object="${reviewsChanges}" method="post" id="hideForm"></form>
-    <th:block th:each="review,number : ${reviewsChanges.reviews}" id="reviewsTable">
-        <tr id="review">
-            <form action="#" th:action="@{/reviews/{id}/delete(id=${review.id})}"
-                  method="post">
-                <td th:text="${number.count+paginator.size*((paginator.page)-1)}"></td>
-                <td th:text="${review.date}">...</td>
-                <td th:text="${review.user.lastName}">...</td>
-                <td th:text="${review.user.firstName}">...</td>
-                <td th:text="${review.user.patronymic}">...</td>
-                <td th:text="${review.content}">...</td>
-                <td>
-                    <button type="submit"> delete</button>
-                </td>
-                <td><input hidden="true" type="text" th:field="${reviewsChanges.reviews[__${number.index}__].id}"
-                           th:value="${review.id}" form="hideForm"/>
-
-                    <input type="checkbox"
-                           th:checked="${review.hidden}"
-                           th:value="${review.hidden}"
-                           th:field="${reviewsChanges.reviews[__${number.index}__].hidden}"
-                           form="hideForm"/>
-                </td>
-            </form>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th> #</th>
+            <th> createdDate</th>
+            <th> lastname</th>
+            <th> firstname</th>
+            <th> patronymic</th>
+            <th> context</th>
+            <th> for deleted</th>
+            <th>
+                <button type="submit" class="btn btn-outline-primary" onclick="return confirm('Are you sure?')"
+                        form="hideForm">
+                    hide
+                </button>
+            </th>
         </tr>
+        </thead>
+        <tbody>
+        <form action="#" th:action="@{/reviews/update}" th:object="${reviewsChanges}" method="post"
+              id="hideForm"></form>
+        <th:block th:each="review,number : ${reviewsChanges.reviews}" id="reviewsTable">
+            <tr id="review">
+                <form action="#" th:action="@{/reviews/{id}/delete(id=${review.id})}"
+                      method="post">
+                    <td th:text="${number.count+paginator.size*((paginator.page)-1)}"></td>
+                    <td th:text="${review.createdDate}">...</td>
+                    <td th:text="${review.user.lastName}">...</td>
+                    <td th:text="${review.user.firstName}">...</td>
+                    <td th:text="${review.user.patronymic}">...</td>
+                    <td th:text="${review.content}">...</td>
+                    <td>
+                        <button type="submit"> delete</button>
+                    </td>
+                    <td><input hidden="true" type="text" th:field="${reviewsChanges.reviews[__${number.index}__].id}"
+                               th:value="${review.id}" form="hideForm"/>
 
-    </th:block>
-    <button type="submit" class="btn btn-outline-primary" onclick="return confirm('Are you sure?')" form="hideForm">
-        hide
-    </button>
+                        <input type="checkbox"
+                               th:checked="${review.hidden}"
+                               th:value="${review.hidden}"
+                               th:field="${reviewsChanges.reviews[__${number.index}__].hidden}"
+                               form="hideForm"/>
+                    </td>
+                </form>
+            </tr>
 
-    </tbody>
-    <tfoot>
-    </tfoot>
-</table>
+        </th:block>
 
-<div th:insert="~{fragments/paginator :: paginator}"></div>
-<div th:insert="~{fragments/footer :: footer}"></div>
+
+        </tbody>
+        <tfoot>
+        </tfoot>
+    </table>
+
+    <div th:insert="~{fragments/paginator :: paginator}"></div>
+    <div th:insert="~{fragments/footer :: footer}"></div>
+</div>
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"

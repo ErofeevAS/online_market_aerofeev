@@ -49,20 +49,15 @@ public class ItemConverterImpl implements ItemConverter {
 
     @Override
     public Item fromDTO(ItemDTO itemDTO) {
-        Long id = itemDTO.getId();
-        String name = itemDTO.getName();
-        BigDecimal price = itemDTO.getPrice();
-        String description = itemDTO.getDescription();
-        String uniqueNumber = itemDTO.getUniqueNumber();
+        Item item = new Item();
+        item.setId(itemDTO.getId());
+        item.setName(itemDTO.getName());
+        item.setPrice(itemDTO.getPrice());
+        item.setDescription(itemDTO.getDescription());
+        item.setUniqueNumber(itemDTO.getUniqueNumber());
         UserDTO userDTO = itemDTO.getUser();
         User user = userConverter.fromDTO(userDTO);
-        Item item = new Item();
         item.setUser(user);
-        item.setId(id);
-        item.setName(name);
-        item.setPrice(price);
-        item.setDescription(description);
-        item.setUniqueNumber(uniqueNumber);
         return item;
     }
 
@@ -75,33 +70,23 @@ public class ItemConverterImpl implements ItemConverter {
 
     @Override
     public ItemRestDTO toRestDTO(Item item) {
-        Long id = item.getId();
-        String description = item.getDescription();
-        String name = item.getName();
-        String uniqueNumber = item.getUniqueNumber();
-        BigDecimal price = item.getPrice();
         ItemRestDTO itemRestDTO = new ItemRestDTO();
-        itemRestDTO.setId(id);
-        itemRestDTO.setDescription(description);
-        itemRestDTO.setName(name);
-        itemRestDTO.setUniqueNumber(uniqueNumber);
-        itemRestDTO.setPrice(price);
+        itemRestDTO.setId(item.getId());
+        itemRestDTO.setDescription(item.getDescription());
+        itemRestDTO.setName(item.getName());
+        itemRestDTO.setUniqueNumber(item.getUniqueNumber());
+        itemRestDTO.setPrice(item.getPrice());
         return itemRestDTO;
     }
 
     @Override
     public Item fromRestDTO(ItemRestDTO itemRestDTO) {
-        Long id = itemRestDTO.getId();
-        String description = itemRestDTO.getDescription();
-        String name = itemRestDTO.getName();
-        String uniqueNumber = itemRestDTO.getUniqueNumber();
-        BigDecimal price = itemRestDTO.getPrice();
         Item item = new Item();
-        item.setId(id);
-        item.setDescription(description);
-        item.setName(name);
-        item.setUniqueNumber(uniqueNumber);
-        item.setPrice(price);
+        item.setId(itemRestDTO.getId());
+        item.setDescription(itemRestDTO.getDescription());
+        item.setName(itemRestDTO.getName());
+        item.setUniqueNumber(itemRestDTO.getUniqueNumber());
+        item.setPrice(itemRestDTO.getPrice());
         return item;
     }
 

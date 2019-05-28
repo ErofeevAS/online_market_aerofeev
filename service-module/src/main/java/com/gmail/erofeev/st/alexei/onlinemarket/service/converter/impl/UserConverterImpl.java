@@ -12,8 +12,8 @@ import com.gmail.erofeev.st.alexei.onlinemarket.service.model.RoleDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.UserDTO;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class UserConverterImpl implements UserConverter {
@@ -27,86 +27,69 @@ public class UserConverterImpl implements UserConverter {
 
     @Override
     public UserDTO toDTO(User user) {
-        Long id = user.getId();
-        String lastName = user.getLastName();
-        String firstName = user.getFirstName();
-        String patronymic = user.getPatronymic();
-        String email = user.getEmail();
-        String password = user.getPassword();
+        UserDTO userDTO = new UserDTO();
+        userDTO.setId(user.getId());
+        userDTO.setLastName(user.getLastName());
+        userDTO.setFirstName(user.getFirstName());
+        userDTO.setPatronymic(user.getPatronymic());
+        userDTO.setEmail(user.getEmail());
+        userDTO.setPassword(user.getPassword());
+        userDTO.setDeleted(user.getDeleted());
         Role role = user.getRole();
+        RoleDTO roleDTO = roleConverter.toRoleDTO(role);
+        userDTO.setRole(roleDTO);
         Profile profile = user.getProfile();
         ProfileDTO profileDTO = profileConverter.toDTO(profile);
-        RoleDTO roleDTO = roleConverter.toRoleDTO(role);
-        Boolean deleted = user.getDeleted();
-        UserDTO userDTO = new UserDTO(id, lastName, firstName, patronymic, email, roleDTO, deleted);
         userDTO.setProfile(profileDTO);
-        userDTO.setPassword(password);
         return userDTO;
     }
 
     @Override
     public User fromDTO(UserDTO userDTO) {
-        String lastName = userDTO.getLastName();
-        String firstName = userDTO.getFirstName();
-        String patronymic = userDTO.getPatronymic();
-        String email = userDTO.getEmail();
+        User user = new User();
+        user.setLastName(userDTO.getLastName());
+        user.setFirstName(userDTO.getFirstName());
+        user.setPatronymic(userDTO.getPatronymic());
+        user.setEmail(userDTO.getEmail());
+        user.setDeleted(userDTO.getDeleted());
         RoleDTO roleDTO = userDTO.getRole();
         Role role = roleConverter.fromRoleDTO(roleDTO);
-        Boolean deleted = userDTO.getDeleted();
+        user.setRole(role);
         ProfileDTO profileDTO = userDTO.getProfile();
         Profile profile = profileConverter.fromDTO(profileDTO);
-        User user = new User();
-        user.setLastName(lastName);
-        user.setFirstName(firstName);
-        user.setPatronymic(patronymic);
-        user.setEmail(email);
-        user.setRole(role);
-        user.setDeleted(deleted);
         user.setProfile(profile);
         return user;
     }
 
     @Override
     public List<UserDTO> toListDTO(List<User> users) {
-        List<UserDTO> userDTOList = new ArrayList<>(users.size());
-        for (User user : users) {
-            userDTOList.add(toDTO(user));
-        }
-        return userDTOList;
+        return users.stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
     public ProfileViewDTO toProfileViewDTO(User user) {
-        Long id = user.getId();
-        String firstName = user.getFirstName();
-        String lastName = user.getLastName();
-        Profile profile = user.getProfile();
-        String address = profile.getAddress();
-        String phone = profile.getPhone();
         ProfileViewDTO profileViewDTO = new ProfileViewDTO();
-        profileViewDTO.setId(id);
-        profileViewDTO.setAddress(address);
-        profileViewDTO.setFirstName(firstName);
-        profileViewDTO.setLastName(lastName);
-        profileViewDTO.setPhone(phone);
+        profileViewDTO.setId(user.getId());
+        profileViewDTO.setFirstName(user.getFirstName());
+        profileViewDTO.setLastName(user.getLastName());
+        Profile profile = user.getProfile();
+        profileViewDTO.setAddress(profile.getAddress());
+        profileViewDTO.setPhone(profile.getPhone());
         return profileViewDTO;
     }
 
     @Override
     public User fromProfileViewDTO(ProfileViewDTO profileViewDTO) {
-        Long id = profileViewDTO.getId();
-        String address = profileViewDTO.getAddress();
-        String firstName = profileViewDTO.getFirstName();
-        String lastName = profileViewDTO.getLastName();
-        String phone = profileViewDTO.getPhone();
         Profile profile = new Profile();
-        profile.setAddress(address);
-        profile.setPhone(phone);
+        profile.setAddress(profileViewDTO.getAddress());
+        profile.setPhone(profileViewDTO.getPhone());
         User user = new User();
-        user.setId(id);
-        user.setLastName(lastName);
-        user.setFirstName(firstName);
         user.setProfile(profile);
+        user.setId(profileViewDTO.getId());
+        user.setLastName(profileViewDTO.getLastName());
+        user.setFirstName(profileViewDTO.getFirstName());
         return user;
     }
 }

@@ -6,7 +6,7 @@ public class ArticleRestDTO {
     private Long id;
     private String title;
     private String content;
-    private Timestamp date;
+    private Timestamp createdDate;
     private boolean isDeleted = false;
     private boolean isHidden = false;
     private String authorLastName;
@@ -37,12 +37,12 @@ public class ArticleRestDTO {
         this.content = content;
     }
 
-    public Timestamp getDate() {
-        return date;
+    public Timestamp getCreatedDate() {
+        return createdDate;
     }
 
-    public void setDate(Timestamp date) {
-        this.date = date;
+    public void setCreatedDate(Timestamp createdDate) {
+        this.createdDate = createdDate;
     }
 
     public boolean isDeleted() {

@@ -34,9 +34,9 @@
                         <textarea th:text="${article.content}" class="form-control"
                                   name="content" id="content-textarena"></textarea>
                         <input type="hidden" th:field="${article.id}" th:value="${editedArticle.id}">
-                        <label>article date</label>
-                        <input type="datetime-local" class="form-control" th:value="${article.date}"
-                               name="date" th:placeholder="${article.date}">
+                        <label>article createdDate</label>
+                        <input type="datetime-local" class="form-control" th:value="${article.createdDate}"
+                               name="createDate" th:placeholder="${article.createdDate}">
                         <button type="submit" class="btn btn-outline-primary">
                             save edit
                         </button>
@@ -46,7 +46,7 @@
 
             <div sec:authorize="hasAnyRole('ROLE_Customer','ROLE_Sale')">
                 <h2 th:text="${article.title}">article title</h2>
-                <p th:text="${article.date}">article date</p>
+                <p th:text="${article.createdDate}">article createDate</p>
                 <p th:text="${article.content}">article content</p>
             </div>
 
@@ -76,9 +76,8 @@
                         <th:block th:each="comment,number : ${article.comments}">
                             <div class="col-sm-4">
                                 <fieldset>
-                                    <p th:text="${comment.id}"></p>
-                                    <p th:text="${comment.user.getFullName()}"></p>
-                                    <p th:text="${comment.date}"></p>
+                                    <p th:text="${'comment from:'+ comment.user.getFullName()}"></p>
+                                    <p th:text="${'date: ' +comment.createdDate}"></p>
                                     <p th:text="${comment.content}"></p>
                                     <div sec:authorize="hasRole('ROLE_Sale')">
                                         <div th:if="${showDeleteButton}">

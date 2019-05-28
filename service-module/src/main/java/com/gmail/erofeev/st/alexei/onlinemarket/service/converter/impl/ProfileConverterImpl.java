@@ -12,13 +12,10 @@ public class ProfileConverterImpl implements ProfileConverter {
         if (profile == null) {
             return new ProfileDTO();
         }
-        Long id = profile.getId();
-        String address = profile.getAddress();
-        String phone = profile.getPhone();
         ProfileDTO profileDTO = new ProfileDTO();
-        profileDTO.setId(id);
-        profileDTO.setAddress(address);
-        profileDTO.setPhone(phone);
+        profileDTO.setId(profile.getId());
+        profileDTO.setAddress(profile.getAddress());
+        profileDTO.setPhone(profile.getPhone());
         return profileDTO;
     }
 
@@ -27,13 +24,10 @@ public class ProfileConverterImpl implements ProfileConverter {
         if (profileDTO == null) {
             return new Profile();
         }
-        Long id = profileDTO.getId();
-        String address = profileDTO.getAddress();
-        String phone = profileDTO.getPhone();
         Profile profile = new Profile();
-        profile.setId(id);
-        profile.setAddress(address);
-        profile.setPhone(phone);
+        profile.setId(profileDTO.getId());
+        profile.setAddress(profileDTO.getAddress());
+        profile.setPhone(profileDTO.getPhone());
         return profile;
     }
 }

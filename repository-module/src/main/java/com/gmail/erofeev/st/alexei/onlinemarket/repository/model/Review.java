@@ -29,8 +29,8 @@ public class Review {
     private User user;
     @Column
     private String content;
-    @Column
-    private Timestamp date;
+    @Column(name = "created_date")
+    private Timestamp createdDate;
     @Column
     private Boolean deleted;
     @Column
@@ -60,12 +60,12 @@ public class Review {
         this.content = content;
     }
 
-    public Timestamp getDate() {
-        return date;
+    public Timestamp getCreatedDate() {
+        return createdDate;
     }
 
-    public void setDate(Timestamp date) {
-        this.date = date;
+    public void setCreatedDate(Timestamp createdDate) {
+        this.createdDate = createdDate;
     }
 
     public Boolean getDeleted() {
@@ -91,14 +91,14 @@ public class Review {
         Review review = (Review) o;
         return id.equals(review.id) &&
                 Objects.equals(content, review.content) &&
-                Objects.equals(date, review.date) &&
+                Objects.equals(createdDate, review.createdDate) &&
                 Objects.equals(deleted, review.deleted) &&
                 Objects.equals(hidden, review.hidden);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, content, date, deleted, hidden);
+        return Objects.hash(id, content, createdDate, deleted, hidden);
     }
 
     @Override
@@ -107,7 +107,7 @@ public class Review {
                 "id=" + id +
                 ", user=" + user +
                 ", content='" + content + '\'' +
-                ", date=" + date +
+                ", createdDate=" + createdDate +
                 ", deleted=" + deleted +
                 ", hidden=" + hidden +
                 '}';

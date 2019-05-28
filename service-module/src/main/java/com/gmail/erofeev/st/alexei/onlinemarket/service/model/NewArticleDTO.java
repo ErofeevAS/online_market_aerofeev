@@ -4,18 +4,18 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 @Validated
 public class NewArticleDTO {
     private Long id;
-    @Pattern(regexp = "^[A-Za-z0-9_ ]{1,40}$", message = "must be from 1 to 40, only English letters")
+    @Size(min = 1, max = 50)
     private String title;
-    @Pattern(regexp = "^[A-Za-z0-9_ ]{1,1000}$", message = "must be from 1 to 1000, only English letters")
+    @Size(min = 1, max = 1000)
     private String content;
     @NotEmpty(message = "must be not empty")
     @NotNull(message = "must be not null")
-    private String date;
+    private String createdDate;
     private Long userId;
 
     public Long getId() {
@@ -42,12 +42,12 @@ public class NewArticleDTO {
         this.content = content;
     }
 
-    public String getDate() {
-        return date;
+    public String getCreatedDate() {
+        return createdDate;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setCreatedDate(String createdDate) {
+        this.createdDate = createdDate;
     }
 
     public Long getUserId() {
