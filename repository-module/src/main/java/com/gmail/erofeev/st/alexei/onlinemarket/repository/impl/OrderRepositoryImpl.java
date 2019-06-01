@@ -1,7 +1,7 @@
 package com.gmail.erofeev.st.alexei.onlinemarket.repository.impl;
 
 import com.gmail.erofeev.st.alexei.onlinemarket.repository.OrderRepository;
-import com.gmail.erofeev.st.alexei.onlinemarket.repository.model.embedded.Order;
+import com.gmail.erofeev.st.alexei.onlinemarket.repository.model.Order;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.Query;

@@ -1,31 +1,34 @@
-package com.gmail.erofeev.st.alexei.onlinemarket.repository.model.embedded;
+package com.gmail.erofeev.st.alexei.onlinemarket.repository.model;
 
-import com.gmail.erofeev.st.alexei.onlinemarket.repository.model.Item;
-import com.gmail.erofeev.st.alexei.onlinemarket.repository.model.User;
 import com.gmail.erofeev.st.alexei.onlinemarket.repository.model.enums.OrderStatusEnum;
 
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.Objects;
 
 @Entity
 @Table(name = "`order`")
 public class Order implements Serializable {
-    @EmbeddedId
-    private OrderId id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column
+    private Long id;
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("user_id")
+//    @MapsId("user_id")
     private User user;
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("item_id")
+//    @MapsId("item_id")
     private Item item;
     @Column(name = "unique_number")
     private String uniqueNumber;
@@ -36,19 +39,17 @@ public class Order implements Serializable {
     private int amount;
     @Column(name = "deleted")
     private boolean isDeleted;
+    @Column(name = "created_date")
+    private Timestamp createdDate;
 
     public Order() {
     }
 
-    public Order(OrderId id) {
-        this.id = id;
-    }
-
-    public OrderId getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(OrderId id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -98,6 +99,14 @@ public class Order implements Serializable {
 
     public void setStatus(OrderStatusEnum status) {
         this.status = status;
+    }
+
+    public Timestamp getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Timestamp createdDate) {
+        this.createdDate = createdDate;
     }
 
     @Override

@@ -4,17 +4,20 @@ import com.gmail.erofeev.st.alexei.onlinemarket.repository.ItemRepository;
 import com.gmail.erofeev.st.alexei.onlinemarket.repository.OrderRepository;
 import com.gmail.erofeev.st.alexei.onlinemarket.repository.UserRepository;
 import com.gmail.erofeev.st.alexei.onlinemarket.repository.model.Item;
+import com.gmail.erofeev.st.alexei.onlinemarket.repository.model.Order;
 import com.gmail.erofeev.st.alexei.onlinemarket.repository.model.User;
-import com.gmail.erofeev.st.alexei.onlinemarket.repository.model.embedded.Order;
-import com.gmail.erofeev.st.alexei.onlinemarket.repository.model.embedded.OrderId;
 import com.gmail.erofeev.st.alexei.onlinemarket.repository.model.enums.OrderStatusEnum;
+import com.gmail.erofeev.st.alexei.onlinemarket.service.OrderService;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.converter.OrderConverter;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.OrderDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.OrderDetailsDTO;
-import com.gmail.erofeev.st.alexei.onlinemarket.service.model.OrderService;
+import com.gmail.erofeev.st.alexei.onlinemarket.service.model.OrderRestDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.PageDTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.util.Date;
@@ -24,6 +27,7 @@ import static java.util.UUID.randomUUID;
 
 @Service
 public class OrderServiceImpl extends AbstractService implements OrderService {
+    private static final Logger logger = LoggerFactory.getLogger(OrderServiceImpl.class);
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
@@ -43,17 +47,17 @@ public class OrderServiceImpl extends AbstractService implements OrderService {
     @Override
     @Transactional
     public void createOrder(Long userId, Long itemId, int amount) {
+        Order order = new Order();
         User user = userRepository.findById(userId);
+        order.setUser(user);
         Item item = itemRepository.findById(itemId);
+        order.setItem(item);
         Date date = new Date();
         Timestamp timestamp = new Timestamp(date.getTime());
-        OrderId orderId = new OrderId(user.getId(), item.getId(), timestamp);
-        Order order = new Order(orderId);
+        order.setCreatedDate(timestamp);
         order.setStatus(OrderStatusEnum.NEW);
         order.setAmount(amount);
         order.setUniqueNumber(randomUUID().toString());
-//        BigDecimal totalPrice = item.getPrice().multiply(new BigDecimal(amount));
-//        order.setTotalPrice(totalPrice);
         orderRepository.persist(order);
     }
 
@@ -73,6 +77,13 @@ public class OrderServiceImpl extends AbstractService implements OrderService {
 
     @Override
     @Transactional
+    public List<OrderRestDTO> getOrdersForRest(int offset, int amount) {
+        List<Order> orders = orderRepository.getEntities(offset, amount);
+        return orderConverter.toListRestDTO(orders);
+    }
+
+    @Override
+    @Transactional
     public void updateOrderStatus(String uniqueNumber, String orderStatus) {
         Order order = orderRepository.findByUUID(uniqueNumber);
         order.setStatus(OrderStatusEnum.valueOf(orderStatus));
@@ -84,5 +95,15 @@ public class OrderServiceImpl extends AbstractService implements OrderService {
     public OrderDetailsDTO findOrderByUUID(String uniqueNumber) {
         Order order = orderRepository.findByUUID(uniqueNumber);
         return orderConverter.toDetailsDTO(order);
+    }
+
+    @Override
+    public OrderRestDTO findRestOrderById(Long id) {
+        Order order = orderRepository.findById(id);
+        if (order == null) {
+            logger.debug(String.format("Order with id:%s not found", id));
+            throw new EntityNotFoundException(String.format("Order with id:%s not found", id));
+        }
+        return orderConverter.toRestDTO(order);
     }
 }

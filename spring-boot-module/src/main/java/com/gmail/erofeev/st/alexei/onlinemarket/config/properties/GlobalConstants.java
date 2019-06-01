@@ -29,4 +29,5 @@ public class GlobalConstants {
     public static final String REST_API_ITEMS_URL = "/api/v1/items";
     public static final String REST_API_USERS_URL = "/api/v1/users";
     public static final String REST_API_ARTICLES_URL = "api/v1/articles";
+    public static final String REST_API_ORDERS_URL = "api/v1/orders";
 }

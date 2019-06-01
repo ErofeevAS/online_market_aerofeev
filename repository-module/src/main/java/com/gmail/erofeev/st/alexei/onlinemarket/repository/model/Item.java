@@ -1,6 +1,5 @@
 package com.gmail.erofeev.st.alexei.onlinemarket.repository.model;
 
-import com.gmail.erofeev.st.alexei.onlinemarket.repository.model.embedded.Order;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 

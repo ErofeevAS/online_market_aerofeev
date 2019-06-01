@@ -5,7 +5,7 @@ import com.gmail.erofeev.st.alexei.onlinemarket.controller.util.Paginator;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.UserAuthenticationService;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.OrderDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.OrderDetailsDTO;
-import com.gmail.erofeev.st.alexei.onlinemarket.service.model.OrderService;
+import com.gmail.erofeev.st.alexei.onlinemarket.service.OrderService;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.PageDTO;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;

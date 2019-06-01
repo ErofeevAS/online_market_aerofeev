@@ -15,6 +15,7 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.REST_API_ALL_URL;
 import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.REST_API_ARTICLES_URL;
 import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.REST_API_ITEMS_URL;
+import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.REST_API_ORDERS_URL;
 import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.REST_API_USERS_URL;
 
 @Configuration
@@ -45,7 +46,7 @@ public class RestApiSecurityConfigurer extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.antMatcher(REST_API_ALL_URL)
                 .authorizeRequests()
-                .antMatchers(REST_API_USERS_URL, REST_API_ARTICLES_URL, REST_API_ITEMS_URL)
+                .antMatchers(REST_API_USERS_URL, REST_API_ARTICLES_URL, REST_API_ITEMS_URL, REST_API_ORDERS_URL)
                 .hasRole(securityProperties.getRoleSecureRestApi())
                 .and()
                 .httpBasic()

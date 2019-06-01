@@ -8,8 +8,6 @@ public class ItemDTO {
     private String uniqueNumber;
     private BigDecimal price;
     private String description;
-    private UserDTO user;
-    private String shortDescription;
 
     public Long getId() {
         return id;
@@ -51,19 +49,4 @@ public class ItemDTO {
         this.description = description;
     }
 
-    public UserDTO getUser() {
-        return user;
-    }
-
-    public void setUser(UserDTO user) {
-        this.user = user;
-    }
-
-    public String getShortDescription() {
-        return shortDescription;
-    }
-
-    public void setShortDescription(String shortDescription) {
-        this.shortDescription = shortDescription;
-    }
 }

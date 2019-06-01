@@ -17,25 +17,25 @@
     <div class="row">
         <th:block th:each="item,number : ${items}">
             <div class="col-sm-4" id="article">
-                <form action="#" th:action="@{/items/{id}(id=${item.id})}" method="get"
+                <form action="#" th:action="@{/items/{id}(id=${item.itemDTO.id})}" method="get"
                       th:id="${'itemDetails' +number.index}"></form>
-                <h2 th:text="${item.name}"></h2>
-                <p th:text="${item.uniqueNumber}"></p>
-                <p th:text="${item.price}"></p>
+                <h2 th:text="${item.itemDTO.name}"></h2>
+                <p th:text="${item.itemDTO.uniqueNumber}"></p>
+                <p th:text="${item.itemDTO.price}"></p>
                 <p th:text="${item.shortDescription}"></p>
 
                 <div class="btn-group" role="group" aria-label="Basic example" sec:authorize="hasRole('ROLE_Sale')">
                     <button type="submit" class="btn btn-outline-primary mx-1" th:form="${'itemDetails' +number.index}">
                         details
                     </button>
-                    <form action="#" th:action="@{/items/{id}/delete(id=${item.id})}" method="post">
-                        <input type="hidden" th:value="${item.id}" name="id"/>
+                    <form action="#" th:action="@{/items/{id}/delete(id=${item.itemDTO.id})}" method="post">
+                        <input type="hidden" th:value="${item.itemDTO.id}" name="id"/>
                         <button type="submit" class="btn btn-outline-primary mx-1">
                             delete
                         </button>
                     </form>
-                    <form action="#" th:action="@{/items/{id}/copy(id=${item.id})}" method="post">
-                        <input type="hidden" th:value="${item.id}" name="id"/>
+                    <form action="#" th:action="@{/items/{id}/copy(id=${item.itemDTO.id})}" method="post">
+                        <input type="hidden" th:value="${item.itemDTO.id}" name="id"/>
                         <button type="submit" class="btn btn-outline-primary mx-1">
                             copy
                         </button>
@@ -45,7 +45,7 @@
                 <div class="btn-group" role="group" aria-label="Basic example" sec:authorize="hasRole('ROLE_Customer')">
                     <input class="form-control" type="number" min="1" id="amount" name="amount"
                            th:form="${'newOrder' +number.index}"/>
-                    <input type="hidden" th:value="${item.id}" id="itemId" name="itemId"
+                    <input type="hidden" th:value="${item.itemDTO.id}" id="itemId" name="itemId"
                            th:form="${'newOrder' +number.index}"/>
                     <form action="#" th:action="@{/orders/sale/new}" method="post"
                           th:id="${'newOrder' +number.index}"></form>

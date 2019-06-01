@@ -7,8 +7,8 @@ import com.gmail.erofeev.st.alexei.onlinemarket.repository.model.User;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.ItemService;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.converter.ItemConverter;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.exception.ServiceException;
+import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ItemDetailsDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ItemDTO;
-import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ItemRestDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.PageDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,13 +33,13 @@ public class ItemServiceImpl extends AbstractService implements ItemService {
 
     @Override
     @Transactional
-    public PageDTO<ItemDTO> getItems(int page, int amount) {
+    public PageDTO<ItemDetailsDTO> getItems(int page, int amount) {
         Integer amountOfEntity = itemRepository.getAmountOfEntity();
         int maxPages = getMaxPages(amountOfEntity, amount);
         int offset = getOffset(page, maxPages, amount);
         List<Item> items = itemRepository.findItems(offset, amount);
-        List<ItemDTO> itemListDTO = itemConverter.toListDTO(items);
-        PageDTO<ItemDTO> pageDTO = new PageDTO<>();
+        List<ItemDetailsDTO> itemListDTO = itemConverter.toListDetailsDTO(items);
+        PageDTO<ItemDetailsDTO> pageDTO = new PageDTO<>();
         pageDTO.setAmountOfPages(maxPages);
         pageDTO.setList(itemListDTO);
         return pageDTO;
@@ -47,14 +47,14 @@ public class ItemServiceImpl extends AbstractService implements ItemService {
 
     @Override
     @Transactional
-    public ItemDTO findById(Long id) {
+    public ItemDetailsDTO findById(Long id) {
         Item item = itemRepository.findById(id);
         if (item == null) {
             String message = String.format("Item with id:%s not found", id);
             logger.error(message);
             throw new ServiceException(message);
         }
-        return itemConverter.toDTO(item);
+        return itemConverter.toDetailsDTO(item);
     }
 
     @Override
@@ -82,30 +82,30 @@ public class ItemServiceImpl extends AbstractService implements ItemService {
 
     @Override
     @Transactional
-    public List<ItemRestDTO> getItemsForRest(int offset, int amount) {
+    public List<ItemDTO> getItemsForRest(int offset, int amount) {
         List<Item> items = itemRepository.getEntities(offset, amount);
-        return itemConverter.toListRestDTO(items);
+        return itemConverter.toListDTO(items);
     }
 
     @Override
     @Transactional
-    public ItemRestDTO findRestItemById(Long validatedId) {
+    public ItemDTO findRestItemById(Long validatedId) {
         Item item = itemRepository.findById(validatedId);
         if (item == null) {
             logger.debug(String.format("Item with id:%s not found", validatedId));
             throw new EntityNotFoundException(String.format("Item with id:%s not found", validatedId));
         }
-        return itemConverter.toRestDTO(item);
+        return itemConverter.toDTO(item);
     }
 
     @Override
     @Transactional
-    public ItemRestDTO saveItem(Long userId, ItemRestDTO itemRestDTO) {
+    public ItemDTO saveItem(Long userId, ItemDTO itemRestDTO) {
         User user = userRepository.findById(userId);
-        Item item = itemConverter.fromRestDTO(itemRestDTO);
+        Item item = itemConverter.fromDTO(itemRestDTO);
         item.setUser(user);
         itemRepository.persist(item);
         logger.debug(String.format("Item with name:%s was saved for user with id:%s", itemRestDTO.getName(), userId));
-        return itemConverter.toRestDTO(item);
+        return itemConverter.toDTO(item);
     }
 }

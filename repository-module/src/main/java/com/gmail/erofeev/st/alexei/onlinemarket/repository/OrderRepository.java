@@ -1,6 +1,6 @@
 package com.gmail.erofeev.st.alexei.onlinemarket.repository;
 
-import com.gmail.erofeev.st.alexei.onlinemarket.repository.model.embedded.Order;
+import com.gmail.erofeev.st.alexei.onlinemarket.repository.model.Order;
 
 import java.util.List;
 

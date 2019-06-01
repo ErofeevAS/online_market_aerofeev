@@ -46,7 +46,8 @@
                 <p th:text="${order.userName}"
                    name="username" id="username"></p>
 
-                <form action="#"   th:action="@{/orders/{uniqueNumber}/update(uniqueNumber=${order.uniqueNumber})}">
+                <form action="#" th:action="@{/orders/{uniqueNumber}/update(uniqueNumber=${order.uniqueNumber})}"
+                      method="post">
                     <select name="orderStatus" onchange="this.form.submit()">
                         <option th:each="state : ${T(com.gmail.erofeev.st.alexei.onlinemarket.repository.model.enums.OrderStatusEnum).values()}"
                                 th:value="${state}"

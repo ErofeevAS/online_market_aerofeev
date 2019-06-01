@@ -5,11 +5,10 @@ import com.gmail.erofeev.st.alexei.onlinemarket.repository.model.User;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.converter.ItemConverter;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.converter.UserConverter;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ItemDTO;
-import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ItemRestDTO;
+import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ItemDetailsDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.UserDTO;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
@@ -28,49 +27,42 @@ public class ItemConverterImpl implements ItemConverter {
     }
 
     @Override
-    public ItemDTO toDTO(Item item) {
-        ItemDTO itemDTO = new ItemDTO();
-        itemDTO.setId(item.getId());
-        itemDTO.setName(item.getName());
-        itemDTO.setPrice(item.getPrice());
+    public ItemDetailsDTO toDetailsDTO(Item item) {
+        ItemDetailsDTO itemDetailsDTO = new ItemDetailsDTO();
+        ItemDTO itemDTO = toDTO(item);
+        itemDetailsDTO.setItemDTO(itemDTO);
         String description = item.getDescription();
-        itemDTO.setDescription(description);
-        itemDTO.setUniqueNumber(item.getUniqueNumber());
         User user = item.getUser();
         UserDTO userDTO = userConverter.toDTO(user);
-        itemDTO.setUser(userDTO);
+//        itemDetailsDTO.setUser(userDTO);
         String shortDescription = description;
         if (shortDescription.length() > SHORT_DESCRIPTION_LENGTH) {
             shortDescription = description.substring(0, SHORT_DESCRIPTION_LENGTH);
         }
-        itemDTO.setShortDescription(shortDescription);
-        return itemDTO;
+        itemDetailsDTO.setShortDescription(shortDescription);
+        return itemDetailsDTO;
     }
 
     @Override
-    public Item fromDTO(ItemDTO itemDTO) {
-        Item item = new Item();
-        item.setId(itemDTO.getId());
-        item.setName(itemDTO.getName());
-        item.setPrice(itemDTO.getPrice());
-        item.setDescription(itemDTO.getDescription());
-        item.setUniqueNumber(itemDTO.getUniqueNumber());
-        UserDTO userDTO = itemDTO.getUser();
-        User user = userConverter.fromDTO(userDTO);
-        item.setUser(user);
+    public Item fromDetailsDTO(ItemDetailsDTO itemDetailsDTO) {
+        ItemDTO itemDTO = itemDetailsDTO.getItemDTO();
+        Item item = fromDTO(itemDTO);
+//        UserDTO userDTO = itemDetailsDTO.getUser();
+//        User user = userConverter.fromDetailsDTO(userDTO);
+//        item.setUser(user);
         return item;
     }
 
     @Override
-    public List<ItemDTO> toListDTO(List<Item> items) {
+    public List<ItemDetailsDTO> toListDetailsDTO(List<Item> items) {
         return items.stream()
-                .map(this::toDTO)
+                .map(this::toDetailsDTO)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public ItemRestDTO toRestDTO(Item item) {
-        ItemRestDTO itemRestDTO = new ItemRestDTO();
+    public ItemDTO toDTO(Item item) {
+        ItemDTO itemRestDTO = new ItemDTO();
         itemRestDTO.setId(item.getId());
         itemRestDTO.setDescription(item.getDescription());
         itemRestDTO.setName(item.getName());
@@ -80,7 +72,7 @@ public class ItemConverterImpl implements ItemConverter {
     }
 
     @Override
-    public Item fromRestDTO(ItemRestDTO itemRestDTO) {
+    public Item fromDTO(ItemDTO itemRestDTO) {
         Item item = new Item();
         item.setId(itemRestDTO.getId());
         item.setDescription(itemRestDTO.getDescription());
@@ -91,9 +83,9 @@ public class ItemConverterImpl implements ItemConverter {
     }
 
     @Override
-    public List<ItemRestDTO> toListRestDTO(List<Item> items) {
+    public List<ItemDTO> toListDTO(List<Item> items) {
         return items.stream()
-                .map(this::toRestDTO)
+                .map(this::toDTO)
                 .collect(Collectors.toList());
     }
 

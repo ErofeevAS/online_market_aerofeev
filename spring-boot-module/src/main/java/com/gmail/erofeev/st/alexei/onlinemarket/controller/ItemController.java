@@ -2,7 +2,7 @@ package com.gmail.erofeev.st.alexei.onlinemarket.controller;
 
 import com.gmail.erofeev.st.alexei.onlinemarket.controller.util.Paginator;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.ItemService;
-import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ItemDTO;
+import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ItemDetailsDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.PageDTO;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,7 +24,7 @@ public class ItemController {
                            @RequestParam(defaultValue = "10", required = false) String size,
                            Model model) {
         Paginator paginator = new Paginator(page, size);
-        PageDTO<ItemDTO> pageDTO = itemService.getItems(paginator.getPage(), paginator.getSize());
+        PageDTO<ItemDetailsDTO> pageDTO = itemService.getItems(paginator.getPage(), paginator.getSize());
         paginator.setMaxPage(pageDTO.getAmountOfPages());
         model.addAttribute("items", pageDTO.getList());
         model.addAttribute("paginator", paginator);
@@ -34,7 +34,7 @@ public class ItemController {
     @GetMapping("/items/{id}")
     public String viewItem(@PathVariable Long id,
                            Model model) {
-        ItemDTO item = itemService.findById(id);
+        ItemDetailsDTO item = itemService.findById(id);
         model.addAttribute("item", item);
         return "item";
     }
