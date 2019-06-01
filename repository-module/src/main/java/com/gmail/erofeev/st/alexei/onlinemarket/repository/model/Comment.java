@@ -32,9 +32,9 @@ public class Comment {
     @Column(name = "created_date")
     private Timestamp createdDate;
     @Column(name = "deleted")
-    private boolean isDeleted;
+    private boolean isDeleted = false;
     @Column(name = "hidden")
-    private boolean isHidden;
+    private boolean isHidden = false;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "article_id", nullable = false)
     private Article article = new Article();

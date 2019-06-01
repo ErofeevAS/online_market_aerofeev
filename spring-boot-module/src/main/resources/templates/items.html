@@ -1,5 +1,6 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
     <title>Users</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -23,7 +24,7 @@
                 <p th:text="${item.price}"></p>
                 <p th:text="${item.shortDescription}"></p>
 
-                <div class="btn-group" role="group" aria-label="Basic example">
+                <div class="btn-group" role="group" aria-label="Basic example" sec:authorize="hasRole('ROLE_Sale')">
                     <button type="submit" class="btn btn-outline-primary mx-1" th:form="${'itemDetails' +number.index}">
                         details
                     </button>
@@ -39,6 +40,22 @@
                             copy
                         </button>
                     </form>
+                </div>
+
+                <div class="btn-group" role="group" aria-label="Basic example" sec:authorize="hasRole('ROLE_Customer')">
+                    <input class="form-control" type="number" min="1" id="amount" name="amount"
+                           th:form="${'newOrder' +number.index}"/>
+                    <input type="hidden" th:value="${item.id}" id="itemId" name="itemId"
+                           th:form="${'newOrder' +number.index}"/>
+                    <form action="#" th:action="@{/orders/sale/new}" method="post"
+                          th:id="${'newOrder' +number.index}"></form>
+                    <button type="submit" class="btn btn-outline-primary mx-1" th:form="${'newOrder' +number.index}">
+                        buy
+                    </button>
+
+                    <button type="submit" class="btn btn-outline-primary mx-1" th:form="${'itemDetails' +number.index}">
+                        details
+                    </button>
                 </div>
             </div>
         </th:block>

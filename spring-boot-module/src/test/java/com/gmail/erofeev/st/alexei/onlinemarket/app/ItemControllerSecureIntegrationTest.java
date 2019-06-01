@@ -14,6 +14,7 @@ import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalC
 import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.ROLE_CUSTOMER;
 import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.ROLE_SALE;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
@@ -34,13 +35,12 @@ public class ItemControllerSecureIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(xpath("//*[@id='itemsButton']").nodeCount(1));
     }
-
     @Test
     @WithMockUser(roles = ROLE_CUSTOMER)
-    public void shouldNotHaveButtonToItemsForCustomer() throws Exception {
-        mockMvc.perform(get("/articles"))
+    public void shouldHaveButtonForItemsForCustomer() throws Exception {
+        mockMvc.perform(get("/items"))
                 .andExpect(status().isOk())
-                .andExpect(xpath("//*[@id='itemsButton']").nodeCount(0));
+                .andExpect(xpath("//*[@id='itemsButton']").nodeCount(1));
     }
 
     @Test
@@ -53,10 +53,10 @@ public class ItemControllerSecureIntegrationTest {
 
     @Test
     @WithMockUser(roles = ROLE_CUSTOMER)
-    public void shouldAccessDeniedForCustomer() throws Exception {
+    public void shouldHaveAccessToItemsPageForCustomer() throws Exception {
         mockMvc.perform(get("/items"))
-                .andExpect(status().isFound())
-                .andExpect(redirectedUrl(REDIRECT_URL));
+                .andExpect(status().isOk())
+                .andExpect(view().name("items"));
     }
 
     @Test
@@ -65,5 +65,36 @@ public class ItemControllerSecureIntegrationTest {
         mockMvc.perform(get("/items/1"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("item"));
+    }
+
+    @Test
+    @WithMockUser(roles = ROLE_SALE)
+    public void shouldHaveAccessToDeleteItemPageForSale() throws Exception {
+        mockMvc.perform(post("/items/3/delete"))
+                .andExpect(status().isFound())
+                .andExpect(redirectedUrl("/items"));
+    }
+    @Test
+    @WithMockUser(roles = ROLE_SALE)
+    public void shouldHaveAccessToCopyItemPageForSale() throws Exception {
+        mockMvc.perform(post("/items/2/copy"))
+                .andExpect(status().isFound())
+                .andExpect(redirectedUrl("/items"));
+    }
+
+    @Test
+    @WithMockUser(roles = ROLE_CUSTOMER)
+    public void shouldNotHaveAccessToDeleteItemPageForCustomer() throws Exception {
+        mockMvc.perform(post("/items/1/delete"))
+                .andExpect(status().isFound())
+                .andExpect(redirectedUrl(REDIRECT_URL));
+    }
+
+    @Test
+    @WithMockUser(roles = ROLE_CUSTOMER)
+    public void shouldNotHaveAccessToCopyItemPageForCustomer() throws Exception {
+        mockMvc.perform(post("/items/2/copy"))
+                .andExpect(status().isFound())
+                .andExpect(redirectedUrl(REDIRECT_URL));
     }
 }

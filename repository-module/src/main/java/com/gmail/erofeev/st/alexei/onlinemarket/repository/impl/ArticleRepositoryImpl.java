@@ -19,7 +19,7 @@ public class ArticleRepositoryImpl extends GenericRepositoryImpl<Long, Article> 
 
     @Override
     public Integer getAmountOfArticlesWithSameTag(String tag) {
-        String hql = "select count(a) from Article a where a.tags.name= :tag";
+        String hql = "select count(a) from Article a where a.tags.name= :tag  ORDER BY a.createdDate DESC";
         Query query = entityManager.createQuery(hql);
         query.setParameter("tag", tag);
         return ((Number) query.getSingleResult()).intValue();
@@ -27,7 +27,7 @@ public class ArticleRepositoryImpl extends GenericRepositoryImpl<Long, Article> 
 
     @Override
     public List<Article> getArticlesFilteredByKeyWord(int offset, Integer amount, String keyWord) {
-        String hql = "select a from Article a where a.title like :keyWord  ORDER BY a.date DESC";
+        String hql = "select a from Article a where a.title like :keyWord  ORDER BY a.createdDate DESC";
         Query query = entityManager.createQuery(hql);
         query.setParameter("keyWord", "%" + keyWord + "%");
         query.setFirstResult(offset);
@@ -37,7 +37,7 @@ public class ArticleRepositoryImpl extends GenericRepositoryImpl<Long, Article> 
 
     @Override
     public List<Article> getEntitiesByTag(int offset, Integer amount, String tagId) {
-        String hql = "select a from Article a  JOIN a.tags t WHERE t.id = :tagId ORDER BY a.date DESC";
+        String hql = "select a from Article a  JOIN a.tags t WHERE t.id = :tagId ORDER BY a.createdDate DESC";
         Query query = entityManager.createQuery(hql);
         query.setParameter("tagId", Long.parseLong(tagId));
         query.setFirstResult(offset);
@@ -47,7 +47,7 @@ public class ArticleRepositoryImpl extends GenericRepositoryImpl<Long, Article> 
 
     @Override
     public List<Article> getEntitiesByTagAndKeyword(int offset, Integer amount, String tagId, String keyWord) {
-        String hql = "select a from Article a  JOIN a.tags t WHERE t.id = :tagId and a.title like :keyWord ORDER BY a.date DESC";
+        String hql = "select a from Article a  JOIN a.tags t WHERE t.id = :tagId and a.title like :keyWord ORDER BY a.createdDate DESC";
         Query query = entityManager.createQuery(hql);
         query.setParameter("tagId", Long.parseLong(tagId));
         query.setParameter("keyWord", "%" + keyWord + "%");

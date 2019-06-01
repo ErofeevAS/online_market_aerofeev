@@ -41,4 +41,53 @@
                                  referencedTableName="user"/>
     </changeSet>
 
+    <changeSet author="alexei.st.erofeev@gmail.com" id="ORDER_TABLE_1">
+        <createTable tableName="order">
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="item_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="unique_number" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="amount" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column defaultValueBoolean="false" name="deleted" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="alexei.st.erofeev@gmail.com" id="ORDER_TABLE_PK_ID">
+        <addPrimaryKey
+                columnNames="user_id, item_id,created_date"
+                constraintName="pk_order"
+                tableName="order"/>
+    </changeSet>
+
+    <changeSet author="alexei.st.erofeev@gmail.com" id="ORDER_TABLE_FK_ID">
+
+        <addForeignKeyConstraint baseColumnNames="user_id"
+                                 baseTableName="order"
+                                 constraintName="order_fk_user_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="user"/>
+
+        <addForeignKeyConstraint baseColumnNames="item_id"
+                                 baseTableName="order"
+                                 constraintName="order_fk_item_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="item"/>
+    </changeSet>
+
+
 </databaseChangeLog>

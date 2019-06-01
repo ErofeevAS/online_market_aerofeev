@@ -32,9 +32,9 @@ public class Review {
     @Column(name = "created_date")
     private Timestamp createdDate;
     @Column
-    private Boolean deleted;
+    private Boolean deleted = false;
     @Column
-    private Boolean hidden;
+    private Boolean hidden = false;
 
     public Long getId() {
         return id;

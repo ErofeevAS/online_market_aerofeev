@@ -11,4 +11,6 @@ public interface ReviewService {
     void delete(Long id);
 
     void updateHiddenFields(ReviewsListWrapper reviewsChanges);
+
+    void create(Long userId, String content);
 }

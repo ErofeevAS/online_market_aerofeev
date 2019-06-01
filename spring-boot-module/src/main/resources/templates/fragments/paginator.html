@@ -22,11 +22,11 @@
     <a th:href="@{__${#httpServletRequest.requestURI}__(page=${paginator.page}-1,size=${paginator.size},
     keyWord=${#httpServletRequest.getParameter('keyWord')})}">&lt;</a>
     <span th:each="pageNumber:${#numbers.sequence(1,paginator.maxPage)}">
-        <a th:href="@{__${#httpServletRequest.requestURI}__(page=${pageNumber},size=${paginator.size},        keyWord=${#httpServletRequest.getParameter('keyWord')})}"
+        <a th:href="@{__${#httpServletRequest.requestURI}__(page=${pageNumber},size=${paginator.size},keyWord=${#httpServletRequest.getParameter('keyWord')})}"
            th:text="${pageNumber}"></a>
     </span>
-    <a th:href="@{__${#httpServletRequest.requestURI}__(page=${paginator.page}+1,size=${paginator.size},    keyWord=${#httpServletRequest.getParameter('keyWord')})}">&gt;</a>
-    <a th:href="@{__${#httpServletRequest.requestURI}__(page=${paginator.maxPage},size=${paginator.size},    keyWord=${#httpServletRequest.getParameter('keyWord')})}">&gt;|</a>
+    <a th:href="@{__${#httpServletRequest.requestURI}__(page=${paginator.page}+1,size=${paginator.size},keyWord=${#httpServletRequest.getParameter('keyWord')})}">&gt;</a>
+    <a th:href="@{__${#httpServletRequest.requestURI}__(page=${paginator.maxPage},size=${paginator.size},keyWord=${#httpServletRequest.getParameter('keyWord')})}">&gt;|</a>
 
     <script th:inline="javascript">
         function selectAmount(size) {

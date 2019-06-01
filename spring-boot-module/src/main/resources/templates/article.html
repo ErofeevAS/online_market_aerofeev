@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
-    <title>Users</title>
+    <title>Article</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"/>
@@ -70,7 +70,7 @@
             <div class="panel-collapse collapse in" id="collapseComments">
                 <div class="card card-body">
                     <div>
-                        <form action="#" th:action="@{{articleId}/new(articleId=${article.id})}"
+                        <form action="#" th:action="@{{articleId}/newComment(articleId=${article.id})}"
                               th:object="${newComment}"
                               method="post" id="saveComment"></form>
                         <th:block th:each="comment,number : ${article.comments}">

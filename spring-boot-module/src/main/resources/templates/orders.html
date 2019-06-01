@@ -1,0 +1,95 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Users</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"/>
+</head>
+<body>
+<div class="container">
+    <div class="row" th:insert="~{fragments/header :: header}">
+    </div>
+    <div class="row" th:insert="~{fragments/navbar :: navbar}">
+    </div>
+
+    <table class="table table-striped" id="usersTable">
+        <thead>
+        <tr>
+            <th> #</th>
+            <th> order number</th>
+            <th> item name</th>
+            <th> amount</th>
+            <th> total price</th>
+            <th> status</th>
+            <div sec:authorize="hasRole('ROLE_Sale')">
+                <th> view details</th>
+            </div>
+        </tr>
+        </thead>
+        <tbody>
+
+        <th:block th:each="order,number : ${orders}">
+            <tr id="user">
+                <form action="#" th:action="@{/orders/{uniqueNumber}(uniqueNumber=${order.uniqueNumber})}"
+                      method="post" th:id="${'viewDetails' +number.index}"></form>
+                <td th:text="${number.count+paginator.size*((paginator.page)-1)}"></td>
+                <td th:text="${order.uniqueNumber}">...</td>
+                <td th:text="${order.itemName}">...</td>
+                <td th:text="${order.amountOfItem}">...</td>
+                <td th:text="${order.totalPrice}">...</td>
+                <div sec:authorize="hasRole('ROLE_Sale')">
+                    <td>
+                        <form action="#"
+                              th:action="@{/orders/{uniqueNumber}/update(uniqueNumber=${order.uniqueNumber})}"
+                              method="post">
+                            <select name="orderStatus" onchange="this.form.submit()">
+                                <option th:each="state : ${T(com.gmail.erofeev.st.alexei.onlinemarket.repository.model.enums.OrderStatusEnum).values()}"
+                                        th:value="${state}"
+                                        th:text="${state}"
+                                        th:selected="${state==T(com.gmail.erofeev.st.alexei.onlinemarket.repository.model.enums.OrderStatusEnum).valueOf(order.status)}">
+                                </option>
+                            </select>
+                        </form>
+                    </td>
+                </div>
+                <div sec:authorize="hasRole('ROLE_Customer')">
+                    <td th:text="${order.status}"> ...</td>
+                </div>
+
+                <div sec:authorize="hasRole('ROLE_Sale')">
+                    <td>
+                        <button type="submit" th:value="${order.uniqueNumber}" name="uniqueNumber"
+                                class="btn btn-outline-primary" th:form="${'viewDetails' +number.index}">
+                            details
+                        </button>
+                    </td>
+                </div>
+
+            </tr>
+        </th:block>
+
+        </tbody>
+        <tfoot>
+        </tfoot>
+    </table>
+
+    <div th:insert="~{fragments/paginator :: paginator}"></div>
+    <div class="row" th:insert="~{fragments/footer :: footer}">
+    </div>
+
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+</body>
+</html>

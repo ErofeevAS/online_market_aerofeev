@@ -2,10 +2,12 @@ package com.gmail.erofeev.st.alexei.onlinemarket.controller;
 
 import com.gmail.erofeev.st.alexei.onlinemarket.controller.util.Paginator;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.ReviewService;
+import com.gmail.erofeev.st.alexei.onlinemarket.service.UserAuthenticationService;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.PageDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ReviewDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ReviewsListWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,10 +19,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class ReviewController {
     private final ReviewService reviewService;
+    private final UserAuthenticationService userAuthenticationService;
 
     @Autowired
-    public ReviewController(ReviewService reviewService) {
+    public ReviewController(ReviewService reviewService, UserAuthenticationService userAuthenticationService) {
         this.reviewService = reviewService;
+        this.userAuthenticationService = userAuthenticationService;
     }
 
     @GetMapping("/reviews")
@@ -47,4 +51,19 @@ public class ReviewController {
         reviewService.updateHiddenFields(reviewsChanges);
         return "redirect:/reviews";
     }
+
+    @GetMapping("/reviews/new")
+    public String createReview() {
+        return "newReview";
+    }
+
+    @PostMapping("/reviews/new")
+    public String createReview(Authentication authentication,
+                               @ModelAttribute("content") String content) {
+        Long userId = userAuthenticationService.getSecureUserId(authentication);
+        reviewService.create(userId, content);
+        return "redirect:/articles";
+    }
+
+
 }

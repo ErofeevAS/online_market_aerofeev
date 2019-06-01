@@ -28,4 +28,11 @@ public class UserRepositoryImpl extends GenericRepositoryImpl<Long, User> implem
         }
         return true;
     }
+
+    @Override
+    public List<User> findAllSortedByEmail(int offset, int amount) {
+        String hql = "select u from User u order by u.email";
+        Query query = entityManager.createQuery(hql, User.class);
+        return query.getResultList();
+    }
 }

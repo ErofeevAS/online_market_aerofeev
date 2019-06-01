@@ -15,15 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
-import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.ABOUT_URL;
-import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.ARTICLES_ALL_URL;
-import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.ARTICLES_NEW_URL;
-import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.ITEMS_ALL_URL;
-import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.LOGIN_URL;
-import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.PROFILE_ALL_URL;
-import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.REDIRECT_URL;
-import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.REVIEWS_ALL_URL;
-import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.USERS_ALL_URL;
+import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.*;
 
 @Configuration
 @Order(2)
@@ -50,24 +42,44 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers(USERS_ALL_URL, REVIEWS_ALL_URL)
-                .hasRole(securityProperties.getRoleAdmin())
-                .antMatchers(ARTICLES_NEW_URL, ITEMS_ALL_URL)
-                .hasAnyRole(securityProperties.getRoleSale())
-                .antMatchers(ARTICLES_ALL_URL)
+
+                .antMatchers(REDIRECT_URL, ABOUT_URL, LOGIN_URL)
+                .permitAll()
+                .antMatchers(
+                        "/orders/*",
+                        "/articles", "/articles/tag/*", "/articles/*/newComment",
+                        "/items", "/items/*")
                 .hasAnyRole(
                         securityProperties.getRoleCustomer(),
                         securityProperties.getRoleSale())
+
+                .antMatchers(ARTICLES_NEW_URL, ITEMS_ALL_URL, "/articles/*/update",
+                        "/articles/*/deleteComment",
+                        "/orders",
+                        "/orders/*/update")
+                .hasRole(securityProperties.getRoleSale())
+
+                .antMatchers(
+                        "/orders/sale/new",
+                        "/userorders",
+                        "/users/*/orders",
+                        "/reviews/new",
+                        "wrongAmount.html")
+                .hasRole(securityProperties.getRoleCustomer())
+
+                .antMatchers(USERS_ALL_URL, "/reviews","/reviews/*/delete","/reviews/update")
+                .hasRole(securityProperties.getRoleAdmin())
+
                 .antMatchers(PROFILE_ALL_URL)
                 .hasAnyRole(
                         securityProperties.getRoleAdmin(),
                         securityProperties.getRoleCustomer(),
                         securityProperties.getRoleSale())
-                .antMatchers(REDIRECT_URL, ABOUT_URL, LOGIN_URL)
-                .permitAll()
+
                 .and()
                 .formLogin()
                 .loginPage(LOGIN_URL)
+
                 .successHandler(authenticationSuccessHandler())
                 .permitAll()
                 .and()

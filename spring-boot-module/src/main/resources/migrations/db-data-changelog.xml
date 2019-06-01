@@ -169,21 +169,26 @@ He never called back."/>
             <column name="id" value="1"/>
             <column name="user_id" value="1"/>
             <column name="content" value="my first comment!! user_1"/>
+            <column name="article_id" value="1"/>
         </insert>
         <insert tableName="comment">
             <column name="id" value="2"/>
             <column name="user_id" value="1"/>
             <column name="content" value="my second comment!! user_1"/>
+            <column name="article_id" value="1"/>
         </insert>
         <insert tableName="comment">
             <column name="id" value="3"/>
             <column name="user_id" value="1"/>
             <column name="content" value="my third comment!! user_1"/>
+            <column name="article_id" value="1"/>
         </insert>
         <insert tableName="comment">
             <column name="id" value="4"/>
+            <column name="id" value="4"/>
             <column name="user_id" value="3"/>
             <column name="content" value="my first comment!! user_3"/>
+            <column name="article_id" value="1"/>
         </insert>
     </changeSet>
 

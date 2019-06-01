@@ -6,6 +6,7 @@ import com.gmail.erofeev.st.alexei.onlinemarket.service.UserService;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.PageDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.PasswordDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ProfileViewDTO;
+import com.gmail.erofeev.st.alexei.onlinemarket.service.model.RoleDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -42,6 +43,8 @@ public class UserController {
         model.addAttribute("users", pageDTO.getList());
         model.addAttribute("paginator", paginator);
         model.addAttribute("updatedUser", new UserDTO());
+        List<RoleDTO> roles = userService.getAllRoles();
+        model.addAttribute("roles", roles);
         return "users";
     }
 
@@ -53,8 +56,8 @@ public class UserController {
 
     @PostMapping("/users/{id}/update")
     public String updateRole(@PathVariable Long id,
-                             @RequestParam String roleName) {
-        userService.updateRole(id, roleName);
+                             @RequestParam Long roleId) {
+        userService.updateRole(id, roleId);
         return "redirect:/users";
     }
 
@@ -62,6 +65,8 @@ public class UserController {
     public String addUser(Model model) {
         UserDTO user = new UserDTO();
         model.addAttribute("user", user);
+        List<RoleDTO> roles = userService.getAllRoles();
+        model.addAttribute("roles", roles);
         return "adduser";
     }
 
@@ -69,6 +74,8 @@ public class UserController {
     public String addUserPost(@ModelAttribute("user") @Valid UserDTO user,
                               BindingResult bindingResult,
                               Model model) {
+        List<RoleDTO> roles = userService.getAllRoles();
+        model.addAttribute("roles", roles);
         if (bindingResult.hasErrors()) {
             return "adduser";
         }

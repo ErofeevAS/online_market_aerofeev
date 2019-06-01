@@ -14,4 +14,14 @@ public class UserAuthenticationServiceImpl implements UserAuthenticationService 
         AppUserPrincipal principal = (AppUserPrincipal) authentication.getPrincipal();
         return principal.getUser().getId();
     }
+
+    @Override
+    public void isUserThSameLikeAuthorizedUser(Long userId, Authentication authentication) {
+        if (authentication != null) {
+            Long secureUserId = getSecureUserId(authentication);
+            if (!secureUserId.equals(userId)) {
+                throw new RuntimeException("GET OUTTA HERE MAN");
+            }
+        }
+    }
 }

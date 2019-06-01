@@ -22,7 +22,9 @@ public class CommentServiceImpl implements CommentService {
     private final CommentConverter commentConverter;
     private final UserRepository userRepository;
 
-    public CommentServiceImpl(CommentRepository commentRepository, CommentConverter commentConverter, UserRepository userRepository) {
+    public CommentServiceImpl(CommentRepository commentRepository,
+                              CommentConverter commentConverter,
+                              UserRepository userRepository) {
         this.commentRepository = commentRepository;
         this.commentConverter = commentConverter;
         this.userRepository = userRepository;

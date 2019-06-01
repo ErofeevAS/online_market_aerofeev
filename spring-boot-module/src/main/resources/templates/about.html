@@ -6,12 +6,16 @@
 <title>About</title>
 </head>
 <body>
-<div th:insert="~{fragments/header :: header}"></div>
-<div th:insert="~{fragments/navbar :: navbar}"></div>
+<div class="container">
+    <div class="row" th:insert="~{fragments/header :: header}">
+    </div>
+    <div class="row" th:insert="~{fragments/navbar :: navbar}">
+    </div>
 
-<h1 th:text="${#calendars.format(#calendars.createNow(), 'dd MMM yyyy HH:mm')}"></h1>
-<h1>Our shop was founded in 2019</h1>
-<h2>We are the best of the best</h2>
-<div th:insert="~{fragments/footer :: footer}"></div>
+    <h1 th:text="${#calendars.format(#calendars.createNow(), 'dd MMM yyyy HH:mm')}"></h1>
+    <h1>Our shop was founded in 2019</h1>
+    <h2>We are the best of the best</h2>
+    <div th:insert="~{fragments/footer :: footer}"></div>
+</div>
 </body>
 </html>

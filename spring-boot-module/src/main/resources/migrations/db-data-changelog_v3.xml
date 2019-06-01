@@ -97,4 +97,15 @@
         </insert>
     </changeSet>
 
+    <changeSet author="alexei.st.erofeev@gmail.com" id="ORER_POPULATE_ID_1">
+    <insert tableName="order">
+        <column name="user_id" value="3"/>
+        <column name="item_id" value="1"/>
+        <column name="unique_number" value="1235b3e7-e79a-485c-a79e-2733ada95051"/>
+        <column name="amount" value="3"/>
+        <column name="status" value="NEW"/>
+    </insert>
+
+    </changeSet>
+
 </databaseChangeLog>

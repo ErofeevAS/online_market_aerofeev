@@ -20,6 +20,8 @@ public class GlobalConstants {
     public static final String REVIEWS_URL = "/reviews";
     public static final String ITEMS_ALL_URL = "/items/**";
     public static final String ITEMS_URL = "/items";
+    public static final String ORDERS_ALL_URL = "/orders/**";
+    public static final String ORDERS_URL = "/orders";
     public static final String ARTICLES_ALL_URL = "/articles/**";
     public static final String ARTICLES_URL = "/articles";
     public static final String ARTICLES_NEW_URL = "/articles/new/**";

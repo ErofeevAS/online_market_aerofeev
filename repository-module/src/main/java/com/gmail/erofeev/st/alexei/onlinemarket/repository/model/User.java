@@ -1,5 +1,6 @@
 package com.gmail.erofeev.st.alexei.onlinemarket.repository.model;
 
+import com.gmail.erofeev.st.alexei.onlinemarket.repository.model.embedded.Order;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
@@ -26,7 +27,7 @@ import java.util.Objects;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(updatable = false, nullable = false)
     private Long id;
     @Column(name = "lastname")
     private String lastName;
@@ -50,7 +51,7 @@ public class User {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Item> items = new ArrayList<>();
     @Column
-    private Boolean deleted;
+    private Boolean deleted = false;
     @Column
     private Boolean undeletable = false;
     @OneToOne(
@@ -59,6 +60,8 @@ public class User {
             cascade = CascadeType.ALL,
             orphanRemoval = true)
     private Profile profile;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Order> orders = new ArrayList<>();
 
     public User() {
     }
@@ -177,6 +180,14 @@ public class User {
 
     public void setItems(List<Item> items) {
         this.items = items;
+    }
+
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
     }
 
     @Override

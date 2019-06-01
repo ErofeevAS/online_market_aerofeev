@@ -19,7 +19,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
-public class ItemServiceImpl implements ItemService {
+public class ItemServiceImpl extends AbstractService implements ItemService {
     private static final Logger logger = LoggerFactory.getLogger(ItemServiceImpl.class);
     private final ItemRepository itemRepository;
     private final ItemConverter itemConverter;
@@ -35,7 +35,7 @@ public class ItemServiceImpl implements ItemService {
     @Transactional
     public PageDTO<ItemDTO> getItems(int page, int amount) {
         Integer amountOfEntity = itemRepository.getAmountOfEntity();
-        int maxPages = (Math.round(amountOfEntity / amount) + 1);
+        int maxPages = getMaxPages(amountOfEntity, amount);
         int offset = getOffset(page, maxPages, amount);
         List<Item> items = itemRepository.findItems(offset, amount);
         List<ItemDTO> itemListDTO = itemConverter.toListDTO(items);
@@ -107,12 +107,5 @@ public class ItemServiceImpl implements ItemService {
         itemRepository.persist(item);
         logger.debug(String.format("Item with name:%s was saved for user with id:%s", itemRestDTO.getName(), userId));
         return itemConverter.toRestDTO(item);
-    }
-
-    private int getOffset(int page, int maxPages, int amount) {
-        if (page > maxPages) {
-            page = maxPages;
-        }
-        return (page - 1) * amount;
     }
 }

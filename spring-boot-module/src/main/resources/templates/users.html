@@ -52,11 +52,11 @@
                         </button>
                     </td>
                     <td>
-                        <select name="roleName" onchange="this.form.submit()">
-                            <option th:each="state : ${T(com.gmail.erofeev.st.alexei.onlinemarket.controller.util.RolesNameEnum).values()}"
-                                    th:value="${state}"
-                                    th:text="${state}"
-                                    th:selected="${state==T(com.gmail.erofeev.st.alexei.onlinemarket.controller.util.RolesNameEnum).valueOf(user.role.name)}">
+                        <select id="roleId" name="roleId" onchange="this.form.submit()">
+                            <option th:each="role : ${roles}"
+                                    th:value="${role.id}"
+                                    th:text="${role.name}"
+                                    th:selected="${role.name==user.role.name}">
                             </option>
                         </select>
                     </td>
@@ -74,7 +74,7 @@
         </tfoot>
     </table>
 
-    <div th:insert="~{fragments/paginator :: paginator(content='/articles')}"></div>
+    <div th:insert="~{fragments/paginator :: paginator}"></div>
     <div class="row" th:insert="~{fragments/footer :: footer}">
     </div>
 

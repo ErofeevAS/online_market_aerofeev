@@ -11,12 +11,12 @@ import javax.validation.constraints.Pattern;
 public class UserDTO {
     private Long id;
     @NotNull
-    @Pattern(regexp = "^[A-Za-z_]{1,40}$", message = "must be from 1 to 40, only English letters")
+    @Pattern(regexp = "^[A-Za-z_\\s]{1,40}$", message = "must be from 1 to 40, only English letters")
     private String lastName;
     @NotNull
-    @Pattern(regexp = "^[A-Za-z_]{1,20}$", message = "must be from 1 to 20, only English letters")
+    @Pattern(regexp = "^[A-Za-z_\\s]{1,20}$", message = "must be from 1 to 20, only English letters")
     private String firstName;
-    @Pattern(regexp = "^[A-Za-z_]{0,40}$", message = "must be from 1 to 40, only English letters")
+    @Pattern(regexp = "^[A-Za-z_\\s]{0,40}$", message = "must be from 1 to 40, only English letters")
     private String patronymic = "";
     private String password;
     private String oldPassword;

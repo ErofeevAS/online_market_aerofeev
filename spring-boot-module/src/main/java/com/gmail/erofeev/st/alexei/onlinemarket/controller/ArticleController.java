@@ -10,6 +10,7 @@ import com.gmail.erofeev.st.alexei.onlinemarket.service.model.CommentDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.NewArticleDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.PageDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.SearchingFilter;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -90,7 +91,7 @@ public class ArticleController {
         return "article";
     }
 
-    @PostMapping("/articles/{id}/new")
+    @PostMapping("/articles/{id}/newComment")
     public String saveNewComment(@ModelAttribute("newComment") CommentDTO commentDTO,
                                  @PathVariable Long id,
                                  Authentication authentication) {
@@ -100,9 +101,8 @@ public class ArticleController {
     }
 
     @PostMapping("/articles/{id}/deleteComment")
-    public String deleteComment(
-            @PathVariable Long id,
-            @RequestParam("deleteCommentId") Long commentId) {
+    public String deleteComment(@PathVariable Long id,
+                                @RequestParam("deleteCommentId") Long commentId) {
         commentService.deleteComment(commentId);
         return "redirect:/articles/" + id;
     }

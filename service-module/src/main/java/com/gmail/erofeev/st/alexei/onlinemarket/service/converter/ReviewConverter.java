@@ -11,4 +11,5 @@ public interface ReviewConverter {
     Review fromDTO(ReviewDTO reviewDTO);
 
     List<ReviewDTO> toListDTO(List<Review> reviews);
+
 }
