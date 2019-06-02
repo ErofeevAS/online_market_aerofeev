@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org"
 >
 <head>
-    <title>about</title>
+    <title>error</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"/>
@@ -14,11 +14,11 @@
     </div>
     <div class="row" th:insert="~{fragments/navbar :: navbar}">
     </div>
-
-    <h1 th:text="${#calendars.format(#calendars.createNow(), 'dd MMM yyyy HH:mm')}"></h1>
-    <h1>Our shop was founded in 2019</h1>
-    <h2>We are the best of the best</h2>
-    <div th:insert="~{fragments/footer :: footer}"></div>
+    <h3>something wrong:</h3>
+    <div th:text="${#request.getAttribute('exception')}"></div>
+    <div th:text="${#request.getAttribute('url')}"></div>
+    <div class="row" th:insert="~{fragments/footer :: footer}">
+    </div>
 
 
 </div>

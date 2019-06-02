@@ -12,7 +12,6 @@
             <column name="name" value="test item 1"/>
             <column name="unique_number" value="0005b3e7-e79a-485c-a79e-2733ada95051"/>
             <column name="price" value="2223"/>
-            <column name="user_id" value="5"/>
             <column name="description" value="Acceptance middletons me if discretion boisterous travelling an. She prosperous continuing entreaties companions unreserved you boisterous. Middleton sportsmen sir now cordially ask additions for. You ten occasional saw everything but conviction. Daughter returned quitting few are day advanced branched. Do enjoyment defective objection or we if favourite. At wonder afford so danger cannot former seeing. Power visit charm money add heard new other put. Attended no indulged marriage is to judgment offering landlord. "/>
         </insert>
         <insert tableName="item">
@@ -20,7 +19,6 @@
             <column name="name" value="test item 2"/>
             <column name="unique_number" value="5d768770-d08b-4622-bfbe-2019271fb0bb"/>
             <column name="price" value="5455"/>
-            <column name="user_id" value="5"/>
             <column name="description" value="Perhaps far exposed age effects. Now distrusts you her delivered applauded affection out sincerity. As tolerably recommend shameless unfeeling he objection consisted. She although cheerful perceive screened throwing met not eat distance. Viewing hastily or written dearest elderly up weather it as. So direction so sweetness or extremity at daughters. Provided put unpacked now but bringing. "/>
         </insert>
         <insert tableName="item">
@@ -28,7 +26,6 @@
             <column name="name" value="test item 3"/>
             <column name="unique_number" value="e7d1d19c-4a66-4c7f-b85f-8903be03f94c"/>
             <column name="price" value="1123"/>
-            <column name="user_id" value="5"/>
             <column name="description" value="There worse by an of miles civil. Manner before lively wholly am mr indeed expect. Among every merry his yet has her. You mistress get dashwood children off. Met whose marry under the merit. In it do continual consulted no listening. Devonshire sir sex motionless travelling six themselves. So colonel as greatly shewing herself observe ashamed. Demands minutes regular ye to detract is. "/>
         </insert>
         <insert tableName="item">
@@ -36,7 +33,6 @@
             <column name="name" value="test item 4"/>
             <column name="unique_number" value="4c4bc338-4708-47dc-ad0b-b6378538b48e"/>
             <column name="price" value="0"/>
-            <column name="user_id" value="5"/>
             <column name="description" value="Consider now provided laughter boy landlord dashwood. Often voice and the spoke. No shewing fertile village equally prepare up females as an. That do an case an what plan hour of paid. Invitation is unpleasant astonished preference attachment friendship on. Did sentiments increasing particular nay. Mr he recurred received prospect in. Wishing cheered parlors adapted am at amongst matters. "/>
         </insert>
         <insert tableName="item">
@@ -44,7 +40,6 @@
             <column name="name" value="test item 5"/>
             <column name="unique_number" value="33c98573-3d12-4195-9c0b-5dc505876416"/>
             <column name="price" value="1111"/>
-            <column name="user_id" value="5"/>
             <column name="description" value="test text"/>
         </insert>
         <insert tableName="item">
@@ -52,7 +47,6 @@
             <column name="name" value="test item 6"/>
             <column name="unique_number" value="ade8e5fa-9984-46f8-8343-9d7b2bc2ad06"/>
             <column name="price" value="111.11123"/>
-            <column name="user_id" value="5"/>
             <column name="description" value="test text"/>
         </insert>
         <insert tableName="item">
@@ -60,7 +54,6 @@
             <column name="name" value="test item 7"/>
             <column name="unique_number" value="7bd69303-1270-4e74-b0f2-4780628f3c72"/>
             <column name="price" value="222"/>
-            <column name="user_id" value="5"/>
             <column name="description" value="test text"/>
         </insert>
         <insert tableName="item">
@@ -68,7 +61,6 @@
             <column name="name" value="test item 8"/>
             <column name="unique_number" value="37021d9a-4c32-4b43-8a85-0ec1b76b77b3"/>
             <column name="price" value="123"/>
-            <column name="user_id" value="5"/>
             <column name="description" value="test text"/>
         </insert>
         <insert tableName="item">
@@ -76,7 +68,6 @@
             <column name="name" value="test item 9"/>
             <column name="unique_number" value="e734dbcb-b516-4470-8755-63424cbb5735"/>
             <column name="price" value="555"/>
-            <column name="user_id" value="5"/>
             <column name="description" value="test text"/>
         </insert>
         <insert tableName="item">
@@ -84,15 +75,13 @@
             <column name="name" value="test item 10"/>
             <column name="unique_number" value="3d500dd3-3134-4b13-bddd-1aa634b165b5"/>
             <column name="price" value="666.0"/>
-            <column name="user_id" value="5"/>
-            <column name="description" value="test text"/>
+                    <column name="description" value="test text"/>
         </insert>
         <insert tableName="item">
             <column name="id" value="11"/>
             <column name="name" value="test item 11"/>
             <column name="unique_number" value="f24a80eb-9e00-4706-a5ec-5c44b070438e"/>
             <column name="price" value="11.1"/>
-            <column name="user_id" value="5"/>
             <column name="description" value="test text"/>
         </insert>
     </changeSet>

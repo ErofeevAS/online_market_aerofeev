@@ -2,8 +2,6 @@ package com.gmail.erofeev.st.alexei.onlinemarket.service.model;
 
 import org.springframework.validation.annotation.Validated;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Validated
@@ -13,9 +11,7 @@ public class NewArticleDTO {
     private String title;
     @Size(min = 1, max = 1000)
     private String content;
-    @NotEmpty(message = "must be not empty")
-    @NotNull(message = "must be not null")
-    private String createdDate;
+    private String createdDate = "0000-01-01T00:00:00";
     private Long userId;
 
     public Long getId() {

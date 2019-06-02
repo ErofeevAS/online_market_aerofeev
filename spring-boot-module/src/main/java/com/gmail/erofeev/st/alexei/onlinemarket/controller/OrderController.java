@@ -2,10 +2,10 @@ package com.gmail.erofeev.st.alexei.onlinemarket.controller;
 
 import com.gmail.erofeev.st.alexei.onlinemarket.controller.util.FrontEndValidator;
 import com.gmail.erofeev.st.alexei.onlinemarket.controller.util.Paginator;
+import com.gmail.erofeev.st.alexei.onlinemarket.service.OrderService;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.UserAuthenticationService;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.OrderDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.OrderDetailsDTO;
-import com.gmail.erofeev.st.alexei.onlinemarket.service.OrderService;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.PageDTO;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -19,14 +19,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class OrderController {
     private final OrderService orderService;
     private final UserAuthenticationService userAuthenticationService;
-    private final FrontEndValidator myValidator;
+    private final FrontEndValidator frontEndValidator;
 
     public OrderController(OrderService orderService,
                            UserAuthenticationService userAuthenticationService,
-                           FrontEndValidator myValidator) {
+                           FrontEndValidator frontEndValidator) {
         this.orderService = orderService;
         this.userAuthenticationService = userAuthenticationService;
-        this.myValidator = myValidator;
+        this.frontEndValidator = frontEndValidator;
     }
 
     @GetMapping("/orders")
@@ -66,7 +66,7 @@ public class OrderController {
     public String createOrder(Authentication authentication,
                               @RequestParam("itemId") Long itemId,
                               @RequestParam("amount") String amount) {
-        Integer validateAmount = myValidator.validateAmount(amount);
+        Integer validateAmount = frontEndValidator.validateAmount(amount);
         if (validateAmount == null) {
             return "wrongAmount";
         }

@@ -1,6 +1,7 @@
 package com.gmail.erofeev.st.alexei.onlinemarket.controller;
 
 import com.gmail.erofeev.st.alexei.onlinemarket.controller.util.DateTimeLocaleUtil;
+import com.gmail.erofeev.st.alexei.onlinemarket.controller.util.FrontEndValidator;
 import com.gmail.erofeev.st.alexei.onlinemarket.controller.util.Paginator;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.ArticleService;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.CommentService;
@@ -10,7 +11,6 @@ import com.gmail.erofeev.st.alexei.onlinemarket.service.model.CommentDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.NewArticleDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.PageDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.SearchingFilter;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,12 +30,18 @@ public class ArticleController {
     private final CommentService commentService;
     private final DateTimeLocaleUtil dateTimeLocaleUtil;
     private final UserAuthenticationService userAuthenticationService;
+    private final FrontEndValidator frontEndValidator;
 
-    public ArticleController(ArticleService articleService, CommentService commentService, DateTimeLocaleUtil dateTimeLocaleUtil, UserAuthenticationService userAuthenticationService) {
+    public ArticleController(ArticleService articleService,
+                             CommentService commentService,
+                             DateTimeLocaleUtil dateTimeLocaleUtil,
+                             UserAuthenticationService userAuthenticationService,
+                             FrontEndValidator frontEndValidator) {
         this.articleService = articleService;
         this.commentService = commentService;
         this.dateTimeLocaleUtil = dateTimeLocaleUtil;
         this.userAuthenticationService = userAuthenticationService;
+        this.frontEndValidator = frontEndValidator;
     }
 
     @GetMapping("/articles")
@@ -71,20 +77,13 @@ public class ArticleController {
     }
 
     @GetMapping("/articles/{id}")
-    public String getArticleAfterUpdateComment(@PathVariable Long id,
-                                               Model model,
-                                               Authentication authentication) {
-        ArticleDTO article = articleService.getArticleById(id);
+    public String getArticleAfterUpdateComment(@PathVariable String id,
+                                               Model model) {
+        Long validatedId = frontEndValidator.validateId(id);
+        ArticleDTO article = articleService.getArticleById(validatedId);
         model.addAttribute("article", article);
-        Long articleAuthorId = article.getUser().getId();
-        Long userId = userAuthenticationService.getSecureUserId(authentication);
-        Boolean showDeleteButton = false;
-        if (articleAuthorId == userId) {
-            showDeleteButton = true;
-        }
-        model.addAttribute("showDeleteButton", showDeleteButton);
         CommentDTO newComment = new CommentDTO();
-        newComment.setArticleId(id);
+        newComment.setArticleId(validatedId);
         model.addAttribute("newComment", newComment);
         NewArticleDTO editedArticle = new NewArticleDTO();
         model.addAttribute("editedArticle", editedArticle);

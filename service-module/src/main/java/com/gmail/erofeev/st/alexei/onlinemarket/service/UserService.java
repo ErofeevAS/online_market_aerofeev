@@ -18,8 +18,6 @@ public interface UserService {
 
     void changePassword(Long id);
 
-    PageDTO<UserDTO> findAll(int page, int amount);
-
     void updateRole(Long id, Long roleId);
 
     boolean changeOldPassword(Long id, PasswordDTO passwordDTO);
@@ -30,4 +28,5 @@ public interface UserService {
 
     List<RoleDTO> getAllRoles();
 
+    PageDTO<UserDTO> getUsers(int page, int size, boolean showDeleted);
 }

@@ -78,18 +78,28 @@
     <changeSet author="alexei.st.erofeev@gmail.com" id="PROFILE_POPULATE_ID_1">
         <insert tableName="profile">
             <column name="id" value="1"/>
+            <column name="address" value="Moskow"></column>
+            <column name="phone" value="+375295565125"></column>
         </insert>
         <insert tableName="profile">
             <column name="id" value="2"/>
+            <column name="address" value="Berlin"></column>
+            <column name="phone" value="+375295565125"></column>
         </insert>
         <insert tableName="profile">
             <column name="id" value="3"/>
+            <column name="address" value="London"></column>
+            <column name="phone" value="+375295565125"></column>
         </insert>
         <insert tableName="profile">
             <column name="id" value="4"/>
+            <column name="address" value="New York"></column>
+            <column name="phone" value="+375295565125"></column>
         </insert>
         <insert tableName="profile">
             <column name="id" value="5"/>
+            <column name="address" value="Moskow"></column>
+            <column name="phone" value="+375295565125"></column>
         </insert>
     </changeSet>
 

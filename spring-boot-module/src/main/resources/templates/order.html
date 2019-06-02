@@ -18,53 +18,53 @@
     <div class="row">
         <div class="col-sm-4">
             <div sec:authorize="hasRole('ROLE_Sale')">
-
-                <label for="order-number">order number</label>
-                <p th:text="${order.uniqueNumber}"
-                   name="name" id="order-number"></p>
-                <label for="order-created-date">date</label>
-                <p th:text="${order.createdDate}"
-                   name="order-created-date" id="order-created-date"></p>
-
-                <label for="order-item-name">itemName</label>
-                <p th:text="${order.itemName}"
-                   name="itemName" id="order-item-name"></p>
-
-                <label for="amount-of-items">amount of items</label>
-                <p th:text="${order.amountOfItem}"
-                   name="amount-of-items" id="amount-of-items"></p>
-
-                <label for="total-price">total price</label>
-                <p th:text="${order.totalPrice}"
-                   name="total-price" id="total-price"></p>
-
-                <label for="user-phone">user phone</label>
-                <p th:text="${order.phoneNumber}"
-                   name="user-phone" id="user-phone"></p>
-
-                <label for="username">username</label>
-                <p th:text="${order.userName}"
-                   name="username" id="username"></p>
-
-                <form action="#" th:action="@{/orders/{uniqueNumber}/update(uniqueNumber=${order.uniqueNumber})}"
-                      method="post">
-                    <select name="orderStatus" onchange="this.form.submit()">
-                        <option th:each="state : ${T(com.gmail.erofeev.st.alexei.onlinemarket.repository.model.enums.OrderStatusEnum).values()}"
-                                th:value="${state}"
-                                th:text="${state}"
-                                th:selected="${state==T(com.gmail.erofeev.st.alexei.onlinemarket.repository.model.enums.OrderStatusEnum).valueOf(order.status)}">
-                        </option>
-                    </select>
-                    <input type="hidden" th:value="${order.uniqueNumber}" name="uniqueNumber">
-                </form>
-
-
+                <table class="table table-striped" id="usersTable">
+                    <thead>
+                    <tr>
+                        <th> order number</th>
+                        <th> date</th>
+                        <th> item name</th>
+                        <th> amount of items</th>
+                        <th> total price</th>
+                        <th> phone</th>
+                        <th> user name</th>
+                        <th> status</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th th:text="${order.orderDTO.uniqueNumber}"></th>
+                        <th th:text="${order.orderDTO.createdDate}"></th>
+                        <th th:text="${order.orderDTO.itemName}"></th>
+                        <th th:text="${order.orderDTO.amountOfItem}"></th>
+                        <th th:text="${order.orderDTO.totalPrice}"></th>
+                        <th th:text="${order.phoneNumber}"></th>
+                        <th th:text="${order.userName}"></th>
+                        <th>
+                            <form action="#"
+                                  th:action="@{/orders/{uniqueNumber}/update(uniqueNumber=${order.orderDTO.uniqueNumber})}"
+                                  method="post">
+                                <select name="orderStatus" onchange="this.form.submit()">
+                                    <option th:each="state : ${T(com.gmail.erofeev.st.alexei.onlinemarket.repository.model.enums.OrderStatusEnum).values()}"
+                                            th:value="${state}"
+                                            th:text="${state}"
+                                            th:selected="${state==T(com.gmail.erofeev.st.alexei.onlinemarket.repository.model.enums.OrderStatusEnum).valueOf(order.orderDTO.status)}">
+                                    </option>
+                                </select>
+                                <input type="hidden" th:value="${order.orderDTO.uniqueNumber}" name="uniqueNumber">
+                            </form>
+                        </th>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
+
         </div>
     </div>
+</div>
 
-    <div class="row" th:insert="~{fragments/footer :: footer}">
-    </div>
+<div class="row" th:insert="~{fragments/footer :: footer}">
+</div>
 
 </div>
 

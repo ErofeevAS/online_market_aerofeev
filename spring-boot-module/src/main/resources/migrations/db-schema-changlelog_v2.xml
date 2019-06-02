@@ -25,10 +25,13 @@
     <changeSet author="alexei.st.erofeev@gmail.com" id="PROFILE_TABLE_1">
         <createTable tableName="profile">
             <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="address" type="varchar(120)" defaultValue=""></column>
+            <column name="phone" type="varchar(15)" defaultValue=""></column>
+            <column defaultValueBoolean="false" name="deleted" type="boolean">
                 <constraints nullable="false"/>
             </column>
-            <column name="address" type="varchar(120)"></column>
-            <column name="phone" type="INT"></column>
         </createTable>
     </changeSet>
 

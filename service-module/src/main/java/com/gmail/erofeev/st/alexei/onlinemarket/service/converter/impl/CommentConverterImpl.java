@@ -30,7 +30,6 @@ public class CommentConverterImpl implements CommentConverter {
         commentDTO.setId(comment.getId());
         commentDTO.setContent(comment.getContent());
         commentDTO.setCreatedDate(comment.getCreatedDate());
-        commentDTO.setHidden(comment.isHidden());
         UserDTO userDTO = userConverter.toDTO(comment.getUser());
         commentDTO.setUser(userDTO);
         return commentDTO;

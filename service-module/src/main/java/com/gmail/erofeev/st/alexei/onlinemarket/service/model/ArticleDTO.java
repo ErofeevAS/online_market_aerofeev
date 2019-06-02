@@ -10,8 +10,6 @@ public class ArticleDTO {
     private UserDTO user;
     private String content;
     private String createdDate;
-    private boolean isDeleted = false;
-    private boolean isHidden = false;
     private List<CommentDTO> comments = new ArrayList<>();
     private List<TagDTO> tags = new ArrayList<>();
 
@@ -55,22 +53,6 @@ public class ArticleDTO {
         this.createdDate = createdDate;
     }
 
-    public boolean isDeleted() {
-        return isDeleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        isDeleted = deleted;
-    }
-
-    public boolean isHidden() {
-        return isHidden;
-    }
-
-    public void setHidden(boolean hidden) {
-        isHidden = hidden;
-    }
-
     public List<CommentDTO> getComments() {
         return comments;
     }
@@ -103,8 +85,6 @@ public class ArticleDTO {
                 ", user=" + user +
                 ", content='" + content + '\'' +
                 ", createdDate=" + createdDate +
-                ", isDeleted=" + isDeleted +
-                ", isHidden=" + isHidden +
                 ", comments=" + comments +
                 '}';
     }

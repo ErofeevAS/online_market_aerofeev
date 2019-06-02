@@ -1,12 +1,9 @@
 package com.gmail.erofeev.st.alexei.onlinemarket.service.converter.impl;
 
 import com.gmail.erofeev.st.alexei.onlinemarket.repository.model.Item;
-import com.gmail.erofeev.st.alexei.onlinemarket.repository.model.User;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.converter.ItemConverter;
-import com.gmail.erofeev.st.alexei.onlinemarket.service.converter.UserConverter;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ItemDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ItemDetailsDTO;
-import com.gmail.erofeev.st.alexei.onlinemarket.service.model.UserDTO;
 import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
@@ -20,11 +17,6 @@ import static java.util.UUID.randomUUID;
 public class ItemConverterImpl implements ItemConverter {
     private static final int SHORT_DESCRIPTION_LENGTH = 200;
     private static final String SUFFIX_FOR_COPY = " -copy ";
-    private final UserConverter userConverter;
-
-    public ItemConverterImpl(UserConverter userConverter) {
-        this.userConverter = userConverter;
-    }
 
     @Override
     public ItemDetailsDTO toDetailsDTO(Item item) {
@@ -32,9 +24,6 @@ public class ItemConverterImpl implements ItemConverter {
         ItemDTO itemDTO = toDTO(item);
         itemDetailsDTO.setItemDTO(itemDTO);
         String description = item.getDescription();
-        User user = item.getUser();
-        UserDTO userDTO = userConverter.toDTO(user);
-//        itemDetailsDTO.setUser(userDTO);
         String shortDescription = description;
         if (shortDescription.length() > SHORT_DESCRIPTION_LENGTH) {
             shortDescription = description.substring(0, SHORT_DESCRIPTION_LENGTH);
@@ -46,11 +35,7 @@ public class ItemConverterImpl implements ItemConverter {
     @Override
     public Item fromDetailsDTO(ItemDetailsDTO itemDetailsDTO) {
         ItemDTO itemDTO = itemDetailsDTO.getItemDTO();
-        Item item = fromDTO(itemDTO);
-//        UserDTO userDTO = itemDetailsDTO.getUser();
-//        User user = userConverter.fromDetailsDTO(userDTO);
-//        item.setUser(user);
-        return item;
+        return fromDTO(itemDTO);
     }
 
     @Override
@@ -97,7 +82,6 @@ public class ItemConverterImpl implements ItemConverter {
         copyOfItem.setName(nameForCopy);
         copyOfItem.setDescription(item.getDescription());
         copyOfItem.setPrice(item.getPrice());
-        copyOfItem.setUser(item.getUser());
         return copyOfItem;
     }
 

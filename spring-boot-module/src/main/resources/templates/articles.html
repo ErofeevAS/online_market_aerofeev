@@ -25,17 +25,19 @@
         <th:block th:each="article,number : ${articles}">
             <div class="col-sm-4" id="article">
                 <form action="#" th:action="@{/articles/{id}(id=${article.id})}" method="get" id="articleDetail">
+                    <p th:text="${article.createdDate}"></p>
                     <h2 th:text="${article.title}"></h2>
                     <p th:text="${article.getUser().getFullName()}"></p>
-                    <p th:text="${article.createdDate}"></p>
                     <p th:text="${article.getShortContent()}"></p>
-                    <th:block th:each="tag : ${article.tags}">
-                        <a th:href="@{/articles/tag/{tag} (tag=${tag.id})}" th:text="${tag.name}"
-                           class="badge badge-default">tags</a>
-                    </th:block>
-                    <button type="submit" class="btn btn-outline-primary">
-                        view details
-                    </button>
+                    <div>
+                        <th:block th:each="tag : ${article.tags}">
+                            <a th:href="@{/articles/tag/{tag} (tag=${tag.name})}" th:text="${tag.name}"
+                               class="badge badge-default">tags</a>
+                        </th:block>
+                    </div>
+                    <div>
+                        <button type="submit" class="btn btn-outline-primary"> view details</button>
+                    </div>
                 </form>
             </div>
         </th:block>

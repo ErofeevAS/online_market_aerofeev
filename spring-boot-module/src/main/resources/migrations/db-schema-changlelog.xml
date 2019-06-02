@@ -81,9 +81,6 @@
             <column defaultValueBoolean="false" name="deleted" type="boolean">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueBoolean="false" name="hidden" type="boolean">
-                <constraints nullable="false"/>
-            </column>
         </createTable>
     </changeSet>
 
@@ -114,9 +111,6 @@
                 <constraints nullable="false"/>
             </column>
             <column defaultValueBoolean="false" name="deleted" type="boolean">
-                <constraints nullable="false"/>
-            </column>
-            <column defaultValueBoolean="false" name="hidden" type="boolean">
                 <constraints nullable="false"/>
             </column>
         </createTable>

@@ -2,12 +2,9 @@ package com.gmail.erofeev.st.alexei.onlinemarket.controller;
 
 import com.gmail.erofeev.st.alexei.onlinemarket.controller.util.RequestParamsValidator;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.ItemService;
-import com.gmail.erofeev.st.alexei.onlinemarket.service.model.AppUserPrincipal;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ItemDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -53,9 +50,6 @@ public class RestItemController {
 
     @PostMapping
     public ItemDTO saveItem(@RequestBody ItemDTO itemRestDTO) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        AppUserPrincipal principal = (AppUserPrincipal) authentication.getPrincipal();
-        Long userId = principal.getUser().getId();
-        return itemService.saveItem(userId, itemRestDTO);
+        return itemService.saveItem(itemRestDTO);
     }
 }

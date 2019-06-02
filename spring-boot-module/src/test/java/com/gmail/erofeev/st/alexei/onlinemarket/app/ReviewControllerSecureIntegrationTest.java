@@ -50,7 +50,7 @@ public class ReviewControllerSecureIntegrationTest {
     public void shouldGetFourTestReviewsFromReviewsPage() throws Exception {
         mockMvc.perform(get("/reviews"))
                 .andExpect(status().isOk())
-                .andExpect(xpath("//*[@id='review']").nodeCount(3));
+                .andExpect(xpath("//*[@id='review']").nodeCount(4));
     }
 
     @Test

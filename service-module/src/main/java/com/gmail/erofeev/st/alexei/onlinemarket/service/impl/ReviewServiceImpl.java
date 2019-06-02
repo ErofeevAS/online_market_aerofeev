@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class ReviewServiceImpl extends AbstractService implements ReviewService {
+public class ReviewServiceImpl extends AbstractService<ReviewDTO> implements ReviewService {
     private static final Logger logger = LoggerFactory.getLogger(ReviewServiceImpl.class);
     private final ReviewRepository reviewRepository;
     private final ReviewConverter reviewConverter;
@@ -40,15 +40,12 @@ public class ReviewServiceImpl extends AbstractService implements ReviewService 
     @Override
     @Transactional
     public PageDTO<ReviewDTO> getReviews(int page, int amount) {
-        Integer amountOfEntity = reviewRepository.getAmountOfEntity();
+        Integer amountOfEntity = reviewRepository.getAmountOfEntity(false);
         int maxPages = getMaxPages(amountOfEntity, amount);
         int offset = getOffset(page, maxPages, amount);
         List<Review> reviews = reviewRepository.getEntities(offset, amount);
         List<ReviewDTO> reviewDTOList = reviewConverter.toListDTO(reviews);
-        PageDTO<ReviewDTO> pageDTO = new PageDTO<>();
-        pageDTO.setList(reviewDTOList);
-        pageDTO.setAmountOfPages(maxPages);
-        return pageDTO;
+        return getPageDTO(reviewDTOList, maxPages);
     }
 
     @Override

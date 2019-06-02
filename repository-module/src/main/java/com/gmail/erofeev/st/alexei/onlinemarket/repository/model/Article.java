@@ -22,9 +22,9 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "article")
+@Table
 @SQLDelete(sql = "UPDATE article SET deleted = true WHERE id = ?")
-@Where(clause = "deleted = '0'")
+@Where(clause = "deleted = false")
 public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,9 +40,7 @@ public class Article {
     @Column(name = "created_date")
     private Timestamp createdDate;
     @Column(name = "deleted")
-    private boolean isDeleted = false;
-    @Column(name = "hidden")
-    private boolean isHidden = false;
+    private boolean deleted = false;
     @OneToMany(mappedBy = "article", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("created_date")
     private List<Comment> comments = new ArrayList<>();
@@ -90,19 +88,11 @@ public class Article {
     }
 
     public boolean isDeleted() {
-        return isDeleted;
+        return deleted;
     }
 
     public void setDeleted(boolean deleted) {
-        isDeleted = deleted;
-    }
-
-    public boolean isHidden() {
-        return isHidden;
-    }
-
-    public void setHidden(boolean hidden) {
-        isHidden = hidden;
+        this.deleted = deleted;
     }
 
     public List<Comment> getComments() {
@@ -126,8 +116,7 @@ public class Article {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Article article = (Article) o;
-        return isDeleted == article.isDeleted &&
-                isHidden == article.isHidden &&
+        return deleted == article.deleted &&
                 id.equals(article.id) &&
                 Objects.equals(title, article.title) &&
                 Objects.equals(content, article.content) &&
@@ -136,7 +125,7 @@ public class Article {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, content, createdDate, isDeleted, isHidden);
+        return Objects.hash(id, title, content, createdDate, deleted);
     }
 
     @Override
@@ -147,8 +136,7 @@ public class Article {
                 ", user=" + user +
                 ", content='" + content + '\'' +
                 ", createdDate=" + createdDate +
-                ", isDeleted=" + isDeleted +
-                ", isHidden=" + isHidden +
+                ", deleted=" + deleted +
                 '}';
     }
 }

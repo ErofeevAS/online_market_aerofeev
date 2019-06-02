@@ -1,6 +1,7 @@
 package com.gmail.erofeev.st.alexei.onlinemarket.repository.model;
 
 import com.gmail.erofeev.st.alexei.onlinemarket.repository.model.enums.OrderStatusEnum;
+import org.hibernate.annotations.SQLDelete;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,7 +12,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.MapsId;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -19,16 +19,15 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "`order`")
+@SQLDelete(sql = "UPDATE `order` SET deleted = true WHERE id = ?")
 public class Order implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
     private Long id;
     @ManyToOne(fetch = FetchType.LAZY)
-//    @MapsId("user_id")
     private User user;
     @ManyToOne(fetch = FetchType.LAZY)
-//    @MapsId("item_id")
     private Item item;
     @Column(name = "unique_number")
     private String uniqueNumber;
@@ -37,8 +36,8 @@ public class Order implements Serializable {
     private OrderStatusEnum status;
     @Column
     private int amount;
-    @Column(name = "deleted")
-    private boolean isDeleted;
+    @Column
+    private boolean deleted;
     @Column(name = "created_date")
     private Timestamp createdDate;
 
@@ -86,11 +85,11 @@ public class Order implements Serializable {
     }
 
     public boolean isDeleted() {
-        return isDeleted;
+        return deleted;
     }
 
     public void setDeleted(boolean deleted) {
-        isDeleted = deleted;
+        this.deleted = deleted;
     }
 
     public OrderStatusEnum getStatus() {
@@ -115,7 +114,7 @@ public class Order implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         Order order = (Order) o;
         return amount == order.amount &&
-                isDeleted == order.isDeleted &&
+                deleted == order.deleted &&
                 Objects.equals(id, order.id) &&
                 Objects.equals(uniqueNumber, order.uniqueNumber) &&
                 status == order.status;
@@ -123,6 +122,6 @@ public class Order implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, uniqueNumber, status, amount, isDeleted);
+        return Objects.hash(id, uniqueNumber, status, amount, deleted);
     }
 }

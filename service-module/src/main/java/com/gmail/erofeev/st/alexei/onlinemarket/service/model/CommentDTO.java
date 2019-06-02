@@ -8,8 +8,6 @@ public class CommentDTO {
     private UserDTO user;
     private String content;
     private Timestamp createdDate;
-    private boolean isDeleted = false;
-    private boolean isHidden = false;
 
     public Long getId() {
         return id;
@@ -43,22 +41,6 @@ public class CommentDTO {
         this.createdDate = createdDate;
     }
 
-    public boolean isDeleted() {
-        return isDeleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        isDeleted = deleted;
-    }
-
-    public boolean isHidden() {
-        return isHidden;
-    }
-
-    public void setHidden(boolean hidden) {
-        isHidden = hidden;
-    }
-
     public Long getArticleId() {
         return articleId;
     }
@@ -75,8 +57,6 @@ public class CommentDTO {
                 ", user=" + user +
                 ", content='" + content + '\'' +
                 ", createdDate=" + createdDate +
-                ", isDeleted=" + isDeleted +
-                ", isHidden=" + isHidden +
                 '}';
     }
 }

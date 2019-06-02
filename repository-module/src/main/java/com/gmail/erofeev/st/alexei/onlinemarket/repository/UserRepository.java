@@ -9,5 +9,5 @@ public interface UserRepository extends GenericRepository<Long, User> {
 
     Boolean isUserExist(String email);
 
-    List<User> findAllSortedByEmail(int offset, int amount);
+    List<User> findUsersSortedByEmail(int offset, int amount, boolean showDeleted);
 }

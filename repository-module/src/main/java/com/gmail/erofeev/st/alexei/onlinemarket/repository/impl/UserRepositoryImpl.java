@@ -1,6 +1,7 @@
 package com.gmail.erofeev.st.alexei.onlinemarket.repository.impl;
 
 import com.gmail.erofeev.st.alexei.onlinemarket.repository.UserRepository;
+import com.gmail.erofeev.st.alexei.onlinemarket.repository.model.Item;
 import com.gmail.erofeev.st.alexei.onlinemarket.repository.model.User;
 import org.springframework.stereotype.Repository;
 
@@ -30,9 +31,16 @@ public class UserRepositoryImpl extends GenericRepositoryImpl<Long, User> implem
     }
 
     @Override
-    public List<User> findAllSortedByEmail(int offset, int amount) {
-        String hql = "select u from User u order by u.email";
-        Query query = entityManager.createQuery(hql, User.class);
+    public List<User> findUsersSortedByEmail(int offset, int amount, boolean showDeleted) {
+        String hql;
+        if (showDeleted) {
+            hql = "select u from User u ORDER BY u.email asc ";
+        } else {
+            hql = "select u from User u where u.deleted = false ORDER BY u.email asc  ";
+        }
+        Query query = entityManager.createQuery(hql);
+        query.setFirstResult(offset);
+        query.setMaxResults(amount);
         return query.getResultList();
     }
 }

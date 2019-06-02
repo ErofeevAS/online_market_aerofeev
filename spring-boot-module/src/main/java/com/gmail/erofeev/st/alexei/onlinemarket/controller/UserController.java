@@ -38,7 +38,7 @@ public class UserController {
                            @RequestParam(defaultValue = "1", required = false) String page,
                            @RequestParam(defaultValue = "10", required = false) String size) {
         Paginator paginator = new Paginator(page, size);
-        PageDTO<UserDTO> pageDTO = userService.findAll(paginator.getPage(), paginator.getSize());
+        PageDTO<UserDTO> pageDTO = userService.getUsers(paginator.getPage(), paginator.getSize(),false);
         paginator.setMaxPage(pageDTO.getAmountOfPages());
         model.addAttribute("users", pageDTO.getList());
         model.addAttribute("paginator", paginator);

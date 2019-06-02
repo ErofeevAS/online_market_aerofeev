@@ -22,7 +22,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 @Service
-public class ArticleServiceImpl extends AbstractService implements ArticleService {
+public class ArticleServiceImpl extends AbstractService<ArticleDTO> implements ArticleService {
     private static final Logger logger = LoggerFactory.getLogger(ArticleServiceImpl.class);
     private static final String SUCCESSFUL_DELETE_MESSAGE = "success";
     private final ArticleRepository articleRepository;
@@ -46,21 +46,21 @@ public class ArticleServiceImpl extends AbstractService implements ArticleServic
         String keyWord = searchingFilter.getKeyWord();
         String tag = searchingFilter.getTag();
         if (keyWord == null && tag == null) {
-            int amountOfEntity = articleRepository.getAmountOfEntity();
+            int amountOfEntity = articleRepository.getAmountOfEntity(false);
             int maxPages = getMaxPages(amountOfEntity, amount);
             int offset = getOffset(page, maxPages, amount);
             List<Article> articles = articleRepository.getEntities(offset, amount);
             List<ArticleDTO> articleDTOList = articleConverter.toListDTO(articles);
             return getPageDTO(articleDTOList, maxPages);
         } else if (keyWord == null) {
-            int amountOfEntity = articleRepository.getAmountOfEntity();
+            int amountOfEntity = articleRepository.getAmountOfEntity(false);
             int maxPages = getMaxPages(amountOfEntity, amount);
             int offset = getOffset(page, maxPages, amount);
             List<Article> articles = articleRepository.getEntitiesByTag(offset, amount, searchingFilter.getTag());
             List<ArticleDTO> articleDTOList = articleConverter.toListDTO(articles);
             return getPageDTO(articleDTOList, maxPages);
         } else if (tag == null) {
-            int amountOfEntity = articleRepository.getAmountOfEntity();
+            int amountOfEntity = articleRepository.getAmountOfEntity(false);
             int maxPages = getMaxPages(amountOfEntity, amount);
             int offset = getOffset(page, maxPages, amount);
             List<Article> articles = articleRepository.getArticlesFilteredByKeyWord(offset, amount, keyWord);
@@ -164,12 +164,5 @@ public class ArticleServiceImpl extends AbstractService implements ArticleServic
         String title = articleDTO.getTitle();
         article.setTitle(title);
         articleRepository.merge(article);
-    }
-
-    private PageDTO<ArticleDTO> getPageDTO(List<ArticleDTO> articleDTOList, Integer maxPages) {
-        PageDTO<ArticleDTO> pageDTO = new PageDTO<>();
-        pageDTO.setList(articleDTOList);
-        pageDTO.setAmountOfPages(maxPages);
-        return pageDTO;
     }
 }

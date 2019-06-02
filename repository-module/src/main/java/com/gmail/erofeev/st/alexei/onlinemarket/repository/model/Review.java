@@ -18,7 +18,7 @@ import java.util.Objects;
 @Entity
 @Table
 @SQLDelete(sql = "UPDATE review SET deleted = true WHERE id = ?")
-@Where(clause = "deleted = '0'")
+@Where(clause = "deleted = false")
 public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,9 +32,9 @@ public class Review {
     @Column(name = "created_date")
     private Timestamp createdDate;
     @Column
-    private Boolean deleted = false;
+    private boolean deleted = false;
     @Column
-    private Boolean hidden = false;
+    private boolean hidden = false;
 
     public Long getId() {
         return id;
@@ -68,19 +68,19 @@ public class Review {
         this.createdDate = createdDate;
     }
 
-    public Boolean getDeleted() {
+    public boolean getDeleted() {
         return deleted;
     }
 
-    public void setDeleted(Boolean deleted) {
+    public void setDeleted(boolean deleted) {
         this.deleted = deleted;
     }
 
-    public Boolean getHidden() {
+    public boolean getHidden() {
         return hidden;
     }
 
-    public void setHidden(Boolean hidden) {
+    public void setHidden(boolean hidden) {
         this.hidden = hidden;
     }
 

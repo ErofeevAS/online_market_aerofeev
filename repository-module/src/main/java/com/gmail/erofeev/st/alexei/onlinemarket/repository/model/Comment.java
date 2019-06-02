@@ -18,7 +18,7 @@ import java.util.Objects;
 @Entity
 @Table
 @SQLDelete(sql = "UPDATE comment SET deleted = true WHERE id = ?")
-@Where(clause = "deleted = '0'")
+@Where(clause = "deleted = false")
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,10 +31,8 @@ public class Comment {
     private String content;
     @Column(name = "created_date")
     private Timestamp createdDate;
-    @Column(name = "deleted")
-    private boolean isDeleted = false;
-    @Column(name = "hidden")
-    private boolean isHidden = false;
+    @Column
+    private boolean deleted = false;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "article_id", nullable = false)
     private Article article = new Article();
@@ -72,20 +70,13 @@ public class Comment {
     }
 
     public boolean isDeleted() {
-        return isDeleted;
+        return deleted;
     }
 
     public void setDeleted(boolean deleted) {
-        isDeleted = deleted;
+        this.deleted = deleted;
     }
 
-    public boolean isHidden() {
-        return isHidden;
-    }
-
-    public void setHidden(boolean hidden) {
-        isHidden = hidden;
-    }
 
     public Article getArticle() {
         return article;
@@ -100,8 +91,7 @@ public class Comment {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Comment comment = (Comment) o;
-        return isDeleted == comment.isDeleted &&
-                isHidden == comment.isHidden &&
+        return deleted == comment.deleted &&
                 id.equals(comment.id) &&
                 Objects.equals(content, comment.content) &&
                 Objects.equals(createdDate, comment.createdDate);
@@ -109,7 +99,7 @@ public class Comment {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, content, createdDate, isDeleted, isHidden);
+        return Objects.hash(id, content, createdDate, deleted);
     }
 
     @Override
@@ -119,8 +109,7 @@ public class Comment {
                 ", user=" + user +
                 ", content='" + content + '\'' +
                 ", createdDate=" + createdDate +
-                ", isDeleted=" + isDeleted +
-                ", isHidden=" + isHidden +//
+                ", deleted=" + deleted +
                 '}';
     }
 }

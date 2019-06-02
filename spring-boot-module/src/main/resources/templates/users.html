@@ -20,15 +20,10 @@
             <th> #</th>
             <th> lastname</th>
             <th> firstname</th>
-            <th> patronymic</th>
             <th> email</th>
             <th> change password</th>
             <th> change role</th>
-            <th>
-                <button type="submit" class="btn btn-outline-primary" form="deletedForm"
-                        onclick="return confirm('Are you sure?')">delete
-                </button>
-            </th>
+            <th> for delete</th>
         </tr>
         </thead>
         <tbody>
@@ -42,7 +37,6 @@
                     <td th:text="${number.count+paginator.size*((paginator.page)-1)}"></td>
                     <td th:text="${user.lastName}">...</td>
                     <td th:text="${user.firstName}">...</td>
-                    <td th:text="${user.patronymic}">...</td>
                     <td th:text="${user.email}">...</td>
                     <td>
                         <button type="submit" th:value="${user.id}" name="userId" form="changePasswordForm"
@@ -61,14 +55,24 @@
                         </select>
                     </td>
                 </form>
-
                 <td>
                     <input type="checkbox" name="deletedUsersId" th:value="${user.id}" form="deletedForm"/>
                 </td>
-
             </tr>
         </th:block>
-
+        <tr>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th>
+                <button type="submit" class="btn btn-outline-primary" form="deletedForm"
+                        onclick="return confirm('Are you sure?')">delete
+                </button>
+            </th>
+        </tr>
         </tbody>
         <tfoot>
         </tfoot>

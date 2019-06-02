@@ -1,7 +1,6 @@
 package com.gmail.erofeev.st.alexei.onlinemarket.repository.model;
 
 import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -10,8 +9,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.math.BigDecimal;
@@ -20,13 +17,12 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "item")
+@Table
 @SQLDelete(sql = "UPDATE item SET deleted = true WHERE id = ?")
-@Where(clause = "deleted = '0'")
 public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(updatable = false,nullable = false)
+    @Column(updatable = false, nullable = false)
     private Long id;
     @Column
     private String name;
@@ -37,11 +33,8 @@ public class Item {
     @Column
     private String description;
     @Column
-    private Boolean deleted = false;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
+    private boolean deleted = false;
+    @OneToMany(mappedBy = "item", fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private List<Order> orders = new ArrayList<>();
 
     @Override
@@ -102,19 +95,11 @@ public class Item {
         this.description = description;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Boolean getDeleted() {
+    public boolean getDeleted() {
         return deleted;
     }
 
-    public void setDeleted(Boolean deleted) {
+    public void setDeleted(boolean deleted) {
         this.deleted = deleted;
     }
 

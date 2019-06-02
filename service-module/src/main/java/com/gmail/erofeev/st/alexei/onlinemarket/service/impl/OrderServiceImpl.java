@@ -26,7 +26,7 @@ import java.util.List;
 import static java.util.UUID.randomUUID;
 
 @Service
-public class OrderServiceImpl extends AbstractService implements OrderService {
+public class OrderServiceImpl extends AbstractService<OrderDTO> implements OrderService {
     private static final Logger logger = LoggerFactory.getLogger(OrderServiceImpl.class);
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
@@ -64,15 +64,12 @@ public class OrderServiceImpl extends AbstractService implements OrderService {
     @Override
     @Transactional
     public PageDTO<OrderDTO> getOrders(int page, int amount, Long userId) {
-        Integer amountOfEntity = orderRepository.getAmountOfEntity();
+        Integer amountOfEntity = orderRepository.getAmountOfEntity(false);
         int maxPages = getMaxPages(amountOfEntity, amount);
         int offset = getOffset(page, maxPages, amount);
         List<Order> orders = orderRepository.getOrders(offset, amount, userId);
         List<OrderDTO> orderListDTO = orderConverter.toListDTO(orders);
-        PageDTO<OrderDTO> pageDTO = new PageDTO<>();
-        pageDTO.setAmountOfPages(maxPages);
-        pageDTO.setList(orderListDTO);
-        return pageDTO;
+        return getPageDTO(orderListDTO, maxPages);
     }
 
     @Override

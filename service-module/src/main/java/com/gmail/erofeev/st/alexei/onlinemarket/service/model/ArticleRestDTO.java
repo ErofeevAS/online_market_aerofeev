@@ -7,8 +7,6 @@ public class ArticleRestDTO {
     private String title;
     private String content;
     private Timestamp createdDate;
-    private boolean isDeleted = false;
-    private boolean isHidden = false;
     private String authorLastName;
     private String authorFirstName;
     private String authorEmail;
@@ -43,22 +41,6 @@ public class ArticleRestDTO {
 
     public void setCreatedDate(Timestamp createdDate) {
         this.createdDate = createdDate;
-    }
-
-    public boolean isDeleted() {
-        return isDeleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        isDeleted = deleted;
-    }
-
-    public boolean isHidden() {
-        return isHidden;
-    }
-
-    public void setHidden(boolean hidden) {
-        isHidden = hidden;
     }
 
     public String getAuthorLastName() {

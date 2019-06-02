@@ -23,22 +23,10 @@
             <column name="description" type="varchar(1000)">
                 <constraints nullable="false"/>
             </column>
-            <column name="user_id" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
             <column defaultValueBoolean="false" name="deleted" type="boolean">
                 <constraints nullable="false"/>
             </column>
         </createTable>
-    </changeSet>
-
-    <changeSet author="alexei.st.erofeev@gmail.com" id="ITEM_TABLE_FK_ID_1">
-
-        <addForeignKeyConstraint baseColumnNames="user_id"
-                                 baseTableName="item"
-                                 constraintName="fk_user_id"
-                                 referencedColumnNames="id"
-                                 referencedTableName="user"/>
     </changeSet>
 
     <changeSet author="alexei.st.erofeev@gmail.com" id="ORDER_TABLE_1">

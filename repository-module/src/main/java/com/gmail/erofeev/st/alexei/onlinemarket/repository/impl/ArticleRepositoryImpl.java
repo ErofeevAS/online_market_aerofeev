@@ -36,20 +36,20 @@ public class ArticleRepositoryImpl extends GenericRepositoryImpl<Long, Article> 
     }
 
     @Override
-    public List<Article> getEntitiesByTag(int offset, Integer amount, String tagId) {
-        String hql = "select a from Article a  JOIN a.tags t WHERE t.id = :tagId ORDER BY a.createdDate DESC";
+    public List<Article> getEntitiesByTag(int offset, Integer amount, String tagName) {
+        String hql = "select a from Article a  JOIN a.tags t WHERE t.name = :tagName ORDER BY a.createdDate DESC";
         Query query = entityManager.createQuery(hql);
-        query.setParameter("tagId", Long.parseLong(tagId));
+        query.setParameter("tagName", tagName);
         query.setFirstResult(offset);
         query.setMaxResults(amount);
         return query.getResultList();
     }
 
     @Override
-    public List<Article> getEntitiesByTagAndKeyword(int offset, Integer amount, String tagId, String keyWord) {
-        String hql = "select a from Article a  JOIN a.tags t WHERE t.id = :tagId and a.title like :keyWord ORDER BY a.createdDate DESC";
+    public List<Article> getEntitiesByTagAndKeyword(int offset, Integer amount, String tagName, String keyWord) {
+        String hql = "select a from Article a  JOIN a.tags t WHERE t.name = :tagName and a.title like :keyWord ORDER BY a.createdDate DESC";
         Query query = entityManager.createQuery(hql);
-        query.setParameter("tagId", Long.parseLong(tagId));
+        query.setParameter("tagName", tagName);
         query.setParameter("keyWord", "%" + keyWord + "%");
         query.setFirstResult(offset);
         query.setMaxResults(amount);

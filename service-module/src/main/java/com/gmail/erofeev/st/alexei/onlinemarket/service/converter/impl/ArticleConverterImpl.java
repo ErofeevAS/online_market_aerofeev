@@ -52,8 +52,6 @@ public class ArticleConverterImpl implements ArticleConverter {
         String date = article.getCreatedDate().toLocalDateTime().toString();
         articleDTO.setCreatedDate(date);
         articleDTO.setContent(article.getContent());
-        articleDTO.setDeleted(article.isDeleted());
-        articleDTO.setHidden(article.isHidden());
         List<Comment> comments = article.getComments();
         List<CommentDTO> commentDTOList = commentConverter.toListDTO(comments);
         articleDTO.setComments(commentDTOList);

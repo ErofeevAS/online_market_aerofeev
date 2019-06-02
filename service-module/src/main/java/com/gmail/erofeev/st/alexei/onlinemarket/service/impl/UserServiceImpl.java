@@ -26,7 +26,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
-public class UserServiceImpl extends AbstractService implements UserService {
+public class UserServiceImpl extends AbstractService<UserDTO> implements UserService {
     private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
     @Value("${app.generated.password.length}")
     private int STANDARD_PASSWORD_LENGTH;
@@ -67,8 +67,10 @@ public class UserServiceImpl extends AbstractService implements UserService {
     public void delete(List<Long> userIdsForDelete) {
         for (Long id : userIdsForDelete) {
             User user = userRepository.findById(id);
-            userRepository.remove(user);
-            logger.debug(String.format("User with id:%s was deleted", id));
+            if (!user.getUndeletable()) {
+                userRepository.remove(user);
+                logger.debug(String.format("User with id:%s was deleted", id));
+            }
         }
     }
 
@@ -82,8 +84,7 @@ public class UserServiceImpl extends AbstractService implements UserService {
             user.setPassword(passwordEncoder.encode(password));
             Role role = roleRepository.findById(user.getRole().getId());
             user.setRole(role);
-            Profile profile = new Profile();
-            user.setProfile(profile);
+            Profile profile = user.getProfile();
             profile.setUser(user);
             userRepository.persist(user);
             String message = String.format("Hello! %s. Your was registered on www.aerofeev-market.com  your password: %s", userDTO.getFullName(), password);
@@ -110,16 +111,13 @@ public class UserServiceImpl extends AbstractService implements UserService {
 
     @Override
     @Transactional
-    public PageDTO<UserDTO> findAll(int page, int amount) {
-        Integer amountOfEntity = userRepository.getAmountOfEntity();
+    public PageDTO<UserDTO> getUsers(int page, int amount, boolean showDeleted) {
+        Integer amountOfEntity = userRepository.getAmountOfEntity(showDeleted);
         int maxPages = getMaxPages(amountOfEntity, amount);
         int offset = getOffset(page, maxPages, amount);
-        List<User> users = userRepository.findAllSortedByEmail(offset, amount);
-        List<UserDTO> userDTOList = userConverter.toListDTO(users);
-        PageDTO<UserDTO> pageDTO = new PageDTO<>();
-        pageDTO.setAmountOfPages(maxPages);
-        pageDTO.setList(userDTOList);
-        return pageDTO;
+        List<User> users = userRepository.findUsersSortedByEmail(offset, amount, showDeleted);
+        List<UserDTO> userListDTO = userConverter.toListDTO(users);
+        return getPageDTO(userListDTO, maxPages);
     }
 
     @Override

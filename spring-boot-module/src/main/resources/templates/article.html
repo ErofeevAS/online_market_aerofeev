@@ -18,30 +18,31 @@
     <div class="row">
         <div class="col-sm-4">
             <div sec:authorize="hasRole('ROLE_Sale')">
-                <div th:if="${showDeleteButton}">
-                    <form action="#" th:action="@{{articleId}/update(articleId=${article.id})}" method="post"
-                          th:object="${editedArticle}">
-                        <div class="alert alert-danger" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">
-                            Name Error
-                        </div>
-                        <label for="article-title">article title</label>
-                        <input th:value="${article.title}"
-                               name="title" id="article-title"/>
-                        <div class="alert alert-danger" th:if="${#fields.hasErrors('content')}" th:errors="*{content}">
-                            Name Error
-                        </div>
-                        <label for="content-textarena">article content</label>
-                        <textarea th:text="${article.content}" class="form-control"
-                                  name="content" id="content-textarena"></textarea>
-                        <input type="hidden" th:field="${article.id}" th:value="${editedArticle.id}">
-                        <label>article createdDate</label>
-                        <input type="datetime-local" class="form-control" th:value="${article.createdDate}"
-                               name="createDate" th:placeholder="${article.createdDate}">
-                        <button type="submit" class="btn btn-outline-primary">
-                            save edit
-                        </button>
-                    </form>
-                </div>
+
+                <form action="#" th:action="@{{articleId}/update(articleId=${article.id})}" method="post"
+                      th:object="${editedArticle}">
+                    <div class="alert alert-danger" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">
+                        Name Error
+                    </div>
+                    <label for="article-title">article title</label>
+                    <input th:value="${article.title}"
+                           name="title" id="article-title"/>
+                    <div class="alert alert-danger" th:if="${#fields.hasErrors('content')}" th:errors="*{content}">
+                        Name Error
+                    </div>
+                    <label for="content-textarena">article content</label>
+                    <textarea th:text="${article.content}" class="form-control"
+                              name="content" id="content-textarena"></textarea>
+                    <input type="hidden" th:field="${article.id}" th:value="${editedArticle.id}">
+                    <label>article createdDate</label>
+                    <input type="datetime-local" class="form-control" th:value="${editedArticle.createdDate}"
+                           th:field="${article.createdDate}"
+                           name="createDate" th:placeholder="${article.createdDate}">
+                    <button type="submit" class="btn btn-outline-primary">
+                        save edit
+                    </button>
+                </form>
+
             </div>
 
             <div sec:authorize="hasAnyRole('ROLE_Customer','ROLE_Sale')">
@@ -74,25 +75,22 @@
                               th:object="${newComment}"
                               method="post" id="saveComment"></form>
                         <th:block th:each="comment,number : ${article.comments}">
+                            <hr>
                             <div class="col-sm-4">
-                                <fieldset>
-                                    <p th:text="${'comment from:'+ comment.user.getFullName()}"></p>
-                                    <p th:text="${'date: ' +comment.createdDate}"></p>
-                                    <p th:text="${comment.content}"></p>
-                                    <div sec:authorize="hasRole('ROLE_Sale')">
-                                        <div th:if="${showDeleteButton}">
-                                            <form action="#"
-                                                  th:action="@{{articleId}/deleteComment(articleId=${article.id})}"
-                                                  method="post">
-                                                <input type="hidden" th:name="'deleteCommentId'"
-                                                       th:value="${comment.id}">
-                                                <button type="submit" class="btn btn-outline-primary">
-                                                    delete
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </fieldset>
+                                <p th:text="${'comment from:'+ comment.user.getFullName()}"></p>
+                                <p th:text="${'date: ' +comment.createdDate}"></p>
+                                <p th:text="${comment.content}"></p>
+                                <div sec:authorize="hasRole('ROLE_Sale')">
+                                    <form action="#"
+                                          th:action="@{{articleId}/deleteComment(articleId=${article.id})}"
+                                          method="post">
+                                        <input type="hidden" th:name="'deleteCommentId'"
+                                               th:value="${comment.id}">
+                                        <button type="submit" class="btn btn-outline-primary">
+                                            delete
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
                         </th:block>
 

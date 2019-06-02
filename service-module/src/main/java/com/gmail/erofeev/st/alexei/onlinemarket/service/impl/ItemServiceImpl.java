@@ -3,12 +3,11 @@ package com.gmail.erofeev.st.alexei.onlinemarket.service.impl;
 import com.gmail.erofeev.st.alexei.onlinemarket.repository.ItemRepository;
 import com.gmail.erofeev.st.alexei.onlinemarket.repository.UserRepository;
 import com.gmail.erofeev.st.alexei.onlinemarket.repository.model.Item;
-import com.gmail.erofeev.st.alexei.onlinemarket.repository.model.User;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.ItemService;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.converter.ItemConverter;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.exception.ServiceException;
-import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ItemDetailsDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ItemDTO;
+import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ItemDetailsDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.PageDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,30 +18,25 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
-public class ItemServiceImpl extends AbstractService implements ItemService {
+public class ItemServiceImpl extends AbstractService<ItemDetailsDTO> implements ItemService {
     private static final Logger logger = LoggerFactory.getLogger(ItemServiceImpl.class);
     private final ItemRepository itemRepository;
     private final ItemConverter itemConverter;
-    private final UserRepository userRepository;
 
-    public ItemServiceImpl(ItemRepository itemRepository, ItemConverter itemConverter, UserRepository userRepository) {
+    public ItemServiceImpl(ItemRepository itemRepository, ItemConverter itemConverter) {
         this.itemRepository = itemRepository;
         this.itemConverter = itemConverter;
-        this.userRepository = userRepository;
     }
 
     @Override
     @Transactional
-    public PageDTO<ItemDetailsDTO> getItems(int page, int amount) {
-        Integer amountOfEntity = itemRepository.getAmountOfEntity();
+    public PageDTO<ItemDetailsDTO> getItems(int page, int amount, boolean showDeleted) {
+        Integer amountOfEntity = itemRepository.getAmountOfEntity(showDeleted);
         int maxPages = getMaxPages(amountOfEntity, amount);
         int offset = getOffset(page, maxPages, amount);
-        List<Item> items = itemRepository.findItems(offset, amount);
+        List<Item> items = itemRepository.findItems(offset, amount, showDeleted);
         List<ItemDetailsDTO> itemListDTO = itemConverter.toListDetailsDTO(items);
-        PageDTO<ItemDetailsDTO> pageDTO = new PageDTO<>();
-        pageDTO.setAmountOfPages(maxPages);
-        pageDTO.setList(itemListDTO);
-        return pageDTO;
+        return getPageDTO(itemListDTO, maxPages);
     }
 
     @Override
@@ -83,7 +77,7 @@ public class ItemServiceImpl extends AbstractService implements ItemService {
     @Override
     @Transactional
     public List<ItemDTO> getItemsForRest(int offset, int amount) {
-        List<Item> items = itemRepository.getEntities(offset, amount);
+        List<Item> items = itemRepository.findItems(offset, amount, false);
         return itemConverter.toListDTO(items);
     }
 
@@ -100,12 +94,10 @@ public class ItemServiceImpl extends AbstractService implements ItemService {
 
     @Override
     @Transactional
-    public ItemDTO saveItem(Long userId, ItemDTO itemRestDTO) {
-        User user = userRepository.findById(userId);
+    public ItemDTO saveItem(ItemDTO itemRestDTO) {
         Item item = itemConverter.fromDTO(itemRestDTO);
-        item.setUser(user);
         itemRepository.persist(item);
-        logger.debug(String.format("Item with name:%s was saved for user with id:%s", itemRestDTO.getName(), userId));
+        logger.debug(String.format("Item with name:%s was saved", itemRestDTO.getName()));
         return itemConverter.toDTO(item);
     }
 }
