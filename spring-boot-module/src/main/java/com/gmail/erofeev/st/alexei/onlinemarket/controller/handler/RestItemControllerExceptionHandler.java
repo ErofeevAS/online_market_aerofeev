@@ -23,7 +23,7 @@ public class RestItemControllerExceptionHandler extends ResponseEntityExceptionH
     @ExceptionHandler(value = {EntityNotFoundException.class})
     protected ResponseEntity<Object> handleNotFoundException(
             RuntimeException ex, WebRequest request) {
-        String bodyOfResponse = "Entity not found";
+        String bodyOfResponse = ex.getMessage();
         return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
 }

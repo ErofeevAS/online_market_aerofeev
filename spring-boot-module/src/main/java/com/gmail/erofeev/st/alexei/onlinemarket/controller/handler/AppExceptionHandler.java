@@ -11,6 +11,12 @@ import javax.servlet.http.HttpServletRequest;
 @ControllerAdvice
 public class AppExceptionHandler {
     @ExceptionHandler(value = {ServiceException.class, WrongIdFormatException.class, AccessDeniedException.class})
+    public String expectedErrorHandler(HttpServletRequest req, Exception e) {
+        req.setAttribute("exception", e.getMessage());
+        req.setAttribute("url", req.getRequestURL());
+        return "/error/error";
+    }
+    @ExceptionHandler(value = {RuntimeException.class})
     public String defaultErrorHandler(HttpServletRequest req, Exception e) {
         req.setAttribute("exception", e.getMessage());
         req.setAttribute("url", req.getRequestURL());

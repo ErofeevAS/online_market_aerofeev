@@ -13,6 +13,8 @@ public interface ArticleService {
 
     ArticleDTO getArticleById(Long id);
 
+    ArticleRestDTO getArticleByIdForRest(Long id);
+
     List<ArticleDTO> getArticles();
 
     List<ArticleRestDTO> getRestArticles();

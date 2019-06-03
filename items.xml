@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<items xmlns="http://www.it-academy.by"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.it-academy.by spring-boot-module/src/main/resources/items.xsd">
+
+    <item id="1">
+        <name>PS4</name>
+        <description>console</description>
+        <uniqueNumber>37d65b00-85c6-11e9-bc42-526af7764f64</uniqueNumber>
+        <price>200.1</price>
+    </item>
+
+    <item id="2">
+        <name>PS5</name>
+        <description>new brand console</description>
+        <uniqueNumber>37d65d8a-85c6-11e9-bc42-526af7764f64</uniqueNumber>
+        <price>2030.1</price>
+    </item>
+
+    <item id="10">
+        <name>Nintendo</name>
+        <description>portable console</description>
+        <uniqueNumber>37d6617c-85c6-11e9-bc42-526af7764f64</uniqueNumber>
+        <price>132.1</price>
+    </item>
+
+    <item id="11">
+        <name>mixer</name>
+        <description></description>
+        <uniqueNumber>37d662b2-85c6-11e9-bc42-526af7764f64</uniqueNumber>
+        <price>10.1</price>
+    </item>
+
+    <item id="12">
+        <name>phone</name>
+        <description>console</description>
+        <uniqueNumber>37d663de-85c6-11e9-bc42-526af7764f64</uniqueNumber>
+        <price>150.1</price>
+    </item>
+
+    <item id="13">
+        <name>monitor</name>
+        <description>new brand console</description>
+        <uniqueNumber>37d664f6-85c6-11e9-bc42-526af7764f64</uniqueNumber>
+        <price>140.1</price>
+    </item>
+
+    <item id="14">
+        <name>tooth brash</name>
+        <description>portable console</description>
+        <uniqueNumber>37d66618-85c6-11e9-bc42-526af7764f64</uniqueNumber>
+        <price>20.1</price>
+    </item>
+
+    <item id="15">
+        <name>TV</name>
+        <description></description>
+        <uniqueNumber>37d6673a-85c6-11e9-bc42-526af7764f64</uniqueNumber>
+        <price>500.1</price>
+    </item>
+
+    <item id="16">
+        <name>refrigerator</name>
+        <description>console</description>
+        <uniqueNumber>37d66a46-85c6-11e9-bc42-526af7764f64</uniqueNumber>
+        <price>451.1</price>
+    </item>
+
+    <item id="17">
+        <name>smartphone</name>
+        <description>new brand console</description>
+        <uniqueNumber>37d66b7c-85c6-11e9-bc42-526af7764f64</uniqueNumber>
+        <price>1000.1</price>
+    </item>
+
+    <item id="18">
+        <name>picture</name>
+        <description>portable console</description>
+        <uniqueNumber>37d66c9e-85c6-11e9-bc42-526af7764f64</uniqueNumber>
+        <price>40.1</price>
+    </item>
+
+    <item id="19">
+        <name>apple</name>
+        <description>console 4</description>
+        <uniqueNumber>37d66dca-85c6-11e9-bc42-526af7764f64</uniqueNumber>
+        <price>0.1</price>
+    </item>
+
+    <item id="20">
+        <name>clock</name>
+        <description>super clock222</description>
+        <uniqueNumber>37d6718a-85c6-11e9-bc42-526af7764f64</uniqueNumber>
+        <price>66</price>
+    </item>
+
+</items>

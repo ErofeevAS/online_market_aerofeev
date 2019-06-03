@@ -20,7 +20,7 @@
             <column name="price" type="DECIMAL(10,4)">
                 <constraints nullable="false"/>
             </column>
-            <column name="description" type="varchar(1000)">
+            <column name="description" type="varchar(1000)" defaultValue="">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueBoolean="false" name="deleted" type="boolean">

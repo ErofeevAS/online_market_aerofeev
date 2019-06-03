@@ -4,6 +4,7 @@ import com.gmail.erofeev.st.alexei.onlinemarket.repository.model.Item;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.converter.ItemConverter;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ItemDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ItemDetailsDTO;
+import com.gmail.erofeev.st.alexei.onlinemarket.service.model.xml.ItemXMLDTO;
 import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
@@ -83,6 +84,30 @@ public class ItemConverterImpl implements ItemConverter {
         copyOfItem.setDescription(item.getDescription());
         copyOfItem.setPrice(item.getPrice());
         return copyOfItem;
+    }
+
+    @Override
+    public List<Item> fromListItemXML(List<ItemXMLDTO> itemsXML) {
+        return itemsXML.stream()
+                .map(this::fromXMLDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Item fromXMLDTO(ItemXMLDTO itemXMLDTO) {
+        Item item = new Item();
+        item.setDescription(itemXMLDTO.getDescription());
+        item.setName(itemXMLDTO.getName());
+        item.setUniqueNumber(itemXMLDTO.getUniqueNumber());
+        item.setPrice(itemXMLDTO.getPrice());
+        return item;
+    }
+
+    @Override
+    public void updateDataBaseEntity(Item item, Item itemFromDataBase) {
+        itemFromDataBase.setDescription(item.getDescription());
+        itemFromDataBase.setName(item.getName());
+        itemFromDataBase.setPrice(item.getPrice());
     }
 
     private String getNameForCopy(String originalName) {

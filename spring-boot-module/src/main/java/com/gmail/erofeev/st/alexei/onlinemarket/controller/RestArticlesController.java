@@ -38,9 +38,9 @@ public class RestArticlesController {
     }
 
     @GetMapping("/{id}")
-    public ArticleDTO getArticles(@PathVariable String id) {
+    public ArticleRestDTO getArticles(@PathVariable String id) {
         Long articleId = requestParamsValidator.validateLong(id);
-        return articleService.getArticleById(articleId);
+        return articleService.getArticleByIdForRest(articleId);
     }
 
     @DeleteMapping("/{id}")

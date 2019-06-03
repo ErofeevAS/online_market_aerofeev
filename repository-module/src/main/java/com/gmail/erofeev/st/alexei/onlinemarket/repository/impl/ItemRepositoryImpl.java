@@ -22,4 +22,16 @@ public class ItemRepositoryImpl extends GenericRepositoryImpl<Long, Item> implem
         query.setMaxResults(amount);
         return query.getResultList();
     }
+
+    @Override
+    public Item findByUUID(String uniqueNumber) {
+        String hql = "select i from Item i where i.uniqueNumber = :uniqueNumber";
+        Query query = entityManager.createQuery(hql);
+        query.setParameter("uniqueNumber", uniqueNumber);
+        List<Item> resultList = query.getResultList();
+        if (resultList.isEmpty()) {
+            return null;
+        }
+        return resultList.get(0);
+    }
 }

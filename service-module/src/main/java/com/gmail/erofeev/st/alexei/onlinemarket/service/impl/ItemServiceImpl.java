@@ -1,7 +1,6 @@
 package com.gmail.erofeev.st.alexei.onlinemarket.service.impl;
 
 import com.gmail.erofeev.st.alexei.onlinemarket.repository.ItemRepository;
-import com.gmail.erofeev.st.alexei.onlinemarket.repository.UserRepository;
 import com.gmail.erofeev.st.alexei.onlinemarket.repository.model.Item;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.ItemService;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.converter.ItemConverter;
@@ -9,6 +8,7 @@ import com.gmail.erofeev.st.alexei.onlinemarket.service.exception.ServiceExcepti
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ItemDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ItemDetailsDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.PageDTO;
+import com.gmail.erofeev.st.alexei.onlinemarket.service.model.xml.ItemXMLDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -99,5 +99,20 @@ public class ItemServiceImpl extends AbstractService<ItemDetailsDTO> implements 
         itemRepository.persist(item);
         logger.debug(String.format("Item with name:%s was saved", itemRestDTO.getName()));
         return itemConverter.toDTO(item);
+    }
+
+    @Override
+    @Transactional
+    public void importItem(List<ItemXMLDTO> itemsXML) {
+        List<Item> items = itemConverter.fromListItemXML(itemsXML);
+        for (Item item : items) {
+            Item itemFromDataBase = itemRepository.findByUUID(item.getUniqueNumber());
+            if (itemFromDataBase == null) {
+                itemRepository.persist(item);
+            } else {
+                itemConverter.updateDataBaseEntity(item, itemFromDataBase);
+                itemRepository.merge(itemFromDataBase);
+            }
+        }
     }
 }

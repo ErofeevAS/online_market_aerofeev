@@ -3,6 +3,7 @@ package com.gmail.erofeev.st.alexei.onlinemarket.service;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ItemDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ItemDetailsDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.PageDTO;
+import com.gmail.erofeev.st.alexei.onlinemarket.service.model.xml.ItemXMLDTO;
 
 import java.util.List;
 
@@ -20,4 +21,7 @@ public interface ItemService {
     ItemDTO findRestItemById(Long validatedId);
 
     ItemDTO saveItem(ItemDTO itemRestDTO);
+
+    void importItem(List<ItemXMLDTO> itemsXML);
+
 }

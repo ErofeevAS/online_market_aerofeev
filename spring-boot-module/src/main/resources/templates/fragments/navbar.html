@@ -25,6 +25,9 @@
                 <li class="nav-item" sec:authorize="hasRole('ROLE_Sale')">
                     <a class="nav-link" href="/orders">orders</a>
                 </li>
+                <li class="nav-item" sec:authorize="hasRole('ROLE_Sale')">
+                    <a class="nav-link" href="/upload">upload file</a>
+                </li>
                 <li class="nav-item" sec:authorize="hasRole('ROLE_Customer')">
                     <a class="nav-link" href="/userorders">my orders</a>
                 </li>

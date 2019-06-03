@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.util.List;
@@ -90,6 +91,14 @@ public class ArticleServiceImpl extends AbstractService<ArticleDTO> implements A
 
     @Override
     @Transactional
+    public ArticleRestDTO getArticleByIdForRest(Long id) {
+        Article article = articleRepository.findById(id);
+        isExist(article, id, "");
+        return articleConverter.toRestDTO(article);
+    }
+
+    @Override
+    @Transactional
     public List<ArticleDTO> getArticles() {
         List<Article> articles = articleRepository.findAll();
         return articleConverter.toListDTO(articles);
@@ -106,6 +115,7 @@ public class ArticleServiceImpl extends AbstractService<ArticleDTO> implements A
     @Transactional
     public String delete(Long id) {
         Article article = articleRepository.findById(id);
+        isExist(article, id, "Can't delete article");
         articleRepository.remove(article);
         return SUCCESSFUL_DELETE_MESSAGE;
     }
@@ -164,5 +174,14 @@ public class ArticleServiceImpl extends AbstractService<ArticleDTO> implements A
         String title = articleDTO.getTitle();
         article.setTitle(title);
         articleRepository.merge(article);
+    }
+
+    private void isExist(Article article, Long id, String additionalMessage) {
+        String defaultMessage = "Article with id:%s not found. ";
+        if (article == null) {
+            String message = String.format(defaultMessage + additionalMessage, id);
+            logger.error(message);
+            throw new EntityNotFoundException(String.format(message, id));
+        }
     }
 }

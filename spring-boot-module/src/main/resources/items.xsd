@@ -1,0 +1,24 @@
+<?xml version ="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://www.it-academy.by"
+           xmlns="http://www.it-academy.by"
+           elementFormDefault="qualified">
+    <xs:element name="items" type="items"/>
+
+    <xs:complexType name="items">
+        <xs:sequence>
+            <xs:element name="item" type="item" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="item">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="description" type="xs:string"/>
+            <xs:element name="uniqueNumber" type="xs:string"/>
+            <xs:element name="price" type="xs:float"/>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:long"/>
+    </xs:complexType>
+
+</xs:schema>

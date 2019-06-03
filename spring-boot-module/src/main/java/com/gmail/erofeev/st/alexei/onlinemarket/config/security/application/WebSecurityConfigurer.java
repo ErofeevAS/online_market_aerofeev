@@ -15,13 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
-import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.ABOUT_URL;
-import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.ARTICLES_NEW_URL;
-import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.ITEMS_ALL_URL;
-import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.LOGIN_URL;
-import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.PROFILE_ALL_URL;
-import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.REDIRECT_URL;
-import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.USERS_ALL_URL;
+import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.*;
 
 @Configuration
 @Order(2)
@@ -53,7 +47,7 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .antMatchers(
                         "/orders/*",
-                        "/articles", "/articles/", "/articles/tag/*", "/articles/*/newComment",
+                        "/articles", "/articles/*", "/articles/tag/*", "/articles/*/newComment",
                         "/items", "/items/*")
                 .hasAnyRole(
                         securityProperties.getRoleCustomer(),
@@ -61,6 +55,7 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
 
                 .antMatchers(ARTICLES_NEW_URL, ITEMS_ALL_URL, "/articles/*/update",
                         "/articles/*/deleteComment",
+                        "/upload",
                         "/orders",
                         "/orders/*/update")
                 .hasRole(securityProperties.getRoleSale())
@@ -73,7 +68,8 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
                         "wrongAmount.html")
                 .hasRole(securityProperties.getRoleCustomer())
 
-                .antMatchers(USERS_ALL_URL, "/reviews", "/reviews/*/delete", "/reviews/update")
+//                .antMatchers(USERS_ALL_URL, "/reviews", "/reviews/*/delete", "/reviews/update")
+                .antMatchers(USERS_ALL_URL, REVIEWS_ALL_URL)
                 .hasRole(securityProperties.getRoleAdmin())
 
                 .antMatchers(PROFILE_ALL_URL)
@@ -82,6 +78,8 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
                         securityProperties.getRoleCustomer(),
                         securityProperties.getRoleSale())
 
+                .antMatchers("/**")
+                .denyAll()
                 .and()
                 .formLogin()
                 .loginPage(LOGIN_URL)
