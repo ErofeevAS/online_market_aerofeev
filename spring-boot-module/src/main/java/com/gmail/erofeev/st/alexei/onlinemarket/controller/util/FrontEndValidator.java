@@ -30,4 +30,8 @@ public class FrontEndValidator {
             throw new WrongIdFormatException(id + " must be Long type");
         }
     }
+
+    public boolean isTextShorterThan(String text, int length) {
+        return text.length() < length && text.length() > 0;
+    }
 }

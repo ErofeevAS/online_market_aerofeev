@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class OrderController {
@@ -48,10 +49,10 @@ public class OrderController {
         return "redirect:/orders";
     }
 
-    @PostMapping("/orders/{uniqueNumber}")
-    public String viewItem(@PathVariable String uniqueNumber,
+    @PostMapping("/orders/{uuid}")
+    public String viewItem(@PathVariable String uuid,
                            Model model) {
-        OrderDetailsDTO order = orderService.findOrderByUUID(uniqueNumber);
+        OrderDetailsDTO order = orderService.findOrderByUUID(uuid);
         model.addAttribute("order", order);
         return "order";
     }
@@ -62,13 +63,15 @@ public class OrderController {
         return "redirect:/users/" + userId + "/orders";
     }
 
-    @PostMapping("/orders/sale/new")
+    @PostMapping("/orders/customer/new")
     public String createOrder(Authentication authentication,
+                              RedirectAttributes attributes,
                               @RequestParam("itemId") Long itemId,
                               @RequestParam("amount") String amount) {
         Integer validateAmount = frontEndValidator.validateAmount(amount);
         if (validateAmount == null) {
-            return "wrongAmount";
+            attributes.addFlashAttribute("info", "amount must be more than zero");
+            return "redirect:/items";
         }
         Long userId = userAuthenticationService.getSecureUserId(authentication);
         orderService.createOrder(userId, itemId, validateAmount);
@@ -78,12 +81,13 @@ public class OrderController {
     @GetMapping("/users/{id}/orders")
     public String getUsersOrders(@RequestParam(defaultValue = "1", required = false) String page,
                                  @RequestParam(defaultValue = "10", required = false) String size,
-                                 @PathVariable Long id,
+                                 @PathVariable String id,
                                  Model model,
                                  Authentication authentication) {
         Paginator paginator = new Paginator(page, size);
-        userAuthenticationService.isUserThSameLikeAuthorizedUser(id, authentication);
-        PageDTO<OrderDTO> pageDTO = orderService.getOrders(paginator.getPage(), paginator.getSize(), id);
+        Long validateId = frontEndValidator.validateId(id);
+        userAuthenticationService.isUserThSameLikeAuthorizedUser(validateId, authentication);
+        PageDTO<OrderDTO> pageDTO = orderService.getOrders(paginator.getPage(), paginator.getSize(), validateId);
         paginator.setMaxPage(pageDTO.getAmountOfPages());
         model.addAttribute("orders", pageDTO.getList());
         model.addAttribute("paginator", paginator);

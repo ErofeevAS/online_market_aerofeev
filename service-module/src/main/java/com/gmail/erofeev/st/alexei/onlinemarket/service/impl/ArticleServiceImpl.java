@@ -54,21 +54,21 @@ public class ArticleServiceImpl extends AbstractService<ArticleDTO> implements A
             List<ArticleDTO> articleDTOList = articleConverter.toListDTO(articles);
             return getPageDTO(articleDTOList, maxPages);
         } else if (keyWord == null) {
-            int amountOfEntity = articleRepository.getAmountOfEntity(false);
+            int amountOfEntity = articleRepository.getAmountOfArticlesWithSameTag(tag);
             int maxPages = getMaxPages(amountOfEntity, amount);
             int offset = getOffset(page, maxPages, amount);
             List<Article> articles = articleRepository.getEntitiesByTag(offset, amount, searchingFilter.getTag());
             List<ArticleDTO> articleDTOList = articleConverter.toListDTO(articles);
             return getPageDTO(articleDTOList, maxPages);
         } else if (tag == null) {
-            int amountOfEntity = articleRepository.getAmountOfEntity(false);
+            int amountOfEntity = articleRepository.getAmountOfArticlesWithKeyWord(keyWord);
             int maxPages = getMaxPages(amountOfEntity, amount);
             int offset = getOffset(page, maxPages, amount);
             List<Article> articles = articleRepository.getArticlesFilteredByKeyWord(offset, amount, keyWord);
             List<ArticleDTO> articleDTOList = articleConverter.toListDTO(articles);
             return getPageDTO(articleDTOList, maxPages);
         } else {
-            Integer amountOfEntity = articleRepository.getAmountOfArticlesWithKeyWord(searchingFilter.getKeyWord());
+            Integer amountOfEntity = articleRepository.getAmountOfArticlesWithKeyWordAndTag(keyWord,tag);
             int maxPages = getMaxPages(amountOfEntity, amount);
             int offset = getOffset(page, maxPages, amount);
             List<Article> articles = articleRepository.getEntitiesByTagAndKeyword(offset, amount, tag, keyWord);

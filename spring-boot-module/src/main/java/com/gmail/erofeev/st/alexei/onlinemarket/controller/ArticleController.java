@@ -20,8 +20,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+
+import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.MAX_COMMENT_LENGTH;
 
 @Controller
 public class ArticleController {
@@ -90,11 +93,13 @@ public class ArticleController {
     }
 
     @PostMapping("/articles/{id}/newComment")
-    public String saveNewComment(@Valid @ModelAttribute("newComment") CommentDTO commentDTO,
-                                 @PathVariable Long id,
-                                 Authentication authentication,
-                                 BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
+    public String saveNewComment(
+            @ModelAttribute("newComment") CommentDTO commentDTO,
+            @PathVariable Long id,
+            Authentication authentication,
+            RedirectAttributes attributes) {
+        if (!frontEndValidator.isTextShorterThan(commentDTO.getContent(), MAX_COMMENT_LENGTH)) {
+            attributes.addFlashAttribute("info", "comment must be less than " + MAX_COMMENT_LENGTH);
             return "redirect:/articles/" + id;
         }
         Long userId = userAuthenticationService.getSecureUserId(authentication);

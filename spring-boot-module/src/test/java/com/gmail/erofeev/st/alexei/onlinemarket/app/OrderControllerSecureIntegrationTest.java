@@ -118,7 +118,7 @@ public class OrderControllerSecureIntegrationTest {
     @Test
     @WithUserDetails(value = CUSTOMER_EMAIL, userDetailsServiceBeanName = USER_DETAILS_SERVICE)
     public void shouldCreateNewOrderForCustomer() throws Exception {
-        mockMvc.perform(post("/orders/sale/new")
+        mockMvc.perform(post("/orders/customer/new")
                 .param("itemId", "1")
                 .param("amount", "2"))
                 .andExpect(status().isFound())
@@ -128,17 +128,17 @@ public class OrderControllerSecureIntegrationTest {
     @Test
     @WithUserDetails(value = CUSTOMER_EMAIL, userDetailsServiceBeanName = USER_DETAILS_SERVICE)
     public void shouldRedirectToWrongAmountPageIfAmountNotPositiveInteger() throws Exception {
-        mockMvc.perform(post("/orders/sale/new")
+        mockMvc.perform(post("/orders/customer/new")
                 .param("itemId", "1")
                 .param("amount", "-2"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("wrongAmount"));
+                .andExpect(status().isFound())
+                .andExpect(redirectedUrl("/items"));
     }
 
     @Test
     @WithUserDetails(value = SALE_EMAIL, userDetailsServiceBeanName = USER_DETAILS_SERVICE)
     public void shouldNotHaveAccessToCreateNewOrderForSale() throws Exception {
-        mockMvc.perform(post("/orders/sale/new"))
+        mockMvc.perform(post("/orders/customer/new"))
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl(REDIRECT_URL));
     }
@@ -146,7 +146,7 @@ public class OrderControllerSecureIntegrationTest {
     @Test
     @WithMockUser(roles = ROLE_ADMIN)
     public void shouldNotHaveAccessToCreateNewOrderForAdmin() throws Exception {
-        mockMvc.perform(post("/orders/sale/new"))
+        mockMvc.perform(post("/orders/customer/new"))
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl(REDIRECT_URL));
     }

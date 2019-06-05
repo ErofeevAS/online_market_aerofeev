@@ -1,6 +1,8 @@
 package com.gmail.erofeev.st.alexei.onlinemarket.config.properties;
 
 public class GlobalConstants {
+    public static final int MAX_COMMENT_LENGTH = 200;
+    public static final int MAX_ARTICLE_LENGTH = 1000;
     public static final String XSD_FILE_PATH = "items.xsd";
     public static final String USER_DETAILS_SERVICE = "userDetailsServiceImpl";
     public static final String USER_DETAILS_SERVICE_REST_API = "userDetailsServiceRestImpl";
@@ -21,7 +23,7 @@ public class GlobalConstants {
     public static final String REVIEWS_DELETE_URL = "/reviews/*/delete";
     public static final String REVIEWS_UPDATE_URL = "/reviews/update";
     public static final String REVIEWS_NEW_URL = "/reviews/new";
-    public static final String ORDERS_NEW_URL = "/orders/sale/new";
+    public static final String ORDERS_NEW_URL = "/orders/customer/new";
     public static final String ORDERS_GET_ALL_URL = "/orders";
     public static final String ORDER_GET_BY_ID_URL = "/orders/*";
     public static final String USER_ORDERS = "/users/*/orders";

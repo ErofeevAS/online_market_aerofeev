@@ -15,11 +15,8 @@
     </div>
     <h3>something wrong:</h3>
     <div th:text="${#request.getAttribute('exception')}"></div>
-    <div th:text="${#request.getAttribute('url')}"></div>
     <div class="row" th:insert="~{fragments/footer :: footer}">
     </div>
-
-
 </div>
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"

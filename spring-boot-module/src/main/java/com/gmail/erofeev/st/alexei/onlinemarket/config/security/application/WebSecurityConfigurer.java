@@ -85,8 +85,8 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
                         securityProperties.getRoleCustomer(),
                         securityProperties.getRoleSale())
 
-                .antMatchers("/**")
-                .denyAll()
+//                .antMatchers("/**")
+//                .denyAll()
                 .and()
                 .formLogin()
                 .loginPage(LOGIN_URL)

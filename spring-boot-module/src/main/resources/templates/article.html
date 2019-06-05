@@ -18,15 +18,13 @@
     <div class="row">
         <div class="col-sm-4">
             <div sec:authorize="hasRole('ROLE_Sale')">
-
                 <form action="#" th:action="@{{articleId}/update(articleId=${article.id})}" method="post"
                       th:object="${editedArticle}">
                     <div class="alert alert-danger" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">
                         Name Error
                     </div>
                     <label for="article-title">article title</label>
-                    <input th:value="${article.title}"
-                           name="title" id="article-title"/>
+                    <input th:value="${article.title}" name="title" id="article-title"/>
                     <div class="alert alert-danger" th:if="${#fields.hasErrors('content')}" th:errors="*{content}">
                         Name Error
                     </div>
@@ -38,19 +36,14 @@
                     <input type="datetime-local" class="form-control" th:value="${editedArticle.createdDate}"
                            th:field="${article.createdDate}"
                            name="createDate" th:placeholder="${article.createdDate}">
-                    <button type="submit" class="btn btn-outline-primary">
-                        save edit
-                    </button>
+                    <button type="submit" class="btn btn-outline-primary"> save edit</button>
                 </form>
-
             </div>
-
-            <div sec:authorize="hasAnyRole('ROLE_Customer','ROLE_Sale')">
+            <div sec:authorize="hasAnyRole('ROLE_Customer')">
                 <h2 th:text="${article.title}">article title</h2>
                 <p th:text="${article.createdDate}">article createDate</p>
                 <p th:text="${article.content}">article content</p>
             </div>
-
         </div>
     </div>
     <div class="row">
@@ -59,7 +52,6 @@
                class="badge badge-default">Default</a>
         </th:block>
     </div>
-
     <div class="row">
         <div class="col-sm-12">
             <p>
@@ -68,15 +60,12 @@
                     show comments
                 </button>
             </p>
-            <div class="panel-collapse collapse in" id="collapseComments">
+            <div class="collapse.show" id="collapseComments">
                 <div class="card card-body">
                     <div>
                         <form action="#" th:action="@{/articles/{articleId}/newComment(articleId=${article.id})}"
                               th:object="${newComment}"
                               method="post" id="saveComment"></form>
-                        <!--<div class="alert alert-danger" th:if="${#fields.hasErrors()}" th:errors="${bindingResult}">-->
-                        <!--Name Error-->
-                        <!--</div>-->
                         <th:block th:each="comment,number : ${article.comments}">
                             <hr>
                             <div class="col-sm-4">
@@ -97,15 +86,15 @@
                             </div>
                         </th:block>
 
-                        <div class="collapse" id="collapseNewComment">
+                        <div class="collapse.show" id="collapseNewComment">
                             <input hidden="true" type="text" th:field="${newComment.articleId}"
                                    th:value="${article.id}" form="saveComment"/>
                             <div class="card card-body">
                                 <div>
-                                    <label for="textarea">new comment</label>
-                                    <textarea class="form-control rounded-0"
-                                              id="textarea" th:field="${newComment.content}" rows="10"
-                                              form="saveComment"></textarea>
+                                    <div class="alert alert-danger" th:if="${info}" th:text="${info}"></div>
+                                    <label>new comment</label>
+                                    <textarea class="form-control rounded-0" rows="10"
+                                              id="content" name="content" form="saveComment"></textarea>
                                     <button form="saveComment" type="submit" class="btn btn-outline-primary"> save
                                     </button>
                                 </div>

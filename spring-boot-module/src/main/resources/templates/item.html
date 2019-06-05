@@ -18,6 +18,7 @@
     <div class="row">
         <div class="col-sm-4">
             <div sec:authorize="hasAnyRole('ROLE_Sale','ROLE_Customer')">
+                <div class="alert alert-danger" th:if="${info}" th:text="${info}"></div>
                 <label for="item-name">item name</label>
                 <p th:text="${item.itemDTO.name}"
                    name="name" id="item-name"></p>
@@ -34,7 +35,7 @@
             <div class="btn-group" role="group" aria-label="Basic example" sec:authorize="hasRole('ROLE_Customer')">
                 <input class="form-control" type="number" min="1" id="amount" name="amount" form="newOrder"/>
                 <input type="hidden" th:value="${item.itemDTO.id}" id="itemId" name="itemId" form="newOrder"/>
-                <form action="#" th:action="@{/orders/sale/new}" method="post" id="newOrder"></form>
+                <form action="#" th:action="@{/orders/customer/new}" method="post" id="newOrder"></form>
                 <button type="submit" class="btn btn-outline-primary mx-1" form="newOrder">
                     buy
                 </button>

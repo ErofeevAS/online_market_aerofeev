@@ -11,6 +11,7 @@
 <div class="container">
     <div class="row" th:insert="~{fragments/header :: header}"></div>
     <div class="row" th:insert="~{fragments/navbar :: navbar}"></div>
+    <div class="alert alert-danger" th:if="${info}" th:text="${info}"></div>
     <div class="row">
         <th:block th:each="item,number : ${items}">
             <div class="col-sm-4" id="article">
@@ -27,25 +28,21 @@
                     </button>
                     <form action="#" th:action="@{/items/{id}/delete(id=${item.itemDTO.id})}" method="post">
                         <input type="hidden" th:value="${item.itemDTO.id}" name="id"/>
-                        <button type="submit" class="btn btn-outline-primary mx-1">
-                            delete
-                        </button>
+                        <button type="submit" class="btn btn-outline-primary mx-1">delete</button>
                     </form>
                     <form action="#" th:action="@{/items/{id}/copy(id=${item.itemDTO.id})}" method="post">
                         <input type="hidden" th:value="${item.itemDTO.id}" name="id"/>
-                        <button type="submit" class="btn btn-outline-primary mx-1">
-                            copy
-                        </button>
+                        <button type="submit" class="btn btn-outline-primary mx-1">copy</button>
                     </form>
                 </div>
 
                 <div class="btn-group" role="group" aria-label="Basic example" sec:authorize="hasRole('ROLE_Customer')">
-                    <input class="form-control" type="number" min="1" id="amount" name="amount"
+                    <form action="#" th:action="@{/orders/customer/new}" method="post"
+                          th:id="${'newOrder' +number.index}"></form>
+                    <input class="form-control" type="text" id="amount" name="amount"
                            th:form="${'newOrder' +number.index}"/>
                     <input type="hidden" th:value="${item.itemDTO.id}" id="itemId" name="itemId"
                            th:form="${'newOrder' +number.index}"/>
-                    <form action="#" th:action="@{/orders/sale/new}" method="post"
-                          th:id="${'newOrder' +number.index}"></form>
                     <button type="submit" class="btn btn-outline-primary mx-1" th:form="${'newOrder' +number.index}">
                         buy
                     </button>

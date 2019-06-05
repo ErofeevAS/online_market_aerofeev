@@ -16,7 +16,7 @@
     </div>
     <div class="row">
         <div class="col-md-8 col-md-offset-1">
-            <form th:action="@{/articles/new}" th:object="${article}" method="post">
+            <form th:action="@{/articles/sale/new}" th:object="${article}" method="post">
                 <div class="alert alert-info" th:if="${info}" th:text="${info}">
                 </div>
                 <div class="alert alert-danger" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">
