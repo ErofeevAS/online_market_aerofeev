@@ -29,4 +29,6 @@ public interface UserService {
     List<RoleDTO> getAllRoles();
 
     PageDTO<UserDTO> getUsers(int page, int size, boolean showDeleted);
+
+    UserDTO findUserByEmailExcludeSecureApiUser(String email);
 }

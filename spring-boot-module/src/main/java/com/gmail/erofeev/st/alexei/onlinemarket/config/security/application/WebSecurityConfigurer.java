@@ -4,6 +4,7 @@ import com.gmail.erofeev.st.alexei.onlinemarket.config.properties.SecurityProper
 import com.gmail.erofeev.st.alexei.onlinemarket.config.security.application.handler.AppAuthenticationSuccessHandler;
 import com.gmail.erofeev.st.alexei.onlinemarket.config.security.application.handler.LoginAccessDeniedHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -25,7 +26,7 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
     private final SecurityProperties securityProperties;
 
     @Autowired
-    public WebSecurityConfigurer(UserDetailsService userDetailsService,
+    public WebSecurityConfigurer(@Qualifier(USER_DETAILS_SERVICE) UserDetailsService userDetailsService,
                                  PasswordEncoder passwordEncoder,
                                  SecurityProperties securityProperties) {
         this.userDetailsService = userDetailsService;
@@ -42,34 +43,40 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-
-                .antMatchers(REDIRECT_URL, ABOUT_URL, LOGIN_URL)
+                .antMatchers(REDIRECT_URL, LOGIN_URL, ERROR_URL)
                 .permitAll()
                 .antMatchers(
-                        "/orders/*",
-                        "/articles", "/articles/*", "/articles/tag/*", "/articles/*/newComment",
-                        "/items", "/items/*")
+                        ORDER_GET_BY_ID_URL,
+                        ARTICLES_GET_ALL_URL,
+                        ARTICLES_GET_BY_ID_URL,
+                        ARTICLES_SELECT_BY_TAG_URL,
+                        ARTICLES_NEW_COMMENT_URL,
+                        ITEMS_GET_ALL_URL,
+                        ITEMS_GET_BY_ID_URL)
                 .hasAnyRole(
                         securityProperties.getRoleCustomer(),
                         securityProperties.getRoleSale())
-
-                .antMatchers(ARTICLES_NEW_URL, ITEMS_ALL_URL, "/articles/*/update",
-                        "/articles/*/deleteComment",
-                        "/upload",
-                        "/orders",
-                        "/orders/*/update")
+                .antMatchers(ITEMS_ALL_URL,
+                        ARTICLES_NEW_URL,
+                        ARTICLES_UPDATE_URL,
+                        ARTICLES_DELETE_URL,
+                        ARTICLES_DELETE_COMMENT_URL,
+                        UPLOAD_FILE_URL,
+                        ORDERS_GET_ALL_URL,
+                        ORDERS_UPDATE_URL)
                 .hasRole(securityProperties.getRoleSale())
-
                 .antMatchers(
-                        "/orders/sale/new",
-                        "/userorders",
-                        "/users/*/orders",
-                        "/reviews/new",
-                        "wrongAmount.html")
+                        ORDERS_NEW_URL,
+                        ORDERS_FOR_USER_URL,
+                        USER_ORDERS,
+                        REVIEWS_NEW_URL,
+                        WRONG_AMOUNT_PAGE)
                 .hasRole(securityProperties.getRoleCustomer())
 
-//                .antMatchers(USERS_ALL_URL, "/reviews", "/reviews/*/delete", "/reviews/update")
-                .antMatchers(USERS_ALL_URL, REVIEWS_ALL_URL)
+                .antMatchers(USERS_ALL_URL,
+                        REVIEWS_GET_ALL_URL,
+                        REVIEWS_DELETE_URL,
+                        REVIEWS_UPDATE_URL)
                 .hasRole(securityProperties.getRoleAdmin())
 
                 .antMatchers(PROFILE_ALL_URL)
@@ -83,7 +90,6 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
                 .and()
                 .formLogin()
                 .loginPage(LOGIN_URL)
-
                 .successHandler(authenticationSuccessHandler())
                 .permitAll()
                 .and()

@@ -71,9 +71,12 @@
             <div class="panel-collapse collapse in" id="collapseComments">
                 <div class="card card-body">
                     <div>
-                        <form action="#" th:action="@{{articleId}/newComment(articleId=${article.id})}"
+                        <form action="#" th:action="@{/articles/{articleId}/newComment(articleId=${article.id})}"
                               th:object="${newComment}"
                               method="post" id="saveComment"></form>
+                        <!--<div class="alert alert-danger" th:if="${#fields.hasErrors()}" th:errors="${bindingResult}">-->
+                        <!--Name Error-->
+                        <!--</div>-->
                         <th:block th:each="comment,number : ${article.comments}">
                             <hr>
                             <div class="col-sm-4">

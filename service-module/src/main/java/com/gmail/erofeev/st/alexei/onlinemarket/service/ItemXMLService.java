@@ -1,13 +1,13 @@
 package com.gmail.erofeev.st.alexei.onlinemarket.service;
 
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.xml.ItemXMLDTO;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.InputStream;
 import java.util.List;
 
 public interface ItemXMLService {
-    List<ItemXMLDTO> importFromXMLFile(InputStream file, File xsd);
+    List<ItemXMLDTO> importFromXMLFile(MultipartFile file);
 
-    void isValidByXsdScheme(InputStream file, File xsd);
+    void isValidByXsdScheme(MultipartFile file, String xsdPath);
 }

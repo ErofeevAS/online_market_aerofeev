@@ -13,6 +13,7 @@ import com.gmail.erofeev.st.alexei.onlinemarket.service.model.OrderDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.OrderDetailsDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.OrderRestDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.PageDTO;
+import com.gmail.erofeev.st.alexei.onlinemarket.service.model.RestEntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -95,11 +96,11 @@ public class OrderServiceImpl extends AbstractService<OrderDTO> implements Order
     }
 
     @Override
-    public OrderRestDTO findRestOrderById(Long id) {
+    public OrderRestDTO findOrderByIdForRest(Long id) {
         Order order = orderRepository.findById(id);
         if (order == null) {
             logger.debug(String.format("Order with id:%s not found", id));
-            throw new EntityNotFoundException(String.format("Order with id:%s not found", id));
+            throw new RestEntityNotFoundException(String.format("Order with id:%s not found", id));
         }
         return orderConverter.toRestDTO(order);
     }

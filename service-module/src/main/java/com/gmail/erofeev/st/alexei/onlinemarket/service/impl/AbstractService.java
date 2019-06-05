@@ -13,7 +13,14 @@ public abstract class AbstractService<T> {
     }
 
     int getMaxPages(int amountOfEntity, int amount) {
-        return (Math.round(amountOfEntity / amount) + 1);
+        if (amountOfEntity < 1) {
+            return 1;
+        }
+        if (amountOfEntity % amount == 0) {
+            return amountOfEntity / amount;
+        } else {
+            return amountOfEntity / amount + 1;
+        }
     }
 
     PageDTO<T> getPageDTO(List<T> listDTo, Integer maxPages) {

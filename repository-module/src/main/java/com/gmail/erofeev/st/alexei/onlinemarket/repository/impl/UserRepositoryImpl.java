@@ -1,7 +1,6 @@
 package com.gmail.erofeev.st.alexei.onlinemarket.repository.impl;
 
 import com.gmail.erofeev.st.alexei.onlinemarket.repository.UserRepository;
-import com.gmail.erofeev.st.alexei.onlinemarket.repository.model.Item;
 import com.gmail.erofeev.st.alexei.onlinemarket.repository.model.User;
 import org.springframework.stereotype.Repository;
 
@@ -13,6 +12,14 @@ public class UserRepositoryImpl extends GenericRepositoryImpl<Long, User> implem
     @Override
     public User findByEmail(String email) {
         String hql = "select u from User u where u.email = :email";
+        Query query = entityManager.createQuery(hql, User.class);
+        query.setParameter("email", email);
+        return (User) query.getSingleResult();
+    }
+
+    @Override
+    public User findByEmailExcludeSecureApiUser(String email) {
+        String hql = "select u from User u where u.email = :email and u.role.id<>4";
         Query query = entityManager.createQuery(hql, User.class);
         query.setParameter("email", email);
         return (User) query.getSingleResult();

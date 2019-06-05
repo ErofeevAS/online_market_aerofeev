@@ -17,9 +17,11 @@ public interface ArticleService {
 
     List<ArticleDTO> getArticles();
 
-    List<ArticleRestDTO> getRestArticles();
+    List<ArticleRestDTO> getArticlesForRest(int offset,int amount);
 
-    String delete(Long id);
+    String deleteArticleById(Long id);
+
+    String deleteArticleByIdForRest(Long id);
 
     void add(ArticleDTO articleDTO);
 

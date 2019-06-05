@@ -23,6 +23,8 @@ import java.util.UUID;
 
 import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.REST_API_EMAIL;
 import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.ROLE_SECURE_REST_API;
+import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.USER_DETAILS_SERVICE;
+import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.USER_DETAILS_SERVICE_REST_API;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -122,7 +124,7 @@ public class RestItemControllerTest {
     }
 
     @Test
-    @WithUserDetails(REST_API_EMAIL)
+    @WithUserDetails(value = REST_API_EMAIL, userDetailsServiceBeanName = USER_DETAILS_SERVICE_REST_API)
     public void shouldSaveNewItemForUser() throws Exception {
         ItemDTO itemRestDTO = new ItemDTO();
         String name = "rest_test_item";
@@ -142,5 +144,4 @@ public class RestItemControllerTest {
         });
         Assert.assertNotNull(item.getId());
     }
-
 }

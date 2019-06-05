@@ -18,5 +18,5 @@ public interface OrderService {
 
     OrderDetailsDTO findOrderByUUID(String uniqueNumber);
 
-    OrderRestDTO findRestOrderById(Long id);
+    OrderRestDTO findOrderByIdForRest(Long id);
 }

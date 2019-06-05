@@ -25,14 +25,14 @@ public class RestOrderController {
     @GetMapping
     public List<OrderRestDTO> getOrders(@RequestParam(defaultValue = "0", required = false) String offset,
                                         @RequestParam(defaultValue = "10", required = false) String amount) {
-        int intOffset = requestParamsValidator.validateInt(offset);
-        int intAmount = requestParamsValidator.validateInt(amount);
+        int intOffset = requestParamsValidator.validateIntRest(offset);
+        int intAmount = requestParamsValidator.validateIntRest(amount);
         return orderService.getOrdersForRest(intOffset, intAmount);
     }
 
     @GetMapping("/{id}")
     public OrderRestDTO getOrder(@PathVariable String id) {
-        Long validatedId = requestParamsValidator.validateLong(id);
-        return orderService.findRestOrderById(validatedId);
+        Long validatedId = requestParamsValidator.validateLongRest(id);
+        return orderService.findOrderByIdForRest(validatedId);
     }
 }

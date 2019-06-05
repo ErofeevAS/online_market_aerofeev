@@ -15,6 +15,7 @@ import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalC
 import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.ROLE_ADMIN;
 import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.ROLE_CUSTOMER;
 import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.ROLE_SALE;
+import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.USER_DETAILS_SERVICE;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
@@ -94,7 +95,7 @@ public class ReviewControllerSecureIntegrationTest {
     }
 
     @Test
-    @WithUserDetails(CUSTOMER_EMAIL)
+    @WithUserDetails(value = CUSTOMER_EMAIL, userDetailsServiceBeanName = USER_DETAILS_SERVICE)
     public void shouldCreateNewReviewForCustomer() throws Exception {
         mockMvc.perform(post("/reviews/new")
                 .param("content", "new test review"))

@@ -10,7 +10,7 @@ public class ProfileViewDTO {
     private String lastName;
     @Pattern(regexp = "^[A-Za-z_]{0,40}$", message = "must be from 1 to 40, only English letters")
     private String address;
-    @Pattern(regexp = "^[0-9_]{5,12}$", message = "must be from 5 to 12, only digit letters")
+    @Pattern(regexp = "^[0-9_]{11,12}$", message = "must be from 11 to 12, only digit letters")
     private String phone;
 
     public Long getId() {

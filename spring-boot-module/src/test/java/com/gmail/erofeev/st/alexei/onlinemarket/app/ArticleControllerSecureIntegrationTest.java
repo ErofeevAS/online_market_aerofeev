@@ -13,12 +13,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.ADMIN_EMAIL;
+import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.ARTICLES_NEW_URL;
 import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.CUSTOMER_EMAIL;
 import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.REDIRECT_URL;
 import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.ROLE_ADMIN;
 import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.ROLE_CUSTOMER;
 import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.ROLE_SALE;
 import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.SALE_EMAIL;
+import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.USER_DETAILS_SERVICE;
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -37,7 +39,7 @@ public class ArticleControllerSecureIntegrationTest {
     private MockMvc mockMvc;
 
     @Test
-    @WithUserDetails(CUSTOMER_EMAIL)
+    @WithUserDetails(value = CUSTOMER_EMAIL, userDetailsServiceBeanName = USER_DETAILS_SERVICE)
     public void shouldSucceedWith200ForArticlesPageForCustomer() throws Exception {
         mockMvc.perform(get("/articles"))
                 .andExpect(status().isOk())
@@ -46,7 +48,7 @@ public class ArticleControllerSecureIntegrationTest {
     }
 
     @Test
-    @WithUserDetails(CUSTOMER_EMAIL)
+    @WithUserDetails(value = CUSTOMER_EMAIL, userDetailsServiceBeanName = USER_DETAILS_SERVICE)
     public void shouldSucceedRedirectOnArticlePage() throws Exception {
         mockMvc.perform(get("/articles/1"))
                 .andExpect(status().isOk())
@@ -128,18 +130,18 @@ public class ArticleControllerSecureIntegrationTest {
     @Test
     @WithMockUser(roles = ROLE_SALE)
     public void shouldHaveAccessToNewArticlePageForSale() throws Exception {
-        mockMvc.perform(get("/articles/new"))
+        mockMvc.perform(get("/articles/sale/new"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("newArticle"));
     }
 
     @Test
-    @WithUserDetails(SALE_EMAIL)
+    @WithUserDetails(value = SALE_EMAIL, userDetailsServiceBeanName = USER_DETAILS_SERVICE)
     public void shouldSaveNewArticlePageForSalePost() throws Exception {
         NewArticleDTO article = new NewArticleDTO();
         article.setContent("test content");
         article.setTitle("test title");
-        mockMvc.perform(post("/articles/new")
+        mockMvc.perform(post(ARTICLES_NEW_URL)
                 .flashAttr("article", article))
                 .andExpect(status().isOk())
                 .andExpect(view().name("newArticle"));
@@ -148,7 +150,7 @@ public class ArticleControllerSecureIntegrationTest {
     @Test
     @WithMockUser(roles = ROLE_CUSTOMER)
     public void shouldNotHaveAccessToNewArticlePageForCustomer() throws Exception {
-        mockMvc.perform(get("/articles/new"))
+        mockMvc.perform(get(ARTICLES_NEW_URL))
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl(REDIRECT_URL));
     }
@@ -156,7 +158,7 @@ public class ArticleControllerSecureIntegrationTest {
     @Test
     @WithMockUser(roles = ROLE_CUSTOMER)
     public void shouldNotHaveAccessToNewArticlePageForCustomerPost() throws Exception {
-        mockMvc.perform(post("/articles/new"))
+        mockMvc.perform(post(ARTICLES_NEW_URL))
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl(REDIRECT_URL));
     }
@@ -219,7 +221,7 @@ public class ArticleControllerSecureIntegrationTest {
     }
 
     @Test
-    @WithUserDetails(SALE_EMAIL)
+    @WithUserDetails(value = SALE_EMAIL, userDetailsServiceBeanName = USER_DETAILS_SERVICE)
     public void shouldHaveAccessToCreateNewCommentInArticleForSale() throws Exception {
         CommentDTO comment = new CommentDTO();
         comment.setArticleId(1L);
@@ -231,7 +233,7 @@ public class ArticleControllerSecureIntegrationTest {
     }
 
     @Test
-    @WithUserDetails(ADMIN_EMAIL)
+    @WithUserDetails(value = ADMIN_EMAIL, userDetailsServiceBeanName = USER_DETAILS_SERVICE)
     public void shouldNotHaveAccessToCreateNewCommentInArticleForAdmin() throws Exception {
         mockMvc.perform(post("/articles/1/newComment"))
                 .andExpect(status().isFound())
@@ -239,7 +241,7 @@ public class ArticleControllerSecureIntegrationTest {
     }
 
     @Test
-    @WithUserDetails(CUSTOMER_EMAIL)
+    @WithUserDetails(value = CUSTOMER_EMAIL, userDetailsServiceBeanName = USER_DETAILS_SERVICE)
     public void shouldHaveAccessToCreateNewCommentInArticleForCustomer() throws Exception {
         CommentDTO comment = new CommentDTO();
         comment.setArticleId(1L);

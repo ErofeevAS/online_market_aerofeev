@@ -2,18 +2,15 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
-    <title>Users</title>
+    <title>Items</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"/>
 </head>
 <body>
 <div class="container">
-    <div class="row" th:insert="~{fragments/header :: header}">
-    </div>
-    <div class="row" th:insert="~{fragments/navbar :: navbar}">
-    </div>
-
+    <div class="row" th:insert="~{fragments/header :: header}"></div>
+    <div class="row" th:insert="~{fragments/navbar :: navbar}"></div>
     <div class="row">
         <th:block th:each="item,number : ${items}">
             <div class="col-sm-4" id="article">

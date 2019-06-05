@@ -19,6 +19,7 @@ import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalC
 import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.ROLE_ADMIN;
 import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.ROLE_CUSTOMER;
 import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.SALE_EMAIL;
+import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.USER_DETAILS_SERVICE;
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -36,7 +37,7 @@ public class UserControllerSecureIntegrationTest {
     private MockMvc mockMvc;
 
     @Test
-    @WithUserDetails(ADMIN_EMAIL)
+    @WithUserDetails(value = ADMIN_EMAIL, userDetailsServiceBeanName = USER_DETAILS_SERVICE)
     public void shouldSucceedWith200ForUsersPage() throws Exception {
         mockMvc.perform(get("/users"))
                 .andExpect(status().isOk())
@@ -45,7 +46,7 @@ public class UserControllerSecureIntegrationTest {
     }
 
     @Test
-    @WithUserDetails(ADMIN_EMAIL)
+    @WithUserDetails(value = ADMIN_EMAIL, userDetailsServiceBeanName = USER_DETAILS_SERVICE)
     public void shouldSucceedRedirectOnUsersPageAfterChangePassword() throws Exception {
         PasswordDTO passwordDTO = new PasswordDTO();
         passwordDTO.setNewPassword("1234");
@@ -105,7 +106,7 @@ public class UserControllerSecureIntegrationTest {
     }
 
     @Test
-    @WithUserDetails(ADMIN_EMAIL)
+    @WithUserDetails(value = ADMIN_EMAIL, userDetailsServiceBeanName = USER_DETAILS_SERVICE)
     public void shouldSucceedWith200ForProfilePage() throws Exception {
         mockMvc.perform(get("/profile"))
                 .andExpect(status().isOk())
@@ -114,7 +115,7 @@ public class UserControllerSecureIntegrationTest {
     }
 
     @Test
-    @WithUserDetails(SALE_EMAIL)
+    @WithUserDetails(value = SALE_EMAIL, userDetailsServiceBeanName = USER_DETAILS_SERVICE)
     public void shouldSucceedWith200ForProfilePageForSale() throws Exception {
         mockMvc.perform(get("/profile"))
                 .andExpect(status().isOk())
@@ -122,7 +123,7 @@ public class UserControllerSecureIntegrationTest {
     }
 
     @Test
-    @WithUserDetails(CUSTOMER_EMAIL)
+    @WithUserDetails(value = CUSTOMER_EMAIL, userDetailsServiceBeanName = USER_DETAILS_SERVICE)
     public void shouldSucceedWith200ForProfilePageForCustomer() throws Exception {
         mockMvc.perform(get("/profile"))
                 .andExpect(status().isOk())

@@ -7,11 +7,11 @@ import com.gmail.erofeev.st.alexei.onlinemarket.repository.model.User;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.ArticleService;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.converter.ArticleConverter;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.converter.DateTimeConverter;
-import com.gmail.erofeev.st.alexei.onlinemarket.service.exception.ServiceException;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ArticleDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ArticleRestDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.NewArticleDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.PageDTO;
+import com.gmail.erofeev.st.alexei.onlinemarket.service.model.RestEntityNotFoundException;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.SearchingFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +50,7 @@ public class ArticleServiceImpl extends AbstractService<ArticleDTO> implements A
             int amountOfEntity = articleRepository.getAmountOfEntity(false);
             int maxPages = getMaxPages(amountOfEntity, amount);
             int offset = getOffset(page, maxPages, amount);
-            List<Article> articles = articleRepository.getEntities(offset, amount);
+            List<Article> articles = articleRepository.getArticles(offset, amount);
             List<ArticleDTO> articleDTOList = articleConverter.toListDTO(articles);
             return getPageDTO(articleDTOList, maxPages);
         } else if (keyWord == null) {
@@ -81,11 +81,7 @@ public class ArticleServiceImpl extends AbstractService<ArticleDTO> implements A
     @Transactional
     public ArticleDTO getArticleById(Long id) {
         Article article = articleRepository.findById(id);
-        if (article == null) {
-            String message = String.format("Article with id:%s not found", id);
-            logger.error(message);
-            throw new ServiceException(message);
-        }
+        isExist(article, id);
         return articleConverter.toDTO(article);
     }
 
@@ -93,7 +89,7 @@ public class ArticleServiceImpl extends AbstractService<ArticleDTO> implements A
     @Transactional
     public ArticleRestDTO getArticleByIdForRest(Long id) {
         Article article = articleRepository.findById(id);
-        isExist(article, id, "");
+        isExistForRest(article, id);
         return articleConverter.toRestDTO(article);
     }
 
@@ -106,16 +102,25 @@ public class ArticleServiceImpl extends AbstractService<ArticleDTO> implements A
 
     @Override
     @Transactional
-    public List<ArticleRestDTO> getRestArticles() {
-        List<Article> articles = articleRepository.findAll();
+    public List<ArticleRestDTO> getArticlesForRest(int offset, int amount) {
+        List<Article> articles = articleRepository.getEntities(offset, amount);
         return articleConverter.toListRestDTO(articles);
     }
 
     @Override
     @Transactional
-    public String delete(Long id) {
+    public String deleteArticleById(Long id) {
         Article article = articleRepository.findById(id);
-        isExist(article, id, "Can't delete article");
+        isExist(article, id);
+        articleRepository.remove(article);
+        return SUCCESSFUL_DELETE_MESSAGE;
+    }
+
+    @Override
+    @Transactional
+    public String deleteArticleByIdForRest(Long id) {
+        Article article = articleRepository.findById(id);
+        isExistForRest(article, id);
         articleRepository.remove(article);
         return SUCCESSFUL_DELETE_MESSAGE;
     }
@@ -176,12 +181,21 @@ public class ArticleServiceImpl extends AbstractService<ArticleDTO> implements A
         articleRepository.merge(article);
     }
 
-    private void isExist(Article article, Long id, String additionalMessage) {
+    private void isExist(Article article, Long id) {
         String defaultMessage = "Article with id:%s not found. ";
         if (article == null) {
-            String message = String.format(defaultMessage + additionalMessage, id);
+            String message = String.format(defaultMessage, id);
             logger.error(message);
             throw new EntityNotFoundException(String.format(message, id));
+        }
+    }
+
+    private void isExistForRest(Article article, Long id) {
+        String defaultMessage = "Article with id:%s not found. ";
+        if (article == null) {
+            String message = String.format(defaultMessage, id);
+            logger.error(message);
+            throw new RestEntityNotFoundException(String.format(message, id));
         }
     }
 }

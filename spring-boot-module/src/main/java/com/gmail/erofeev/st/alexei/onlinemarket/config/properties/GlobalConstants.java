@@ -1,6 +1,9 @@
 package com.gmail.erofeev.st.alexei.onlinemarket.config.properties;
 
 public class GlobalConstants {
+    public static final String XSD_FILE_PATH = "items.xsd";
+    public static final String USER_DETAILS_SERVICE = "userDetailsServiceImpl";
+    public static final String USER_DETAILS_SERVICE_REST_API = "userDetailsServiceRestImpl";
     public static final String ROLE_SECURE_REST_API = "SECURE_REST_API";
     public static final String ROLE_ADMIN = "Administrator";
     public static final String ROLE_CUSTOMER = "Customer";
@@ -10,24 +13,32 @@ public class GlobalConstants {
     public static final String REST_API_EMAIL = "rest@gmail.com";
     public static final String ROLE_SALE = "Sale";
     public static final String REDIRECT_URL = "/403";
+    public static final String ERROR_URL = "/error";
     public static final String LOGIN_URL = "/login";
-    public static final String ABOUT_URL = "/about";
     public static final String PROFILE_ALL_URL = "/profile/**";
-    public static final String PROFILE_URL = "/profile";
     public static final String USERS_ALL_URL = "/users/**";
-    public static final String USERS_URL = "/users";
-    public static final String REVIEWS_ALL_URL = "/reviews/**";
-    public static final String REVIEWS_URL = "/reviews";
+    public static final String REVIEWS_GET_ALL_URL = "/reviews";
+    public static final String REVIEWS_DELETE_URL = "/reviews/*/delete";
+    public static final String REVIEWS_UPDATE_URL = "/reviews/update";
+    public static final String REVIEWS_NEW_URL = "/reviews/new";
+    public static final String ORDERS_NEW_URL = "/orders/sale/new";
+    public static final String ORDERS_GET_ALL_URL = "/orders";
+    public static final String ORDER_GET_BY_ID_URL = "/orders/*";
+    public static final String USER_ORDERS = "/users/*/orders";
+    public static final String ORDERS_UPDATE_URL = "/orders/*/update";
+    public static final String ORDERS_FOR_USER_URL = "/userorders";
+    public static final String WRONG_AMOUNT_PAGE = "wrongAmount.html";
     public static final String ITEMS_ALL_URL = "/items/**";
-    public static final String ITEMS_URL = "/items";
-    public static final String ORDERS_ALL_URL = "/orders/**";
-    public static final String ORDERS_URL = "/orders";
-    public static final String ARTICLES_ALL_URL = "/articles/**";
-    public static final String ARTICLES_URL = "/articles";
-    public static final String ARTICLES_NEW_URL = "/articles/new/**";
+    public static final String ITEMS_GET_BY_ID_URL = "/items/*";
+    public static final String ITEMS_GET_ALL_URL = "/items";
+    public static final String ARTICLES_GET_ALL_URL = "/articles";
+    public static final String ARTICLES_NEW_URL = "/articles/sale/new";
+    public static final String ARTICLES_GET_BY_ID_URL = "/articles/*";
+    public static final String ARTICLES_SELECT_BY_TAG_URL = "/articles/tag/*";
+    public static final String ARTICLES_NEW_COMMENT_URL = "/articles/*/newComment";
+    public static final String ARTICLES_UPDATE_URL = "/articles/*/update";
+    public static final String ARTICLES_DELETE_URL = "/articles/*/delete";
+    public static final String ARTICLES_DELETE_COMMENT_URL = "/articles/*/deleteComment";
+    public static final String UPLOAD_FILE_URL = "/upload";
     public static final String REST_API_ALL_URL = "/api/v1/**";
-    public static final String REST_API_ITEMS_URL = "/api/v1/items";
-    public static final String REST_API_USERS_URL = "/api/v1/users";
-    public static final String REST_API_ARTICLES_URL = "api/v1/articles";
-    public static final String REST_API_ORDERS_URL = "api/v1/orders";
 }

@@ -19,8 +19,8 @@ public class ProfileConverterImpl implements ProfileConverter {
     @Override
     public Profile fromDTO(ProfileDTO profileDTO) {
         Profile profile = new Profile();
-        profile.setAddress("");
-        profile.setPhone("");
+        profile.setAddress(profileDTO.getAddress());
+        profile.setPhone(profileDTO.getPhone());
         return profile;
     }
 }

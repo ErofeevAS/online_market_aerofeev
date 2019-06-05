@@ -8,6 +8,7 @@ import com.gmail.erofeev.st.alexei.onlinemarket.service.exception.ServiceExcepti
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ItemDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ItemDetailsDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.PageDTO;
+import com.gmail.erofeev.st.alexei.onlinemarket.service.model.RestEntityNotFoundException;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.xml.ItemXMLDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class ItemServiceImpl extends AbstractService<ItemDetailsDTO> implements ItemService {
@@ -56,8 +58,19 @@ public class ItemServiceImpl extends AbstractService<ItemDetailsDTO> implements 
     public void deleteById(Long id) {
         Item item = itemRepository.findById(id);
         if (item == null) {
-            logger.debug(String.format("Item with id:%s not found. Can not delete item", id));
-            throw new EntityNotFoundException(String.format("Item with id:%s not found. Can not delete item", id));
+            logger.debug(String.format("Item with id:%s not found. Can not deleteArticleById item", id));
+            throw new EntityNotFoundException(String.format("Item with id:%s not found. Can not deleteArticleById item", id));
+        }
+        itemRepository.remove(item);
+    }
+
+    @Override
+    @Transactional
+    public void deleteByIdForRest(Long id) {
+        Item item = itemRepository.findById(id);
+        if (item == null) {
+            logger.debug(String.format("Item with id:%s not found. Can not deleteArticleById item", id));
+            throw new RestEntityNotFoundException(String.format("Item with id:%s not found. Can not deleteArticleById item", id));
         }
         itemRepository.remove(item);
     }
@@ -83,11 +96,11 @@ public class ItemServiceImpl extends AbstractService<ItemDetailsDTO> implements 
 
     @Override
     @Transactional
-    public ItemDTO findRestItemById(Long validatedId) {
+    public ItemDTO findItemByIdForRest(Long validatedId) {
         Item item = itemRepository.findById(validatedId);
         if (item == null) {
             logger.debug(String.format("Item with id:%s not found", validatedId));
-            throw new EntityNotFoundException(String.format("Item with id:%s not found", validatedId));
+            throw new RestEntityNotFoundException(String.format("Item with id:%s not found", validatedId));
         }
         return itemConverter.toDTO(item);
     }
@@ -96,6 +109,9 @@ public class ItemServiceImpl extends AbstractService<ItemDetailsDTO> implements 
     @Transactional
     public ItemDTO saveItem(ItemDTO itemRestDTO) {
         Item item = itemConverter.fromDTO(itemRestDTO);
+        if (item.getUniqueNumber() == null || item.getUniqueNumber().equals("")) {
+            item.setUniqueNumber(UUID.randomUUID().toString());
+        }
         itemRepository.persist(item);
         logger.debug(String.format("Item with name:%s was saved", itemRestDTO.getName()));
         return itemConverter.toDTO(item);

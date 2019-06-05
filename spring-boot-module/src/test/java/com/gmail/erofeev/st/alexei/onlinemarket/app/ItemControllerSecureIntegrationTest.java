@@ -85,7 +85,7 @@ public class ItemControllerSecureIntegrationTest {
     @Test
     @WithMockUser(roles = ROLE_CUSTOMER)
     public void shouldNotHaveAccessToDeleteItemPageForCustomer() throws Exception {
-        mockMvc.perform(post("/items/1/delete"))
+        mockMvc.perform(post("/items/1/deleteArticleById"))
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl(REDIRECT_URL));
     }

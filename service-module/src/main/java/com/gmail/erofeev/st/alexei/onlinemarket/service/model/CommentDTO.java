@@ -1,11 +1,16 @@
 package com.gmail.erofeev.st.alexei.onlinemarket.service.model;
 
+import org.springframework.validation.annotation.Validated;
+
+import javax.validation.constraints.Size;
 import java.sql.Timestamp;
 
+@Validated
 public class CommentDTO {
     private Long id;
     private Long articleId;
     private UserDTO user;
+    @Size(min = 1, max = 200)
     private String content;
     private Timestamp createdDate;
 

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -33,20 +34,23 @@ public class RestArticlesController {
     }
 
     @GetMapping
-    public List<ArticleRestDTO> getArticles() {
-        return articleService.getRestArticles();
+    public List<ArticleRestDTO> getArticles(@RequestParam(defaultValue = "1", required = false) String offset,
+                                            @RequestParam(defaultValue = "10", required = false) String amount) {
+        int intOffset = requestParamsValidator.validateIntRest(offset);
+        int intAmount = requestParamsValidator.validateIntRest(amount);
+        return articleService.getArticlesForRest(intOffset, intAmount);
     }
 
     @GetMapping("/{id}")
     public ArticleRestDTO getArticles(@PathVariable String id) {
-        Long articleId = requestParamsValidator.validateLong(id);
+        Long articleId = requestParamsValidator.validateLongRest(id);
         return articleService.getArticleByIdForRest(articleId);
     }
 
     @DeleteMapping("/{id}")
     public String deleteArticle(@PathVariable String id) {
-        Long articleId = requestParamsValidator.validateLong(id);
-        return articleService.delete(articleId);
+        Long articleId = requestParamsValidator.validateLongRest(id);
+        return articleService.deleteArticleByIdForRest(articleId);
     }
 
     @PostMapping

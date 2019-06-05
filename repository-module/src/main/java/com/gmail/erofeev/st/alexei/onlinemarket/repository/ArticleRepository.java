@@ -5,13 +5,15 @@ import com.gmail.erofeev.st.alexei.onlinemarket.repository.model.Article;
 import java.util.List;
 
 public interface ArticleRepository extends GenericRepository<Long, Article> {
-    Integer getAmountOfArticlesWithKeyWord(String keyWord);
+    int getAmountOfArticlesWithKeyWord(String keyWord);
 
-    Integer getAmountOfArticlesWithSameTag(String tagName);
+    int getAmountOfArticlesWithSameTag(String tagName);
 
-    List<Article> getArticlesFilteredByKeyWord(int offset, Integer amount, String keyWord);
+    List<Article> getArticlesFilteredByKeyWord(int offset, int amount, String keyWord);
 
-    List<Article> getEntitiesByTag(int offset, Integer amount, String tag);
+    List<Article> getEntitiesByTag(int offset, int amount, String tag);
 
-    List<Article> getEntitiesByTagAndKeyword(int offset, Integer amount, String tagId, String keyWord);
+    List<Article> getEntitiesByTagAndKeyword(int offset, int amount, String tagId, String keyWord);
+
+    List<Article> getArticles(int offset, int amount);
 }

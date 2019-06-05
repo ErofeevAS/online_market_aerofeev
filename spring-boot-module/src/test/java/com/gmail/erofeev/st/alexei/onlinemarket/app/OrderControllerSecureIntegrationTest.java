@@ -18,6 +18,7 @@ import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalC
 import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.ROLE_SALE;
 import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.ROLE_SECURE_REST_API;
 import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.SALE_EMAIL;
+import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.USER_DETAILS_SERVICE;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
@@ -51,7 +52,7 @@ public class OrderControllerSecureIntegrationTest {
     }
 
     @Test
-    @WithUserDetails(CUSTOMER_EMAIL)
+    @WithUserDetails(value = CUSTOMER_EMAIL, userDetailsServiceBeanName = USER_DETAILS_SERVICE)
     public void shouldHaveAccessToOrderForCustomer() throws Exception {
         mockMvc.perform(get("/users/" + TEST_CUSTOMER_USER_ID + "/orders"))
                 .andExpect(status().isOk())
@@ -59,7 +60,7 @@ public class OrderControllerSecureIntegrationTest {
     }
 
     @Test
-    @WithUserDetails(CUSTOMER_EMAIL)
+    @WithUserDetails(value = CUSTOMER_EMAIL, userDetailsServiceBeanName = USER_DETAILS_SERVICE)
     public void shouldHaveAccessToOwnOrdersForCustomer() throws Exception {
         mockMvc.perform(get("/userorders"))
                 .andExpect(status().isFound())
@@ -67,7 +68,7 @@ public class OrderControllerSecureIntegrationTest {
     }
 
     @Test
-    @WithUserDetails(ADMIN_EMAIL)
+    @WithUserDetails(value = ADMIN_EMAIL, userDetailsServiceBeanName = USER_DETAILS_SERVICE)
     public void shouldNotHaveAccessToOwnOrdersForAdmin() throws Exception {
         mockMvc.perform(get("/userorders"))
                 .andExpect(status().isFound())
@@ -115,7 +116,7 @@ public class OrderControllerSecureIntegrationTest {
     }
 
     @Test
-    @WithUserDetails(CUSTOMER_EMAIL)
+    @WithUserDetails(value = CUSTOMER_EMAIL, userDetailsServiceBeanName = USER_DETAILS_SERVICE)
     public void shouldCreateNewOrderForCustomer() throws Exception {
         mockMvc.perform(post("/orders/sale/new")
                 .param("itemId", "1")
@@ -125,7 +126,7 @@ public class OrderControllerSecureIntegrationTest {
     }
 
     @Test
-    @WithUserDetails(CUSTOMER_EMAIL)
+    @WithUserDetails(value = CUSTOMER_EMAIL, userDetailsServiceBeanName = USER_DETAILS_SERVICE)
     public void shouldRedirectToWrongAmountPageIfAmountNotPositiveInteger() throws Exception {
         mockMvc.perform(post("/orders/sale/new")
                 .param("itemId", "1")
@@ -135,7 +136,7 @@ public class OrderControllerSecureIntegrationTest {
     }
 
     @Test
-    @WithUserDetails(SALE_EMAIL)
+    @WithUserDetails(value = SALE_EMAIL, userDetailsServiceBeanName = USER_DETAILS_SERVICE)
     public void shouldNotHaveAccessToCreateNewOrderForSale() throws Exception {
         mockMvc.perform(post("/orders/sale/new"))
                 .andExpect(status().isFound())
@@ -151,7 +152,7 @@ public class OrderControllerSecureIntegrationTest {
     }
 
     @Test
-    @WithUserDetails(SALE_EMAIL)
+    @WithUserDetails(value = SALE_EMAIL, userDetailsServiceBeanName = USER_DETAILS_SERVICE)
     public void shouldUpdateOrderStatusForSale() throws Exception {
         mockMvc.perform(post("/orders/" + TEST_ORDER_UUID + "/update")
                 .param("orderStatus", "IN_PROGRESS"))
@@ -160,7 +161,7 @@ public class OrderControllerSecureIntegrationTest {
     }
 
     @Test
-    @WithUserDetails(CUSTOMER_EMAIL)
+    @WithUserDetails(value = CUSTOMER_EMAIL, userDetailsServiceBeanName = USER_DETAILS_SERVICE)
     public void shouldNotHaveAccessToUpdateOrderStatusForCustomer() throws Exception {
         mockMvc.perform(post("/orders/" + TEST_ORDER_UUID + "/update"))
                 .andExpect(status().isFound())
@@ -168,7 +169,7 @@ public class OrderControllerSecureIntegrationTest {
     }
 
     @Test
-    @WithUserDetails(ADMIN_EMAIL)
+    @WithUserDetails(value = ADMIN_EMAIL, userDetailsServiceBeanName = USER_DETAILS_SERVICE)
     public void shouldNotHaveAccessToUpdateOrderStatusForAdmin() throws Exception {
         mockMvc.perform(post("/orders/" + TEST_ORDER_UUID + "/update"))
                 .andExpect(status().isFound())

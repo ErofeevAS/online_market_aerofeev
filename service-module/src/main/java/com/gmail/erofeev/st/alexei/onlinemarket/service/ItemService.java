@@ -14,11 +14,13 @@ public interface ItemService {
 
     void deleteById(Long id);
 
+    void deleteByIdForRest(Long id);
+
     void copyItem(Long id);
 
     List<ItemDTO> getItemsForRest(int offset, int amount);
 
-    ItemDTO findRestItemById(Long validatedId);
+    ItemDTO findItemByIdForRest(Long validatedId);
 
     ItemDTO saveItem(ItemDTO itemRestDTO);
 

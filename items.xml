@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<items xmlns="http://www.it-academy.by"
+<items xmlns="www.aerofeev-market.com"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.it-academy.by spring-boot-module/src/main/resources/items.xsd">
+       xsi:schemaLocation="www.aerofeev-market.com spring-boot-module/src/main/resources/items.xsd">
 
     <item id="1">
         <name>PS4</name>

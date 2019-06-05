@@ -29,9 +29,9 @@ public class Profile {
     @Column(unique = true, nullable = false)
     private Long id;
     @Column
-    private String address;
+    private String address="";
     @Column
-    private String phone;
+    private String phone="";
     @Column
     private boolean deleted = false;
     @OneToOne(fetch = FetchType.LAZY)

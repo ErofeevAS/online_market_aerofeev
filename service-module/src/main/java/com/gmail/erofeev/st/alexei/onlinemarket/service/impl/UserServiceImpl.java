@@ -89,7 +89,7 @@ public class UserServiceImpl extends AbstractService<UserDTO> implements UserSer
             userRepository.persist(user);
             String message = String.format("Hello! %s. Your was registered on www.aerofeev-market.com  your password: %s", userDTO.getFullName(), password);
 //            mailService.send(email, "new password", message);
-            logger.debug(String.format("User with email: %s and password: %s was saved", email, password));
+            logger.debug(String.format("User with email: %s and password: %s was saved on www.aerofeev-market.com", email, password));
             return userConverter.toDTO(user);
         }
         return null;
@@ -118,6 +118,14 @@ public class UserServiceImpl extends AbstractService<UserDTO> implements UserSer
         List<User> users = userRepository.findUsersSortedByEmail(offset, amount, showDeleted);
         List<UserDTO> userListDTO = userConverter.toListDTO(users);
         return getPageDTO(userListDTO, maxPages);
+    }
+
+    @Override
+    @Transactional
+    public UserDTO findUserByEmailExcludeSecureApiUser(String email) {
+        User user = userRepository.findByEmailExcludeSecureApiUser(email);
+        logger.debug(String.format("User with email:%s was found", email));
+        return userConverter.toDTO(user);
     }
 
     @Override

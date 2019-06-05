@@ -18,6 +18,8 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Collection;
 
+import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.LOGIN_URL;
+
 @Component
 public class AppAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
     private static final Logger logger = LoggerFactory.getLogger(AppAuthenticationSuccessHandler.class);
@@ -37,6 +39,9 @@ public class AppAuthenticationSuccessHandler implements AuthenticationSuccessHan
             logger.debug("Response has already been committed. Unable to redirect to " + url);
             return;
         }
+        if (url.equals(LOGIN_URL)) {
+            request.setAttribute("roleError", "USER WITH ROLE_SECURE_REST_API CAN'T LOGGIN");
+        }
         redirectStrategy.sendRedirect(request, response, url);
     }
 
@@ -44,6 +49,7 @@ public class AppAuthenticationSuccessHandler implements AuthenticationSuccessHan
         boolean isAdmin = false;
         boolean isCustomer = false;
         boolean isSale = false;
+        boolean isRest = false;
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         for (GrantedAuthority authority : authorities) {
             String userAuthority = authority.getAuthority();
@@ -56,6 +62,9 @@ public class AppAuthenticationSuccessHandler implements AuthenticationSuccessHan
             } else if (userAuthority.equals(securityProperties.getRoleSaleWithPrefix())) {
                 isSale = true;
                 break;
+            } else if (userAuthority.equals(securityProperties.getRoleSecureRestApiWithPrefix())) {
+                isRest = true;
+                break;
             }
         }
         if (isAdmin) {
@@ -64,6 +73,8 @@ public class AppAuthenticationSuccessHandler implements AuthenticationSuccessHan
             return securityProperties.getStartCustomerPage();
         } else if (isSale) {
             return securityProperties.getStartSalePage();
+        } else if (isRest) {
+            return LOGIN_URL;
         } else {
             logger.error("role not defined");
             throw new IllegalStateException("role not defined");

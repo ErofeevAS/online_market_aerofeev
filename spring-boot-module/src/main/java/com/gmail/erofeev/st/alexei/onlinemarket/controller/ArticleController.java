@@ -15,7 +15,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -91,9 +90,13 @@ public class ArticleController {
     }
 
     @PostMapping("/articles/{id}/newComment")
-    public String saveNewComment(@ModelAttribute("newComment") CommentDTO commentDTO,
+    public String saveNewComment(@Valid @ModelAttribute("newComment") CommentDTO commentDTO,
                                  @PathVariable Long id,
-                                 Authentication authentication) {
+                                 Authentication authentication,
+                                 BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "redirect:/articles/" + id;
+        }
         Long userId = userAuthenticationService.getSecureUserId(authentication);
         commentService.save(userId, commentDTO);
         return "redirect:/articles/" + id;
@@ -106,7 +109,13 @@ public class ArticleController {
         return "redirect:/articles/" + id;
     }
 
-    @GetMapping("/articles/new")
+    @PostMapping("/articles/{id}/delete")
+    public String deleteArticle(@PathVariable Long id) {
+        articleService.deleteArticleById(id);
+        return "redirect:/articles";
+    }
+
+    @GetMapping("/articles/sale/new")
     public String createArticle(Model model) {
         NewArticleDTO article = new NewArticleDTO();
         model.addAttribute("article", article);
@@ -115,7 +124,7 @@ public class ArticleController {
         return "newArticle";
     }
 
-    @PostMapping("/articles/new")
+    @PostMapping("/articles/sale/new")
     public String createArticle(Model model,
                                 @ModelAttribute("article") @Valid NewArticleDTO article,
                                 BindingResult bindingResult,
@@ -135,7 +144,7 @@ public class ArticleController {
 
     @PostMapping("/articles/{id}/update")
     public String updateArticle(@PathVariable Long id,
-                                @ModelAttribute("editedArticle") @Validated NewArticleDTO article,
+                                @ModelAttribute("editedArticle") @Valid NewArticleDTO article,
                                 BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "redirect:/articles/" + id;

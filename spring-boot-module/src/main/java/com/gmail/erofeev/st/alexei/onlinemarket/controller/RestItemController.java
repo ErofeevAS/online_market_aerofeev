@@ -30,21 +30,21 @@ public class RestItemController {
     @GetMapping
     public List<ItemDTO> getItems(@RequestParam(defaultValue = "1", required = false) String offset,
                                   @RequestParam(defaultValue = "10", required = false) String amount) {
-        int intOffset = requestParamsValidator.validateInt(offset);
-        int intAmount = requestParamsValidator.validateInt(amount);
+        int intOffset = requestParamsValidator.validateIntRest(offset);
+        int intAmount = requestParamsValidator.validateIntRest(amount);
         return itemService.getItemsForRest(intOffset, intAmount);
     }
 
     @GetMapping("/{id}")
     public ItemDTO getItem(@PathVariable String id) {
-        Long validatedId = requestParamsValidator.validateLong(id);
-        return itemService.findRestItemById(validatedId);
+        Long validatedId = requestParamsValidator.validateLongRest(id);
+        return itemService.findItemByIdForRest(validatedId);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity deleteItem(@PathVariable String id) {
-        Long validatedId = requestParamsValidator.validateLong(id);
-        itemService.deleteById(validatedId);
+        Long validatedId = requestParamsValidator.validateLongRest(id);
+        itemService.deleteByIdForRest(validatedId);
         return ResponseEntity.status(HttpStatus.OK).body("item was deleted");
     }
 
