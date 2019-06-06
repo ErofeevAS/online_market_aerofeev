@@ -5,6 +5,7 @@ import com.gmail.erofeev.st.alexei.onlinemarket.service.model.PasswordDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ProfileViewDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.RoleDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.UserDTO;
+import com.gmail.erofeev.st.alexei.onlinemarket.service.model.UserRestDTO;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ public interface UserService {
 
     void delete(List<Long> usersIdForDelete);
 
-    UserDTO register(UserDTO user);
+    UserDTO registerUser(UserDTO user);
 
     void changePassword(Long id);
 
@@ -31,4 +32,6 @@ public interface UserService {
     PageDTO<UserDTO> getUsers(int page, int size, boolean showDeleted);
 
     UserDTO findUserByEmailExcludeSecureApiUser(String email);
+
+    UserRestDTO registerFromRest(UserRestDTO userDTO);
 }

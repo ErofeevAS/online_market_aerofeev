@@ -102,5 +102,4 @@ public class ReviewControllerSecureIntegrationTest {
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl("/articles"));
     }
-
 }

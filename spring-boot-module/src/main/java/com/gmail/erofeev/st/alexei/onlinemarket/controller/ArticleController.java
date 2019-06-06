@@ -1,11 +1,12 @@
 package com.gmail.erofeev.st.alexei.onlinemarket.controller;
 
-import com.gmail.erofeev.st.alexei.onlinemarket.controller.util.DateTimeLocaleUtil;
 import com.gmail.erofeev.st.alexei.onlinemarket.controller.util.FrontEndValidator;
 import com.gmail.erofeev.st.alexei.onlinemarket.controller.util.Paginator;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.ArticleService;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.CommentService;
+import com.gmail.erofeev.st.alexei.onlinemarket.service.DateTimeLocaleService;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.UserAuthenticationService;
+import com.gmail.erofeev.st.alexei.onlinemarket.service.impl.DateTimeLocaleServiceImpl;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ArticleDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.CommentDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.NewArticleDTO;
@@ -30,18 +31,18 @@ import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalC
 public class ArticleController {
     private final ArticleService articleService;
     private final CommentService commentService;
-    private final DateTimeLocaleUtil dateTimeLocaleUtil;
+    private final DateTimeLocaleService dateTimeLocaleService;
     private final UserAuthenticationService userAuthenticationService;
     private final FrontEndValidator frontEndValidator;
 
     public ArticleController(ArticleService articleService,
                              CommentService commentService,
-                             DateTimeLocaleUtil dateTimeLocaleUtil,
+                             DateTimeLocaleServiceImpl dateTimeLocaleUtil,
                              UserAuthenticationService userAuthenticationService,
                              FrontEndValidator frontEndValidator) {
         this.articleService = articleService;
         this.commentService = commentService;
-        this.dateTimeLocaleUtil = dateTimeLocaleUtil;
+        this.dateTimeLocaleService = dateTimeLocaleUtil;
         this.userAuthenticationService = userAuthenticationService;
         this.frontEndValidator = frontEndValidator;
     }
@@ -124,7 +125,7 @@ public class ArticleController {
     public String createArticle(Model model) {
         NewArticleDTO article = new NewArticleDTO();
         model.addAttribute("article", article);
-        String currentDateTime = dateTimeLocaleUtil.getCurrentTimeInDateTimeLocaleFormat();
+        String currentDateTime = dateTimeLocaleService.getCurrentTimeInDateTimeLocaleFormat();
         model.addAttribute("currentDate", currentDateTime);
         return "newArticle";
     }
@@ -134,7 +135,7 @@ public class ArticleController {
                                 @ModelAttribute("article") @Valid NewArticleDTO article,
                                 BindingResult bindingResult,
                                 Authentication authentication) {
-        String currentDateTime = dateTimeLocaleUtil.getCurrentTimeInDateTimeLocaleFormat();
+        String currentDateTime = dateTimeLocaleService.getCurrentTimeInDateTimeLocaleFormat();
         model.addAttribute("currentDate", currentDateTime);
         if (bindingResult.hasErrors()) {
             return "newArticle";

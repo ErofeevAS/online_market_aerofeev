@@ -16,6 +16,7 @@
     </div>
     <div class="row">
         <div class="col-md-8 col-md-offset-1">
+            <div class="alert alert-info" th:if="${info}" th:text="${info}"></div>
             <form th:action="@{/reviews/new}" method="post">
                 <div class="form-group">
                     <label>review content</label>:

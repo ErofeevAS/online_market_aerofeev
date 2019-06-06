@@ -20,7 +20,7 @@ public interface ItemService {
 
     List<ItemDTO> getItemsForRest(int offset, int amount);
 
-    ItemDTO findItemByIdForRest(Long validatedId);
+    ItemDTO findItemByIdForRest(Long id);
 
     ItemDTO saveItem(ItemDTO itemRestDTO);
 

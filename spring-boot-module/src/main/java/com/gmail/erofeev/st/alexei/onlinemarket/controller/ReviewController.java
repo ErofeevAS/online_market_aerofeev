@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.MAX_REVIEW_LENGTH;
+
 @Controller
 public class ReviewController {
     private final ReviewService reviewService;
@@ -42,7 +44,7 @@ public class ReviewController {
 
     @PostMapping("/reviews/{id}/delete")
     public String deleteReview(@PathVariable Long id) {
-        reviewService.delete(id);
+        reviewService.deleteReview(id);
         return "redirect:/reviews";
     }
 
@@ -59,11 +61,14 @@ public class ReviewController {
 
     @PostMapping("/reviews/new")
     public String createReview(Authentication authentication,
-                               @ModelAttribute("content") String content) {
+                               @ModelAttribute("content") String content,
+                               Model model) {
+        if (content.length() == 0 || content.length() > MAX_REVIEW_LENGTH) {
+            model.addAttribute("info", "must be not empty and less than " + MAX_REVIEW_LENGTH);
+            return "newReview";
+        }
         Long userId = userAuthenticationService.getSecureUserId(authentication);
-        reviewService.create(userId, content);
+        reviewService.createReview(userId, content);
         return "redirect:/articles";
     }
-
-
 }

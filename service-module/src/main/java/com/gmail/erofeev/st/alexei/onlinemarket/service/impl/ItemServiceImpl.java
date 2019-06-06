@@ -4,7 +4,6 @@ import com.gmail.erofeev.st.alexei.onlinemarket.repository.ItemRepository;
 import com.gmail.erofeev.st.alexei.onlinemarket.repository.model.Item;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.ItemService;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.converter.ItemConverter;
-import com.gmail.erofeev.st.alexei.onlinemarket.service.exception.ServiceException;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ItemDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ItemDetailsDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.PageDTO;
@@ -20,7 +19,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-public class ItemServiceImpl extends AbstractService<ItemDetailsDTO> implements ItemService {
+public class ItemServiceImpl extends GenericService<ItemDetailsDTO> implements ItemService {
     private static final Logger logger = LoggerFactory.getLogger(ItemServiceImpl.class);
     private final ItemRepository itemRepository;
     private final ItemConverter itemConverter;
@@ -45,11 +44,7 @@ public class ItemServiceImpl extends AbstractService<ItemDetailsDTO> implements 
     @Transactional
     public ItemDetailsDTO findById(Long id) {
         Item item = itemRepository.findById(id);
-        if (item == null) {
-            String message = String.format("Item with id:%s not found", id);
-            logger.error(message);
-            throw new ServiceException(message);
-        }
+        isExist(item, id);
         return itemConverter.toDetailsDTO(item);
     }
 
@@ -57,10 +52,7 @@ public class ItemServiceImpl extends AbstractService<ItemDetailsDTO> implements 
     @Transactional
     public void deleteById(Long id) {
         Item item = itemRepository.findById(id);
-        if (item == null) {
-            logger.debug(String.format("Item with id:%s not found. Can not deleteArticleById item", id));
-            throw new EntityNotFoundException(String.format("Item with id:%s not found. Can not deleteArticleById item", id));
-        }
+        isExist(item, id);
         itemRepository.remove(item);
     }
 
@@ -68,10 +60,7 @@ public class ItemServiceImpl extends AbstractService<ItemDetailsDTO> implements 
     @Transactional
     public void deleteByIdForRest(Long id) {
         Item item = itemRepository.findById(id);
-        if (item == null) {
-            logger.debug(String.format("Item with id:%s not found. Can not deleteArticleById item", id));
-            throw new RestEntityNotFoundException(String.format("Item with id:%s not found. Can not deleteArticleById item", id));
-        }
+        isExistForRest(item, id);
         itemRepository.remove(item);
     }
 
@@ -79,10 +68,7 @@ public class ItemServiceImpl extends AbstractService<ItemDetailsDTO> implements 
     @Transactional
     public void copyItem(Long id) {
         Item item = itemRepository.findById(id);
-        if (item == null) {
-            logger.debug(String.format("Item with id:%s not found. Can not copy item", id));
-            throw new EntityNotFoundException(String.format("Item with id:%s not found. Can not copy item", id));
-        }
+        isExist(item, id);
         Item copyOfItem = itemConverter.copyItem(item);
         itemRepository.persist(copyOfItem);
     }
@@ -96,12 +82,9 @@ public class ItemServiceImpl extends AbstractService<ItemDetailsDTO> implements 
 
     @Override
     @Transactional
-    public ItemDTO findItemByIdForRest(Long validatedId) {
-        Item item = itemRepository.findById(validatedId);
-        if (item == null) {
-            logger.debug(String.format("Item with id:%s not found", validatedId));
-            throw new RestEntityNotFoundException(String.format("Item with id:%s not found", validatedId));
-        }
+    public ItemDTO findItemByIdForRest(Long id) {
+        Item item = itemRepository.findById(id);
+        isExistForRest(item, id);
         return itemConverter.toDTO(item);
     }
 
@@ -129,6 +112,30 @@ public class ItemServiceImpl extends AbstractService<ItemDetailsDTO> implements 
                 itemConverter.updateDataBaseEntity(item, itemFromDataBase);
                 itemRepository.merge(itemFromDataBase);
             }
+        }
+    }
+
+    private void isExist(Item item, Long id) {
+        String message = String.format("Item with id:%s not found. ", id);
+        if (item == null) {
+            logger.error(message);
+            throw new EntityNotFoundException(message);
+        }
+        if (item.getDeleted()) {
+            logger.error(message);
+            throw new EntityNotFoundException(message);
+        }
+    }
+
+    private void isExistForRest(Item item, Long id) {
+        String message = String.format("Item with id:%s not found. ", id);
+        if (item == null) {
+            logger.error(message);
+            throw new RestEntityNotFoundException(message);
+        }
+        if (item.getDeleted()) {
+            logger.error(message);
+            throw new RestEntityNotFoundException(message);
         }
     }
 }

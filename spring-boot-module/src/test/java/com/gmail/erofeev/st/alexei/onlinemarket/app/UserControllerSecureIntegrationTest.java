@@ -77,7 +77,7 @@ public class UserControllerSecureIntegrationTest {
     public void shouldGetFiveTestUserFromUsersPage() throws Exception {
         mockMvc.perform(get("/users"))
                 .andExpect(status().isOk())
-                .andExpect(xpath("//*[@id='user']").nodeCount(5));
+                .andExpect(xpath("//*[@id='user']").nodeCount(6));
     }
 
     @Test
@@ -129,5 +129,4 @@ public class UserControllerSecureIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("profile"));
     }
-
 }

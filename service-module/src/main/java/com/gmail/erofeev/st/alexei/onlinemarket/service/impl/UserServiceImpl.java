@@ -13,8 +13,10 @@ import com.gmail.erofeev.st.alexei.onlinemarket.service.converter.UserConverter;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.PageDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.PasswordDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ProfileViewDTO;
+import com.gmail.erofeev.st.alexei.onlinemarket.service.model.RestEntityNotFoundException;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.RoleDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.UserDTO;
+import com.gmail.erofeev.st.alexei.onlinemarket.service.model.UserRestDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +28,8 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
-public class UserServiceImpl extends AbstractService<UserDTO> implements UserService {
-    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+public class UserServiceImpl extends GenericService<UserDTO> implements UserService {
+    private static final Logger logger = LoggerFactory.getLogger(GenericService.class);
     @Value("${app.generated.password.length}")
     private int STANDARD_PASSWORD_LENGTH;
     private final UserRepository userRepository;
@@ -76,7 +78,7 @@ public class UserServiceImpl extends AbstractService<UserDTO> implements UserSer
 
     @Override
     @Transactional
-    public UserDTO register(UserDTO userDTO) {
+    public UserDTO registerUser(UserDTO userDTO) {
         String email = userDTO.getEmail();
         if (!userRepository.isUserExist(email)) {
             User user = userConverter.fromDTO(userDTO);
@@ -126,6 +128,35 @@ public class UserServiceImpl extends AbstractService<UserDTO> implements UserSer
         User user = userRepository.findByEmailExcludeSecureApiUser(email);
         logger.debug(String.format("User with email:%s was found", email));
         return userConverter.toDTO(user);
+    }
+
+    @Override
+    @Transactional
+    public UserRestDTO registerFromRest(UserRestDTO userDTO) {
+        String email = userDTO.getEmail();
+        if (!userRepository.isUserExist(email)) {
+            User user = userConverter.fromRestDTO(userDTO);
+            String password = passwordService.generatePassword(STANDARD_PASSWORD_LENGTH);
+            user.setPassword(passwordEncoder.encode(password));
+            Long roleId = user.getRole().getId();
+            Role role = roleRepository.findById(roleId);
+            if (role == null) {
+                String message = String.format("role with id:%s not exist", roleId);
+                logger.error(message);
+                throw new RestEntityNotFoundException(message);
+            }
+            user.setRole(role);
+            Profile profile = user.getProfile();
+            profile.setUser(user);
+            userRepository.persist(user);
+            String message = String.format("Hello! %s. Your was registered on www.aerofeev-market.com  your password: %s", userDTO.getEmail(), password);
+//            mailService.send(email, "new password", message);
+            logger.debug(String.format("User with email: %s and password: %s was saved on www.aerofeev-market.com", email, password));
+            return userConverter.toRestDTO(user);
+        }
+        String message = String.format("user same email: %s  exist", email);
+        logger.error(message);
+        throw new RestEntityNotFoundException(message);
     }
 
     @Override

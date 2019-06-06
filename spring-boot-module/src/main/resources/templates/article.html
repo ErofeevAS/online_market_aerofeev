@@ -48,7 +48,7 @@
     </div>
     <div class="row">
         <th:block th:each="tag,number : ${article.tags}">
-            <a th:href="@{/articles/tag/{id} (id=${tag.id})}" th:text="${tag.name}"
+            <a th:href="@{/articles/tag/{name} (name=${tag.name})}" th:text="${tag.name}"
                class="badge badge-default">Default</a>
         </th:block>
     </div>
@@ -85,7 +85,6 @@
                                 </div>
                             </div>
                         </th:block>
-
                         <div class="collapse.show" id="collapseNewComment">
                             <input hidden="true" type="text" th:field="${newComment.articleId}"
                                    th:value="${article.id}" form="saveComment"/>
@@ -100,7 +99,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <p>
                             <button class="btn btn-primary" type="button" data-toggle="collapse"
                                     data-target="#collapseNewComment"

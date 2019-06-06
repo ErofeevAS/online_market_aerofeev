@@ -53,9 +53,7 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
                         ARTICLES_NEW_COMMENT_URL,
                         ITEMS_GET_ALL_URL,
                         ITEMS_GET_BY_ID_URL)
-                .hasAnyRole(
-                        securityProperties.getRoleCustomer(),
-                        securityProperties.getRoleSale())
+                .hasAnyRole(securityProperties.getRoleCustomer(), securityProperties.getRoleSale())
                 .antMatchers(ITEMS_ALL_URL,
                         ARTICLES_NEW_URL,
                         ARTICLES_UPDATE_URL,
@@ -72,21 +70,16 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
                         REVIEWS_NEW_URL,
                         WRONG_AMOUNT_PAGE)
                 .hasRole(securityProperties.getRoleCustomer())
-
                 .antMatchers(USERS_ALL_URL,
                         REVIEWS_GET_ALL_URL,
                         REVIEWS_DELETE_URL,
                         REVIEWS_UPDATE_URL)
                 .hasRole(securityProperties.getRoleAdmin())
-
                 .antMatchers(PROFILE_ALL_URL)
                 .hasAnyRole(
                         securityProperties.getRoleAdmin(),
                         securityProperties.getRoleCustomer(),
                         securityProperties.getRoleSale())
-
-//                .antMatchers("/**")
-//                .denyAll()
                 .and()
                 .formLogin()
                 .loginPage(LOGIN_URL)

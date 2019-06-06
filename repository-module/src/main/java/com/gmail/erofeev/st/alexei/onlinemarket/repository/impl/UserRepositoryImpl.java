@@ -31,10 +31,7 @@ public class UserRepositoryImpl extends GenericRepositoryImpl<Long, User> implem
         Query query = entityManager.createQuery(hql);
         query.setParameter("email", email);
         List resultList = query.getResultList();
-        if (resultList.isEmpty()) {
-            return false;
-        }
-        return true;
+        return !resultList.isEmpty();
     }
 
     @Override

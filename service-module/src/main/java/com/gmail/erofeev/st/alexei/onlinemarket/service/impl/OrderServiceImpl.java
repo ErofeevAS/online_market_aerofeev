@@ -18,7 +18,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.util.Date;
@@ -27,7 +26,7 @@ import java.util.List;
 import static java.util.UUID.randomUUID;
 
 @Service
-public class OrderServiceImpl extends AbstractService<OrderDTO> implements OrderService {
+public class OrderServiceImpl extends GenericService<OrderDTO> implements OrderService {
     private static final Logger logger = LoggerFactory.getLogger(OrderServiceImpl.class);
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;

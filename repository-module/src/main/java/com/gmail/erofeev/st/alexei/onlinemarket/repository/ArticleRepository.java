@@ -18,5 +18,4 @@ public interface ArticleRepository extends GenericRepository<Long, Article> {
     List<Article> getEntitiesByTagAndKeyword(int offset, int amount, String tagId, String keyWord);
 
     List<Article> getArticles(int offset, int amount);
-
 }

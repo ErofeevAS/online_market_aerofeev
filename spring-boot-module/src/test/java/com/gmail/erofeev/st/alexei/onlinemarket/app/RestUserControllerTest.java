@@ -1,8 +1,7 @@
 package com.gmail.erofeev.st.alexei.onlinemarket.app;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gmail.erofeev.st.alexei.onlinemarket.service.model.RoleDTO;
-import com.gmail.erofeev.st.alexei.onlinemarket.service.model.UserDTO;
+import com.gmail.erofeev.st.alexei.onlinemarket.service.model.UserRestDTO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,14 +27,12 @@ public class RestUserControllerTest {
 
     @Test
     @WithMockUser(roles = ROLE_SECURE_REST_API)
-    public void addNewUserByAdministrator() throws Exception {
-        UserDTO user = new UserDTO();
-        user.setEmail("spokeman152@yandex.ru");
+    public void addNewUserBySecureRole() throws Exception {
+        UserRestDTO user = new UserRestDTO();
+        user.setEmail("test@yandex.ru");
         user.setLastName("test");
         user.setFirstName("testName");
-        RoleDTO role = new RoleDTO();
-        role.setName("ROLE_Customer");
-        user.setRole(role);
+        user.setRoleId(3L);
         String json = objectMapper.writeValueAsString(user);
         String url = "/api/v1/users";
         mvc.perform(post(url).contentType(MediaType.APPLICATION_JSON)

@@ -3,7 +3,6 @@ package com.gmail.erofeev.st.alexei.onlinemarket.repository.model;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,7 +17,6 @@ import java.util.Objects;
 @Entity
 @Table
 @SQLDelete(sql = "UPDATE profile SET deleted = true WHERE id = ?")
-@Where(clause = "deleted = false")
 public class Profile {
     @Id
     @GeneratedValue(generator = "generator")
@@ -29,9 +27,9 @@ public class Profile {
     @Column(unique = true, nullable = false)
     private Long id;
     @Column
-    private String address="";
+    private String address = "";
     @Column
-    private String phone="";
+    private String phone = "";
     @Column
     private boolean deleted = false;
     @OneToOne(fetch = FetchType.LAZY)

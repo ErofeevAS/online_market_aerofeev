@@ -10,6 +10,7 @@ import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ProfileDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ProfileViewDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.RoleDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.UserDTO;
+import com.gmail.erofeev.st.alexei.onlinemarket.service.model.UserRestDTO;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -55,10 +56,34 @@ public class UserConverterImpl implements UserConverter {
         RoleDTO roleDTO = userDTO.getRole();
         Role role = roleConverter.fromDTO(roleDTO);
         user.setRole(role);
-        ProfileDTO profileDTO = userDTO.getProfile();
+        ProfileDTO profileDTO = new ProfileDTO();
         Profile profile = profileConverter.fromDTO(profileDTO);
         user.setProfile(profile);
         return user;
+    }
+
+    @Override
+    public User fromRestDTO(UserRestDTO userRestDTO) {
+        User user = new User();
+        Role role = new Role();
+        role.setId(userRestDTO.getRoleId());
+        user.setRole(role);
+        user.setProfile(new Profile());
+        user.setEmail(userRestDTO.getEmail());
+        user.setLastName(userRestDTO.getLastName());
+        user.setFirstName(userRestDTO.getFirstName());
+        return user;
+    }
+
+    @Override
+    public UserRestDTO toRestDTO(User user) {
+        UserRestDTO userDTO = new UserRestDTO();
+        userDTO.setEmail(user.getEmail());
+        userDTO.setFirstName(user.getFirstName());
+        userDTO.setLastName(user.getLastName());
+        userDTO.setId(user.getId());
+        userDTO.setRoleId(user.getRole().getId());
+        return userDTO;
     }
 
     @Override

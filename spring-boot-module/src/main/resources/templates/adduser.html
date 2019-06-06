@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
-<title>Registration page</title>
+<title>new user page</title>
 </head>
 <body>
 <div class="container">
@@ -25,7 +25,6 @@
                         <input type="text" th:field="*{lastName}" class="form-control" autofocus="autofocus"
                                placeholder="lastName">
                     </div>
-
                     <div class="alert alert-danger" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">
                         Name Error
                     </div>
@@ -34,7 +33,6 @@
                         <input type="text" th:field="*{firstName}" class="form-control" autofocus="autofocus"
                                placeholder="firstName">
                     </div>
-
                     <div class="alert alert-danger" th:if="${#fields.hasErrors('patronymic')}"
                          th:errors="*{patronymic}">
                         Name Error
@@ -44,7 +42,6 @@
                         <input type="text" th:field="*{patronymic}" class="form-control" autofocus="autofocus"
                                placeholder="patronymic">
                     </div>
-
                     <div class="alert alert-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">
                         Name Error
                     </div>
@@ -60,7 +57,6 @@
                                 th:text="${role.name}">
                         </option>
                     </select>
-
                     <div class="form-group">
                         <div class="row">
                             <div class="col-sm-6">

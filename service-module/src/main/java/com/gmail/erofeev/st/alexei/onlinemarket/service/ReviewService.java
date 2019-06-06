@@ -8,9 +8,9 @@ public interface ReviewService {
 
     PageDTO<ReviewDTO> getReviews(int page, int amount);
 
-    void delete(Long id);
+    void deleteReview(Long id);
 
     void updateHiddenFields(ReviewsListWrapper reviewsChanges);
 
-    void create(Long userId, String content);
+    void createReview(Long userId, String content);
 }

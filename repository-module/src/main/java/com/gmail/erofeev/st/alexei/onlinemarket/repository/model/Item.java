@@ -1,7 +1,6 @@
 package com.gmail.erofeev.st.alexei.onlinemarket.repository.model;
 
 import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -20,7 +19,6 @@ import java.util.Objects;
 @Entity
 @Table
 @SQLDelete(sql = "UPDATE item SET deleted = true WHERE id = ?")
-@Where(clause = "deleted = false")
 public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

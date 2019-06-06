@@ -29,7 +29,6 @@ public class ApiAccessDeniedHandler implements AccessDeniedHandler {
                     request.getRequestURI()));
         }
         JsonResponse jsonResponse = new JsonResponse();
-        jsonResponse.setLocalDateTime(LocalDateTime.now());
         jsonResponse.setStatus(HttpStatus.FORBIDDEN);
         jsonResponse.setMessage("Access denied");
         String json = objectMapper.writeValueAsString(jsonResponse);

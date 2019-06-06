@@ -74,11 +74,10 @@
         </insert>
     </changeSet>
 
-
     <changeSet author="alexei.st.erofeev@gmail.com" id="PROFILE_POPULATE_ID_1">
         <insert tableName="profile">
             <column name="id" value="1"/>
-            <column name="address" value="Moskow"></column>
+            <column name="address" value="Moscow"></column>
             <column name="phone" value="375295565125"></column>
         </insert>
         <insert tableName="profile">
@@ -98,75 +97,10 @@
         </insert>
         <insert tableName="profile">
             <column name="id" value="5"/>
-            <column name="address" value="Moskow"></column>
+            <column name="address" value="Moscow"></column>
             <column name="phone" value="375295565125"></column>
         </insert>
     </changeSet>
-
-    <changeSet author="alexei.st.erofeev@gmail.com" id="ARTICLE_POPULATE_ID_1">
-        <insert tableName="article">
-            <column name="id" value="1"/>
-            <column name="title" value="first article"/>
-            <column name="user_id" value="1"/>
-            <column name="content" value="my first ARTICLE!! user_1"/>
-        </insert>
-        <insert tableName="article">
-            <column name="id" value="2"/>
-            <column name="title" value="second article"/>
-            <column name="user_id" value="1"/>
-            <column name="content" value="my second ARTICLE!! user_1"/>
-        </insert>
-        <insert tableName="article">
-            <column name="id" value="3"/>
-            <column name="title" value="third article"/>
-            <column name="user_id" value="1"/>
-            <column name="content" value="my third ARTICLE!! user_1"/>
-        </insert>
-        <insert tableName="article">
-            <column name="id" value="4"/>
-            <column name="title" value="article from user with id 3"/>
-            <column name="user_id" value="3"/>
-            <column name="content" value="my first ARTICLE!! user_3"/>
-        </insert>
-        <insert tableName="article">
-            <column name="id" value="5"/>
-            <column name="title" value="article from user with id 3"/>
-            <column name="user_id" value="3"/>
-            <column name="content" value="My Dad is cleaning out my grandmother's house (she died in December) and he brought me an old Royal Crown Cola bottle.
-In the bottle top was a stopper with a bunch of holes in it. I knew immediately what it was, but my daughter had no idea.  She thought they had tried to make it a salt shaker or something.
-I knew it as the bottle that sat on the end of the ironing board to 'sprinkle' clothes with because we didn't have steam irons. Man, I am old!"/>
-        </insert>
-        <insert tableName="article">
-            <column name="id" value="6"/>
-            <column name="title" value="article from user with id 3"/>
-            <column name="user_id" value="3"/>
-            <column name="content" value="Stanley decided to lookup his friend Alf, who was a tight-fisted Yorkshireman.
-            He found Alf at his bungalow in Huddersfield stripping the wallpaper from the dining room.
-            Rather obviously, he remarked, You're decorating, I see.  To which Alf replied, Nay Stanley lad, I'm moving 'ouse to Bradford."/>
-        </insert>
-        <insert tableName="article">
-            <column name="id" value="7"/>
-            <column name="title" value="article from user with id 3"/>
-            <column name="user_id" value="3"/>
-
-            <column name="content" value="At an antiques auction in Leeds, England a wealthy American announced that he had lost his wallet containing £5,000,
-             and he would give a reward of £50 to the person who found it.
-             From the back of the hall a Yorkshire voice shouted, I'll give £100!"/>
-        </insert>
-        <insert tableName="article">
-            <column name="id" value="8"/>
-            <column name="title" value="article from user with id 1"/>
-            <column name="user_id" value="1"/>
-            <column name="content" value="Last year I replaced all the windows in my house with that expensive casement type with shutters.
-              Today, I got a call from the contractor who installed them.
-              He was complaining that the work had been completed a whole year ago and I still hadn't paid for them.Funny English Joke - Window
-Hellloo..... Just because I have fair hair doesn't mean that I am automatically stupid.
- So, I told him just what his fast talking sales guy had told me last year, that in ONE YEAR these windows would pay for themselves!
-Hellloo? It's been a year! I told him. There was only silence at the other end of the line, so I finally just hung up.
-He never called back."/>
-        </insert>
-    </changeSet>
-
 
 
     <changeSet author="alexei.st.erofeev@gmail.com" id="TAG_POPULATE_ID_1">
@@ -187,58 +121,5 @@ He never called back."/>
             <column name="name" value="humor"/>
         </insert>
     </changeSet>
-
-    <changeSet author="alexei.st.erofeev@gmail.com" id="ARTICLE_TAG_POPULATE_ID_1">
-        <insert tableName="article_tag">
-            <column name="article_id" value="1"/>
-            <column name="tag_id" value="1"/>
-        </insert>
-        <insert tableName="article_tag">
-            <column name="article_id" value="1"/>
-            <column name="tag_id" value="2"/>
-        </insert>
-        <insert tableName="article_tag">
-            <column name="article_id" value="1"/>
-            <column name="tag_id" value="3"/>
-        </insert>
-        <insert tableName="article_tag">
-            <column name="article_id" value="1"/>
-            <column name="tag_id" value="4"/>
-        </insert>
-        <insert tableName="article_tag">
-            <column name="article_id" value="2"/>
-            <column name="tag_id" value="2"/>
-        </insert>
-        <insert tableName="article_tag">
-            <column name="article_id" value="3"/>
-            <column name="tag_id" value="3"/>
-        </insert>
-        <insert tableName="article_tag">
-            <column name="article_id" value="4"/>
-            <column name="tag_id" value="4"/>
-        </insert>
-        <insert tableName="article_tag">
-            <column name="article_id" value="5"/>
-            <column name="tag_id" value="4"/>
-        </insert>
-        <insert tableName="article_tag">
-            <column name="article_id" value="6"/>
-            <column name="tag_id" value="4"/>
-        </insert>
-        <insert tableName="article_tag">
-            <column name="article_id" value="7"/>
-            <column name="tag_id" value="4"/>
-        </insert>
-        <insert tableName="article_tag">
-            <column name="article_id" value="8"/>
-            <column name="tag_id" value="4"/>
-        </insert>
-
-    </changeSet>
-
-
-
-
-
 
 </databaseChangeLog>

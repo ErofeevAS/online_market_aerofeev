@@ -35,8 +35,7 @@ public class ItemController {
     }
 
     @GetMapping("/items/{id}")
-    public String viewItem(@PathVariable String id,
-                           Model model) {
+    public String viewItem(@PathVariable String id, Model model) {
         Long validateId = frontEndValidator.validateId(id);
         ItemDetailsDTO item = itemService.findById(validateId);
         model.addAttribute("item", item);

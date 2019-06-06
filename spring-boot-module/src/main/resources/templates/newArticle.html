@@ -27,7 +27,6 @@
                     <input type="text" th:field="*{title}" class="form-control" autofocus="autofocus"
                            th:placeholder="*{title}">
                 </div>
-
                 <div class="alert alert-danger" th:if="${#fields.hasErrors('content')}" th:errors="*{content}">
                     Name Error
                 </div>
@@ -36,11 +35,9 @@
                     <textarea th:field="*{content}" class="form-control" autofocus="autofocus"
                               th:placeholder="*{content}"></textarea>
                 </div>
-
                 <div class="alert alert-danger" th:if="${#fields.hasErrors('createdDate')}" th:errors="*{createdDate}">
                     Name Error
                 </div>
-
                 <div class="col-md-6">
                     <div class="form-group">
                         <label class="col-6 col-form-label">DateAndTime</label>
@@ -52,13 +49,10 @@
                 <input type="submit" class="form-control btn btn-info" value="create article">
                 </div>
             </form>
-
         </div>
     </div>
     <div th:insert="~{fragments/footer :: footer}"></div>
 </div>
-
-
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script>

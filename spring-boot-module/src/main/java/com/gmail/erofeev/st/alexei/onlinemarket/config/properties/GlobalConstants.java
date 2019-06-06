@@ -3,6 +3,7 @@ package com.gmail.erofeev.st.alexei.onlinemarket.config.properties;
 public class GlobalConstants {
     public static final int MAX_COMMENT_LENGTH = 200;
     public static final int MAX_ARTICLE_LENGTH = 1000;
+    public static final int MAX_REVIEW_LENGTH = 1000;
     public static final String XSD_FILE_PATH = "items.xsd";
     public static final String USER_DETAILS_SERVICE = "userDetailsServiceImpl";
     public static final String USER_DETAILS_SERVICE_REST_API = "userDetailsServiceRestImpl";

@@ -38,7 +38,7 @@ public class UserController {
                            @RequestParam(defaultValue = "1", required = false) String page,
                            @RequestParam(defaultValue = "10", required = false) String size) {
         Paginator paginator = new Paginator(page, size);
-        PageDTO<UserDTO> pageDTO = userService.getUsers(paginator.getPage(), paginator.getSize(),false);
+        PageDTO<UserDTO> pageDTO = userService.getUsers(paginator.getPage(), paginator.getSize(), false);
         paginator.setMaxPage(pageDTO.getAmountOfPages());
         model.addAttribute("users", pageDTO.getList());
         model.addAttribute("paginator", paginator);
@@ -79,7 +79,7 @@ public class UserController {
         if (bindingResult.hasErrors()) {
             return "adduser";
         }
-        UserDTO registeredUser = userService.register(user);
+        UserDTO registeredUser = userService.registerUser(user);
         if (registeredUser != null) {
             model.addAttribute("info", "user was registered");
             return "adduser";
@@ -132,7 +132,6 @@ public class UserController {
         if (bindingResult.hasErrors()) {
             return "profile";
         }
-
         model.addAttribute("infoPassword", "password was changed");
         return "profile";
     }
@@ -140,8 +139,6 @@ public class UserController {
     @PostMapping("/users/changepassword")
     public String changePasswordForRandomPassword(@RequestParam(name = "userId") Long id) {
         userService.changePassword(id);
-        return "users";
+        return "redirect:/users";
     }
 }
-
-

@@ -1,12 +1,13 @@
-package com.gmail.erofeev.st.alexei.onlinemarket.controller.util;
+package com.gmail.erofeev.st.alexei.onlinemarket.service.impl;
 
+import com.gmail.erofeev.st.alexei.onlinemarket.service.DateTimeLocaleService;
 import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
 import java.util.Date;
 
 @Component
-public class DateTimeLocaleUtil {
+public class DateTimeLocaleServiceImpl implements DateTimeLocaleService {
     public String getCurrentTimeInDateTimeLocaleFormat() {
         Date date = new Date();
         Timestamp currentDate = new Timestamp(date.getTime());
@@ -19,8 +20,7 @@ public class DateTimeLocaleUtil {
         String DoubleNumberFormatHour = getDoubleNumberFormat(hour);
         int minute = currentDate.toLocalDateTime().getMinute();
         String DoubleNumberFormatMinute = getDoubleNumberFormat(minute);
-        String time = String.format("%s-%s-%sT%s:%s", year, DoubleNumberFormatMonth, DoubleNumberFormatDay, DoubleNumberFormatHour, DoubleNumberFormatMinute);
-        return time;
+        return String.format("%s-%s-%sT%s:%s", year, DoubleNumberFormatMonth, DoubleNumberFormatDay, DoubleNumberFormatHour, DoubleNumberFormatMinute);
     }
 
     private String getDoubleNumberFormat(int digit) {

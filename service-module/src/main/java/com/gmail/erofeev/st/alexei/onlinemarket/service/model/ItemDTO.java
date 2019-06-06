@@ -1,12 +1,20 @@
 package com.gmail.erofeev.st.alexei.onlinemarket.service.model;
 
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
 
 public class ItemDTO {
     private Long id;
+    @NotNull
     private String name;
     private String uniqueNumber;
+    @NotNull
+    @Digits(integer = 6, fraction = 2)
+    @Positive
     private BigDecimal price;
+    @NotNull
     private String description;
 
     public Long getId() {

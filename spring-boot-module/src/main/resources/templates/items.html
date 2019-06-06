@@ -21,7 +21,6 @@
                 <p th:text="${item.itemDTO.uniqueNumber}"></p>
                 <p th:text="${item.itemDTO.price}"></p>
                 <p th:text="${item.shortDescription}"></p>
-
                 <div class="btn-group" role="group" aria-label="Basic example" sec:authorize="hasRole('ROLE_Sale')">
                     <button type="submit" class="btn btn-outline-primary mx-1" th:form="${'itemDetails' +number.index}">
                         details
@@ -35,7 +34,6 @@
                         <button type="submit" class="btn btn-outline-primary mx-1">copy</button>
                     </form>
                 </div>
-
                 <div class="btn-group" role="group" aria-label="Basic example" sec:authorize="hasRole('ROLE_Customer')">
                     <form action="#" th:action="@{/orders/customer/new}" method="post"
                           th:id="${'newOrder' +number.index}"></form>
@@ -54,11 +52,8 @@
             </div>
         </th:block>
     </div>
-
     <div th:insert="~{fragments/paginator :: paginator}"></div>
-    <div class="row" th:insert="~{fragments/footer :: footer}">
-    </div>
-
+    <div class="row" th:insert="~{fragments/footer :: footer}"></div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"

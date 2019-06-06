@@ -10,11 +10,8 @@
 </head>
 <body>
 <div class="container">
-    <div class="row" th:insert="~{fragments/header :: header}">
-    </div>
-    <div class="row" th:insert="~{fragments/navbar :: navbar}">
-    </div>
-
+    <div class="row" th:insert="~{fragments/header :: header}"></div>
+    <div class="row" th:insert="~{fragments/navbar :: navbar}"></div>
     <table class="table table-striped">
         <thead>
         <tr>
@@ -60,15 +57,11 @@
                     </td>
                 </form>
             </tr>
-
         </th:block>
-
-
         </tbody>
         <tfoot>
         </tfoot>
     </table>
-
     <div th:insert="~{fragments/paginator :: paginator}"></div>
     <div th:insert="~{fragments/footer :: footer}"></div>
 </div>

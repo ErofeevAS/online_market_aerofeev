@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class ReviewServiceImpl extends AbstractService<ReviewDTO> implements ReviewService {
+public class ReviewServiceImpl extends GenericService<ReviewDTO> implements ReviewService {
     private static final Logger logger = LoggerFactory.getLogger(ReviewServiceImpl.class);
     private final ReviewRepository reviewRepository;
     private final ReviewConverter reviewConverter;
@@ -50,7 +50,7 @@ public class ReviewServiceImpl extends AbstractService<ReviewDTO> implements Rev
 
     @Override
     @Transactional
-    public void delete(Long id) {
+    public void deleteReview(Long id) {
         Review review = reviewRepository.findById(id);
         reviewRepository.remove(review);
         logger.debug(String.format("Review with id:%s was deleted", id));
@@ -69,7 +69,7 @@ public class ReviewServiceImpl extends AbstractService<ReviewDTO> implements Rev
 
     @Override
     @Transactional
-    public void create(Long userId, String content) {
+    public void createReview(Long userId, String content) {
         Review review = new Review();
         Timestamp timestamp = new Timestamp((new Date()).getTime());
         review.setCreatedDate(timestamp);

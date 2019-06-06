@@ -72,7 +72,7 @@ public class ArticleConverterImpl implements ArticleConverter {
         articleRestDTO.setContent(article.getContent());
         articleRestDTO.setCreatedDate(article.getCreatedDate());
         User user = article.getUser();
-        articleRestDTO.setAuthorEmail(user.getEmail());
+        articleRestDTO.setAuthorId(user.getId());
         articleRestDTO.setAuthorFirstName(user.getFirstName());
         articleRestDTO.setAuthorLastName(user.getLastName());
         return articleRestDTO;
@@ -91,6 +91,9 @@ public class ArticleConverterImpl implements ArticleConverter {
         article.setTitle(articleRestDTO.getTitle());
         article.setContent(articleRestDTO.getContent());
         article.setCreatedDate(articleRestDTO.getCreatedDate());
+        User user = new User();
+        user.setId(articleRestDTO.getAuthorId());
+        article.setUser(user);
         return article;
     }
 

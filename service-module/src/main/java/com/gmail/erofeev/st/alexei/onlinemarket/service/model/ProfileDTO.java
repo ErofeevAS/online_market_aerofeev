@@ -2,8 +2,8 @@ package com.gmail.erofeev.st.alexei.onlinemarket.service.model;
 
 public class ProfileDTO {
     private Long id;
-    private String address;
-    private String phone;
+    private String address = "";
+    private String phone = "";
 
     public Long getId() {
         return id;

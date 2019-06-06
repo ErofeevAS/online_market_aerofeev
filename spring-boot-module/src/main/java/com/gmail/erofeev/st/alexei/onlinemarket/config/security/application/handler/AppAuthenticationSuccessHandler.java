@@ -40,7 +40,7 @@ public class AppAuthenticationSuccessHandler implements AuthenticationSuccessHan
             return;
         }
         if (url.equals(LOGIN_URL)) {
-            request.setAttribute("roleError", "USER WITH ROLE_SECURE_REST_API CAN'T LOGGIN");
+            request.setAttribute("roleError", "USER WITH ROLE_SECURE_REST_API CAN'T LOGIN");
         }
         redirectStrategy.sendRedirect(request, response, url);
     }
