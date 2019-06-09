@@ -124,36 +124,6 @@ public class ArticleServiceImpl extends GenericService<ArticleDTO> implements Ar
         articleRepository.remove(article);
     }
 
-//    @Override
-//    @Transactional
-//    public void add(ArticleDTO articleDTO) {
-//        Long userId = articleDTO.getUser().getId();
-//        User user = userRepository.findById(userId);
-//        Article article = articleConverter.fromDTO(articleDTO);
-//        article.setUser(user);
-//        articleRepository.persist(article);
-//    }
-
-//    @Override
-//    @Transactional
-//    public Integer getAmountOfArticlesWithKeyWord(String keyWord) {
-//        return articleRepository.getAmountOfArticlesWithKeyWord(keyWord);
-//    }
-
-//    @Override
-//    @Transactional
-//    public PageDTO<ArticleDTO> getArticlesByTag(int page, int amount, String tagName) {
-//        Integer amountOfEntity = articleRepository.getAmountOfArticlesWithSameTag(tagName);
-//        int maxPages = getMaxPages(amountOfEntity, amount);
-//        int offset = getOffset(page, maxPages, amount);
-//        List<Article> articles = articleRepository.getArticlesFilteredByKeyWord(offset, amount, tagName);
-//        List<ArticleDTO> articleDTOList = articleConverter.toListDTO(articles);
-//        PageDTO<ArticleDTO> pageDTO = new PageDTO<>();
-//        pageDTO.setList(articleDTOList);
-//        pageDTO.setAmountOfPages(maxPages);
-//        return pageDTO;
-//    }
-
     @Override
     @Transactional
     public void createArticle(NewArticleDTO articleDTO) {

@@ -35,6 +35,7 @@ public class ItemControllerSecureIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(xpath("//*[@id='itemsButton']").nodeCount(1));
     }
+
     @Test
     @WithMockUser(roles = ROLE_CUSTOMER)
     public void shouldHaveButtonForItemsForCustomer() throws Exception {
@@ -74,6 +75,7 @@ public class ItemControllerSecureIntegrationTest {
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl("/items"));
     }
+
     @Test
     @WithMockUser(roles = ROLE_SALE)
     public void shouldHaveAccessToCopyItemPageForSale() throws Exception {

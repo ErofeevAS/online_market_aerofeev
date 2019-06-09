@@ -95,6 +95,7 @@ public class OrderServiceImpl extends GenericService<OrderDTO> implements OrderS
     }
 
     @Override
+    @Transactional
     public OrderRestDTO findOrderByIdForRest(Long id) {
         Order order = orderRepository.findById(id);
         if (order == null) {

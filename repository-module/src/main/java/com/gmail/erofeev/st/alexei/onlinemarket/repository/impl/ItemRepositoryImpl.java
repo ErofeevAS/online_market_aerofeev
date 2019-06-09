@@ -4,6 +4,7 @@ import com.gmail.erofeev.st.alexei.onlinemarket.repository.ItemRepository;
 import com.gmail.erofeev.st.alexei.onlinemarket.repository.model.Item;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import java.util.List;
 
@@ -28,10 +29,10 @@ public class ItemRepositoryImpl extends GenericRepositoryImpl<Long, Item> implem
         String hql = "select i from Item i where i.uniqueNumber = :uniqueNumber";
         Query query = entityManager.createQuery(hql);
         query.setParameter("uniqueNumber", uniqueNumber);
-        List<Item> resultList = query.getResultList();
-        if (resultList.isEmpty()) {
+        try {
+            return (Item) query.getSingleResult();
+        } catch (NoResultException e) {
             return null;
         }
-        return resultList.get(0);
     }
 }
