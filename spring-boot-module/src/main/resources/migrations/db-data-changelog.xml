@@ -31,7 +31,7 @@
             <column name="lastname" value="Admin"/>
             <column name="firstname" value="Super"/>
             <column name="patronymic" value="Superovich"/>
-            <column name="email" value="superadmin@gmail.com"/>
+            <column name="email" value="spokeman152@yandex.ru"/>
             <column name="password" value="$2a$10$IGusU6L6LTCSNP/qzgS.BerXXVoHgvFfdqhEzfE04RTW8cJc1Xg7m"/>
             <column name="role_id" value="1"/>
             <column name="undeletable" valueBoolean="true"/>
@@ -50,8 +50,8 @@
             <column name="lastname" value="User"/>
             <column name="firstname" value="User"/>
             <column name="patronymic" value="Userovich"/>
-            <column name="email" value="user@gmail.com"/>
-            <column name="password" value="$2a$04$ujFLCfnVxKEbf08RnrtqHuRZ1oCpymraVCN.X2TIW6z27OHElSy7S"/>
+            <column name="email" value="customer@gmail.com"/>
+            <column name="password" value="$2a$10$Tou5xkq6DFNbAle6ROoYDeFVfyh9iH1rqAJFVAl7BtD9lyRYradC2"/>
             <column name="role_id" value="3"/>
         </insert>
         <insert tableName="user">
@@ -60,7 +60,7 @@
             <column name="firstname" value="rest"/>
             <column name="patronymic" value="rest"/>
             <column name="email" value="rest@gmail.com"/>
-            <column name="password" value="$2a$04$57WmpuHQm.MN.v/5JgPgO.aLkT3tSggZ9.P4/Dwt8aqUj2dhKc8h2"/>
+            <column name="password" value="$2a$10$E.ogL/8JeaOjXYL8fwTJfehoZ4TfwuCzTXgtn1qlBFy8LYtzSRr5i"/>
             <column name="role_id" value="4"/>
         </insert>
         <insert tableName="user">
@@ -74,166 +74,51 @@
         </insert>
     </changeSet>
 
-
     <changeSet author="alexei.st.erofeev@gmail.com" id="PROFILE_POPULATE_ID_1">
         <insert tableName="profile">
             <column name="id" value="1"/>
+            <column name="address" value="Moscow"></column>
+            <column name="phone" value="375295565125"></column>
         </insert>
         <insert tableName="profile">
             <column name="id" value="2"/>
+            <column name="address" value="Berlin"></column>
+            <column name="phone" value="375295565125"></column>
         </insert>
         <insert tableName="profile">
             <column name="id" value="3"/>
+            <column name="address" value="London"></column>
+            <column name="phone" value="375295565125"></column>
         </insert>
         <insert tableName="profile">
             <column name="id" value="4"/>
+            <column name="address" value="New York"></column>
+            <column name="phone" value="375295565125"></column>
         </insert>
         <insert tableName="profile">
             <column name="id" value="5"/>
+            <column name="address" value="Moscow"></column>
+            <column name="phone" value="375295565125"></column>
         </insert>
     </changeSet>
 
-    <changeSet author="alexei.st.erofeev@gmail.com" id="USER_POPULATE_ID_2">
-        <update tableName="user">
-            <column name="email" value="spokeman152@yandex.ru"></column>
-            <where>id=1</where>
-        </update>
-    </changeSet>
 
-    <changeSet author="alexei.st.erofeev@gmail.com" id="ARTICLE_POPULATE_ID_1">
-        <insert tableName="article">
+    <changeSet author="alexei.st.erofeev@gmail.com" id="TAG_POPULATE_ID_1">
+        <insert tableName="tag">
             <column name="id" value="1"/>
-            <column name="title" value="first article"/>
-            <column name="user_id" value="1"/>
-            <column name="content" value="my first ARTICLE!! user_1"/>
+            <column name="name" value="test_tag"/>
         </insert>
-        <insert tableName="article">
+        <insert tableName="tag">
             <column name="id" value="2"/>
-            <column name="title" value="second article"/>
-            <column name="user_id" value="1"/>
-            <column name="content" value="my second ARTICLE!! user_1"/>
+            <column name="name" value="politic"/>
         </insert>
-        <insert tableName="article">
+        <insert tableName="tag">
             <column name="id" value="3"/>
-            <column name="title" value="third article"/>
-            <column name="user_id" value="1"/>
-            <column name="content" value="my third ARTICLE!! user_1"/>
+            <column name="name" value="world"/>
         </insert>
-        <insert tableName="article">
+        <insert tableName="tag">
             <column name="id" value="4"/>
-            <column name="title" value="article from user with id 3"/>
-            <column name="user_id" value="3"/>
-            <column name="content" value="my first ARTICLE!! user_3"/>
-        </insert>
-        <insert tableName="article">
-            <column name="id" value="5"/>
-            <column name="title" value="article from user with id 3"/>
-            <column name="user_id" value="3"/>
-            <column name="content" value="My Dad is cleaning out my grandmother's house (she died in December) and he brought me an old Royal Crown Cola bottle.
-In the bottle top was a stopper with a bunch of holes in it. I knew immediately what it was, but my daughter had no idea.  She thought they had tried to make it a salt shaker or something.
-I knew it as the bottle that sat on the end of the ironing board to 'sprinkle' clothes with because we didn't have steam irons. Man, I am old!"/>
-        </insert>
-        <insert tableName="article">
-            <column name="id" value="6"/>
-            <column name="title" value="article from user with id 3"/>
-            <column name="user_id" value="3"/>
-            <column name="content" value="Stanley decided to lookup his friend Alf, who was a tight-fisted Yorkshireman.
-            He found Alf at his bungalow in Huddersfield stripping the wallpaper from the dining room.
-            Rather obviously, he remarked, You're decorating, I see.  To which Alf replied, Nay Stanley lad, I'm moving 'ouse to Bradford."/>
-        </insert>
-        <insert tableName="article">
-            <column name="id" value="7"/>
-            <column name="title" value="article from user with id 3"/>
-            <column name="user_id" value="3"/>
-
-            <column name="content" value="At an antiques auction in Leeds, England a wealthy American announced that he had lost his wallet containing £5,000,
-             and he would give a reward of £50 to the person who found it.
-             From the back of the hall a Yorkshire voice shouted, I'll give £100!"/>
-        </insert>
-        <insert tableName="article">
-            <column name="id" value="8"/>
-            <column name="title" value="article from user with id 1"/>
-            <column name="user_id" value="1"/>
-            <column name="content" value="Last year I replaced all the windows in my house with that expensive casement type with shutters.
-              Today, I got a call from the contractor who installed them.
-              He was complaining that the work had been completed a whole year ago and I still hadn't paid for them.Funny English Joke - Window
-Hellloo..... Just because I have fair hair doesn't mean that I am automatically stupid.
- So, I told him just what his fast talking sales guy had told me last year, that in ONE YEAR these windows would pay for themselves!
-Hellloo? It's been a year! I told him. There was only silence at the other end of the line, so I finally just hung up.
-He never called back."/>
-        </insert>
-    </changeSet>
-
-    <changeSet author="alexei.st.erofeev@gmail.com" id="COMMENT_POPULATE_ID_1">
-        <insert tableName="comment">
-            <column name="id" value="1"/>
-            <column name="user_id" value="1"/>
-            <column name="content" value="my first comment!! user_1"/>
-        </insert>
-        <insert tableName="comment">
-            <column name="id" value="2"/>
-            <column name="user_id" value="1"/>
-            <column name="content" value="my second comment!! user_1"/>
-        </insert>
-        <insert tableName="comment">
-            <column name="id" value="3"/>
-            <column name="user_id" value="1"/>
-            <column name="content" value="my third comment!! user_1"/>
-        </insert>
-        <insert tableName="comment">
-            <column name="id" value="4"/>
-            <column name="user_id" value="3"/>
-            <column name="content" value="my first comment!! user_3"/>
-        </insert>
-    </changeSet>
-
-    <changeSet author="alexei.st.erofeev@gmail.com" id="ARTICLE_COMMENT_POPULATE_ID_1">
-        <insert tableName="article_comment">
-            <column name="article_id" value="1"/>
-            <column name="comment_id" value="1"/>
-        </insert>
-        <insert tableName="article_comment">
-            <column name="article_id" value="1"/>
-            <column name="comment_id" value="2"/>
-        </insert>
-        <insert tableName="article_comment">
-            <column name="article_id" value="1"/>
-            <column name="comment_id" value="3"/>
-        </insert>
-        <insert tableName="article_comment">
-            <column name="article_id" value="1"/>
-            <column name="comment_id" value="4"/>
-        </insert>
-        <insert tableName="article_comment">
-            <column name="article_id" value="2"/>
-            <column name="comment_id" value="2"/>
-        </insert>
-        <insert tableName="article_comment">
-            <column name="article_id" value="3"/>
-            <column name="comment_id" value="4"/>
-        </insert>
-    </changeSet>
-
-    <changeSet author="alexei.st.erofeev@gmail.com" id="REVIEW_POPULATE_ID_1">
-        <insert tableName="review">
-            <column name="id" value="1"/>
-            <column name="user_id" value="1"/>
-            <column name="content" value="my first REVIEW!! user_1"/>
-        </insert>
-        <insert tableName="review">
-            <column name="id" value="2"/>
-            <column name="user_id" value="1"/>
-            <column name="content" value="my second REVIEW!! user_1"/>
-        </insert>
-        <insert tableName="review">
-            <column name="id" value="3"/>
-            <column name="user_id" value="1"/>
-            <column name="content" value="my third REVIEW!! user_1"/>
-        </insert>
-        <insert tableName="review">
-            <column name="id" value="4"/>
-            <column name="user_id" value="3"/>
-            <column name="content" value="my first REVIEW!! user_3"/>
+            <column name="name" value="humor"/>
         </insert>
     </changeSet>
 

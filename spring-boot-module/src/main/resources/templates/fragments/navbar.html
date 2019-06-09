@@ -22,14 +22,23 @@
                 <li class="nav-item" sec:authorize="hasAnyRole('ROLE_Customer','ROLE_Sale')">
                     <a class="nav-link" href="/articles">articles</a>
                 </li>
+                <li class="nav-item" sec:authorize="hasRole('ROLE_Sale')">
+                    <a class="nav-link" href="/orders">orders</a>
+                </li>
+                <li class="nav-item" sec:authorize="hasRole('ROLE_Sale')">
+                    <a class="nav-link" href="/upload">upload file</a>
+                </li>
+                <li class="nav-item" sec:authorize="hasRole('ROLE_Customer')">
+                    <a class="nav-link" href="/userorders">my orders</a>
+                </li>
+                <li class="nav-item" sec:authorize="hasRole('ROLE_Customer')">
+                    <a class="nav-link" href="/reviews/new">leave review</a>
+                </li>
                 <li class="nav-item" sec:authorize="hasRole('ROLE_Sale')" id="newArticleButton">
-                    <a class="nav-link" href="/articles/new">new article</a>
+                    <a class="nav-link" href="/articles/sale/new">new article</a>
                 </li>
-                <li class="nav-item" sec:authorize="hasRole('ROLE_Sale')" id="itemsButton">
+                <li class="nav-item" sec:authorize="hasAnyRole('ROLE_Customer','ROLE_Sale')" id="itemsButton">
                     <a class="nav-link" href="/items">items</a>
-                </li>
-                <li class="nav-item" sec:authorize="isAuthenticated()">
-                    <a class="nav-link" href="/about">about</a>
                 </li>
                 <li class="nav-item" sec:authorize="isAuthenticated()">
                     <div><a class="nav-link" th:text="${#authentication.getPrincipal().getUsername()}"

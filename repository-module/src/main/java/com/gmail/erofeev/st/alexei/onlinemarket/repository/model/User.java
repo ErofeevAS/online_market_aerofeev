@@ -1,7 +1,6 @@
 package com.gmail.erofeev.st.alexei.onlinemarket.repository.model;
 
 import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -22,18 +21,17 @@ import java.util.Objects;
 @Entity
 @Table
 @SQLDelete(sql = "UPDATE user SET deleted = true WHERE id = ? and undeletable='0'")
-@Where(clause = "deleted = '0'")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(updatable = false, nullable = false)
     private Long id;
     @Column(name = "lastname")
     private String lastName;
     @Column(name = "firstname")
     private String firstName;
     @Column(nullable = false)
-    private String patronymic;
+    private String patronymic = "";
     @Column
     private String email;
     @Column
@@ -41,16 +39,14 @@ public class User {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id", nullable = false)
     private Role role = new Role();
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<Article> articles = new ArrayList<>();
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<Comment> comments = new ArrayList<>();
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<Review> reviews = new ArrayList<>();
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Item> items = new ArrayList<>();
     @Column
-    private Boolean deleted;
+    private Boolean deleted = false;
     @Column
     private Boolean undeletable = false;
     @OneToOne(
@@ -59,6 +55,8 @@ public class User {
             cascade = CascadeType.ALL,
             orphanRemoval = true)
     private Profile profile;
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    private List<Order> orders = new ArrayList<>();
 
     public User() {
     }
@@ -171,12 +169,12 @@ public class User {
         this.profile = profile;
     }
 
-    public List<Item> getItems() {
-        return items;
+    public List<Order> getOrders() {
+        return orders;
     }
 
-    public void setItems(List<Item> items) {
-        this.items = items;
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
     }
 
     @Override

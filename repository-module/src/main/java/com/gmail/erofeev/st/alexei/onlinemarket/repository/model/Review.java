@@ -18,7 +18,7 @@ import java.util.Objects;
 @Entity
 @Table
 @SQLDelete(sql = "UPDATE review SET deleted = true WHERE id = ?")
-@Where(clause = "deleted = '0'")
+@Where(clause = "deleted = false")
 public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,12 +29,12 @@ public class Review {
     private User user;
     @Column
     private String content;
+    @Column(name = "created_date")
+    private Timestamp createdDate;
     @Column
-    private Timestamp date;
+    private boolean deleted = false;
     @Column
-    private Boolean deleted;
-    @Column
-    private Boolean hidden;
+    private boolean hidden = false;
 
     public Long getId() {
         return id;
@@ -60,27 +60,27 @@ public class Review {
         this.content = content;
     }
 
-    public Timestamp getDate() {
-        return date;
+    public Timestamp getCreatedDate() {
+        return createdDate;
     }
 
-    public void setDate(Timestamp date) {
-        this.date = date;
+    public void setCreatedDate(Timestamp createdDate) {
+        this.createdDate = createdDate;
     }
 
-    public Boolean getDeleted() {
+    public boolean getDeleted() {
         return deleted;
     }
 
-    public void setDeleted(Boolean deleted) {
+    public void setDeleted(boolean deleted) {
         this.deleted = deleted;
     }
 
-    public Boolean getHidden() {
+    public boolean getHidden() {
         return hidden;
     }
 
-    public void setHidden(Boolean hidden) {
+    public void setHidden(boolean hidden) {
         this.hidden = hidden;
     }
 
@@ -91,14 +91,14 @@ public class Review {
         Review review = (Review) o;
         return id.equals(review.id) &&
                 Objects.equals(content, review.content) &&
-                Objects.equals(date, review.date) &&
+                Objects.equals(createdDate, review.createdDate) &&
                 Objects.equals(deleted, review.deleted) &&
                 Objects.equals(hidden, review.hidden);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, content, date, deleted, hidden);
+        return Objects.hash(id, content, createdDate, deleted, hidden);
     }
 
     @Override
@@ -107,7 +107,7 @@ public class Review {
                 "id=" + id +
                 ", user=" + user +
                 ", content='" + content + '\'' +
-                ", date=" + date +
+                ", createdDate=" + createdDate +
                 ", deleted=" + deleted +
                 ", hidden=" + hidden +
                 '}';

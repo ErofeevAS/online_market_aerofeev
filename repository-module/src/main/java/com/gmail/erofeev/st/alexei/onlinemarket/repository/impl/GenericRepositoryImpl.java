@@ -46,8 +46,13 @@ public abstract class GenericRepositoryImpl<I, T> implements GenericRepository<I
     }
 
     @Override
-    public Integer getAmountOfEntity() {
-        String hql = "select count(e) from " + entityClass.getName() + " e";
+    public Integer getAmountOfEntity(boolean countDeleted) {
+        String hql;
+        if (countDeleted) {
+            hql = "select count(e) from " + entityClass.getName() + " e";
+        } else {
+            hql = "select count(e) from " + entityClass.getName() + " e where e.deleted=false";
+        }
         Query query = entityManager.createQuery(hql);
         return ((Number) query.getSingleResult()).intValue();
     }

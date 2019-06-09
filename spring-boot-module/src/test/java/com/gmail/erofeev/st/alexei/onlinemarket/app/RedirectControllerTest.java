@@ -9,8 +9,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
@@ -22,26 +22,7 @@ public class RedirectControllerTest {
     @Test
     public void shouldSucceedWith200ForLoginPage() throws Exception {
         mvc.perform(get("/login"))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    public void shouldSucceedWith200ForAboutPage() throws Exception {
-        mvc.perform(get("/about"))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    public void shouldSucceedWithRedirectOnLoginPage() throws Exception {
-        mvc.perform(get("/"))
-                .andExpect(status().isFound())
-                .andExpect(redirectedUrl("/login"));
-    }
-
-    @Test
-    public void shouldSucceedWithRedirectOnLoginPageFromIndexPage() throws Exception {
-        mvc.perform(get("/index"))
-                .andExpect(status().isFound())
-                .andExpect(redirectedUrl("/login"));
+                .andExpect(status().isOk())
+                .andExpect(view().name("login"));
     }
 }

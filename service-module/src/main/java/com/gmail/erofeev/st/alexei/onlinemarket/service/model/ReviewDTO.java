@@ -6,7 +6,7 @@ public class ReviewDTO {
     private Long id;
     private UserDTO user;
     private String content;
-    private Timestamp date;
+    private Timestamp createdDate;
     private Boolean deleted = false;
     private Boolean hidden = false;
 
@@ -37,12 +37,12 @@ public class ReviewDTO {
         this.content = content;
     }
 
-    public Timestamp getDate() {
-        return date;
+    public Timestamp getCreatedDate() {
+        return createdDate;
     }
 
-    public void setDate(Timestamp date) {
-        this.date = date;
+    public void setCreatedDate(Timestamp createdDate) {
+        this.createdDate = createdDate;
     }
 
     public Boolean getDeleted() {
@@ -67,7 +67,7 @@ public class ReviewDTO {
                 "id=" + id +
                 ", user=" + user +
                 ", content='" + content + '\'' +
-                ", date=" + date +
+                ", createdDate=" + createdDate +
                 ", deleted=" + deleted +
                 ", hidden=" + hidden +
                 '}';

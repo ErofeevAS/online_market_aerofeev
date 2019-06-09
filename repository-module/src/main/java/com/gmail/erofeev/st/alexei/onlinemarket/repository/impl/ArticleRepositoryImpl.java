@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public class ArticleRepositoryImpl extends GenericRepositoryImpl<Long, Article> implements ArticleRepository {
     @Override
-    public Integer getAmountOfArticlesWithKeyWord(String keyWord) {
+    public int getAmountOfArticlesWithKeyWord(String keyWord) {
         String hql = "select count(a) from Article a where a.title like :keyWord";
         Query query = entityManager.createQuery(hql);
         query.setParameter("keyWord", "%" + keyWord + "%");
@@ -18,16 +18,25 @@ public class ArticleRepositoryImpl extends GenericRepositoryImpl<Long, Article> 
     }
 
     @Override
-    public Integer getAmountOfArticlesWithSameTag(String tag) {
-        String hql = "select count(a) from Article a where a.tags.name= :tag";
+    public int getAmountOfArticlesWithSameTag(String tag) {
+        String hql = "select count(a) from Article a JOIN a.tags t WHERE t.name = :tag ";
         Query query = entityManager.createQuery(hql);
         query.setParameter("tag", tag);
         return ((Number) query.getSingleResult()).intValue();
     }
 
     @Override
-    public List<Article> getArticlesFilteredByKeyWord(int offset, Integer amount, String keyWord) {
-        String hql = "select a from Article a where a.title like :keyWord  ORDER BY a.date DESC";
+    public int getAmountOfArticlesWithKeyWordAndTag(String keyWord, String tag) {
+        String hql = "select count(a) from Article a JOIN a.tags t WHERE t.name = :tag and a.title like :keyWord";
+        Query query = entityManager.createQuery(hql);
+        query.setParameter("tag", tag);
+        query.setParameter("keyWord", "%" + keyWord + "%");
+        return ((Number) query.getSingleResult()).intValue();
+    }
+
+    @Override
+    public List<Article> getArticlesFilteredByKeyWord(int offset, int amount, String keyWord) {
+        String hql = "select a from Article a where a.title like :keyWord  ORDER BY a.createdDate DESC";
         Query query = entityManager.createQuery(hql);
         query.setParameter("keyWord", "%" + keyWord + "%");
         query.setFirstResult(offset);
@@ -36,21 +45,30 @@ public class ArticleRepositoryImpl extends GenericRepositoryImpl<Long, Article> 
     }
 
     @Override
-    public List<Article> getEntitiesByTag(int offset, Integer amount, String tagId) {
-        String hql = "select a from Article a  JOIN a.tags t WHERE t.id = :tagId ORDER BY a.date DESC";
+    public List<Article> getEntitiesByTag(int offset, int amount, String tagName) {
+        String hql = "select a from Article a  JOIN a.tags t WHERE t.name = :tagName ORDER BY a.createdDate DESC";
         Query query = entityManager.createQuery(hql);
-        query.setParameter("tagId", Long.parseLong(tagId));
+        query.setParameter("tagName", tagName);
         query.setFirstResult(offset);
         query.setMaxResults(amount);
         return query.getResultList();
     }
 
     @Override
-    public List<Article> getEntitiesByTagAndKeyword(int offset, Integer amount, String tagId, String keyWord) {
-        String hql = "select a from Article a  JOIN a.tags t WHERE t.id = :tagId and a.title like :keyWord ORDER BY a.date DESC";
+    public List<Article> getEntitiesByTagAndKeyword(int offset, int amount, String tagName, String keyWord) {
+        String hql = "select a from Article a JOIN a.tags t WHERE t.name = :tagName and a.title like :keyWord ORDER BY a.createdDate DESC";
         Query query = entityManager.createQuery(hql);
-        query.setParameter("tagId", Long.parseLong(tagId));
+        query.setParameter("tagName", tagName);
         query.setParameter("keyWord", "%" + keyWord + "%");
+        query.setFirstResult(offset);
+        query.setMaxResults(amount);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<Article> getArticles(int offset, int amount) {
+        String hql = "select a from Article a  ORDER BY a.createdDate DESC";
+        Query query = entityManager.createQuery(hql);
         query.setFirstResult(offset);
         query.setMaxResults(amount);
         return query.getResultList();

@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
-<title>Registration page</title>
+<title>new article</title>
 </head>
 <body>
 
@@ -15,11 +15,9 @@
     <div class="row" th:insert="~{fragments/navbar :: navbar}">
     </div>
     <div class="row">
-        <div class="col-ml-6">
-            <form th:action="@{/articles/new}" th:object="${article}" method="post">
-
+        <div class="col-md-8 col-md-offset-1">
+            <form th:action="@{/articles/sale/new}" th:object="${article}" method="post">
                 <div class="alert alert-info" th:if="${info}" th:text="${info}">
-
                 </div>
                 <div class="alert alert-danger" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">
                     Name Error
@@ -29,7 +27,6 @@
                     <input type="text" th:field="*{title}" class="form-control" autofocus="autofocus"
                            th:placeholder="*{title}">
                 </div>
-
                 <div class="alert alert-danger" th:if="${#fields.hasErrors('content')}" th:errors="*{content}">
                     Name Error
                 </div>
@@ -38,27 +35,24 @@
                     <textarea th:field="*{content}" class="form-control" autofocus="autofocus"
                               th:placeholder="*{content}"></textarea>
                 </div>
-
-                <div class="alert alert-danger" th:if="${#fields.hasErrors('date')}" th:errors="*{date}">
+                <div class="alert alert-danger" th:if="${#fields.hasErrors('createdDate')}" th:errors="*{createdDate}">
                     Name Error
                 </div>
-
-                <div class="form-group">
-                    <label class="col-6 col-form-label">DateAndTime</label>
-                    <input type="datetime-local" class="form-control" th:value="${currentDate}"
-                           name="date" th:placeholder="${currentDate}">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="col-6 col-form-label">DateAndTime</label>
+                        <input type="datetime-local" class="form-control" th:value="${currentDate}"
+                               name="createdDate" th:placeholder="${currentDate}">
+                    </div>
                 </div>
+                <div class="col-md-6">
                 <input type="submit" class="form-control btn btn-info" value="create article">
+                </div>
             </form>
-
         </div>
     </div>
     <div th:insert="~{fragments/footer :: footer}"></div>
 </div>
-
-
-
-
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script>

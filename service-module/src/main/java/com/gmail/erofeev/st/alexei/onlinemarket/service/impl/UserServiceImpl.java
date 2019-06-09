@@ -8,11 +8,15 @@ import com.gmail.erofeev.st.alexei.onlinemarket.repository.model.User;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.MailService;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.PasswordService;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.UserService;
+import com.gmail.erofeev.st.alexei.onlinemarket.service.converter.RoleConverter;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.converter.UserConverter;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.PageDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.PasswordDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ProfileViewDTO;
+import com.gmail.erofeev.st.alexei.onlinemarket.service.model.RestEntityNotFoundException;
+import com.gmail.erofeev.st.alexei.onlinemarket.service.model.RoleDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.UserDTO;
+import com.gmail.erofeev.st.alexei.onlinemarket.service.model.UserRestDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,13 +28,14 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
-public class UserServiceImpl implements UserService {
-    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+public class UserServiceImpl extends GenericService<UserDTO> implements UserService {
+    private static final Logger logger = LoggerFactory.getLogger(GenericService.class);
     @Value("${app.generated.password.length}")
     private int STANDARD_PASSWORD_LENGTH;
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
     private final UserConverter userConverter;
+    private final RoleRepository roleRepository;
+    private final RoleConverter roleConverter;
     private final PasswordEncoder passwordEncoder;
     private final PasswordService passwordService;
     private final MailService mailService;
@@ -39,12 +44,13 @@ public class UserServiceImpl implements UserService {
     public UserServiceImpl(UserRepository userRepository,
                            UserConverter userConverter,
                            RoleRepository roleRepository,
-                           PasswordEncoder passwordEncoder,
+                           RoleConverter roleConverter, PasswordEncoder passwordEncoder,
                            PasswordService passwordService,
                            MailService mailService) {
         this.userRepository = userRepository;
         this.userConverter = userConverter;
         this.roleRepository = roleRepository;
+        this.roleConverter = roleConverter;
         this.passwordEncoder = passwordEncoder;
         this.passwordService = passwordService;
         this.mailService = mailService;
@@ -63,28 +69,29 @@ public class UserServiceImpl implements UserService {
     public void delete(List<Long> userIdsForDelete) {
         for (Long id : userIdsForDelete) {
             User user = userRepository.findById(id);
-            userRepository.remove(user);
-            logger.debug(String.format("User with id:%s was deleted", id));
+            if (!user.getUndeletable()) {
+                userRepository.remove(user);
+                logger.debug(String.format("User with id:%s was deleted", id));
+            }
         }
     }
 
     @Override
     @Transactional
-    public UserDTO register(UserDTO userDTO) {
+    public UserDTO registerUser(UserDTO userDTO) {
         String email = userDTO.getEmail();
         if (!userRepository.isUserExist(email)) {
             User user = userConverter.fromDTO(userDTO);
             String password = passwordService.generatePassword(STANDARD_PASSWORD_LENGTH);
             user.setPassword(passwordEncoder.encode(password));
-            Role role = roleRepository.findRoleByName(user.getRole().getName());
+            Role role = roleRepository.findById(user.getRole().getId());
             user.setRole(role);
-            Profile profile = new Profile();
-            user.setProfile(profile);
+            Profile profile = user.getProfile();
             profile.setUser(user);
             userRepository.persist(user);
             String message = String.format("Hello! %s. Your was registered on www.aerofeev-market.com  your password: %s", userDTO.getFullName(), password);
-            mailService.send(email, "new password", message);
-            logger.debug(String.format("User with email: %s and password: %s was saved", email, password));
+//            mailService.send(email, "new password", message);
+            logger.debug(String.format("User with email: %s and password: %s was saved on www.aerofeev-market.com", email, password));
             return userConverter.toDTO(user);
         }
         return null;
@@ -101,21 +108,55 @@ public class UserServiceImpl implements UserService {
         String message = String.format("Hello! %s. Your password on www.aerofeev-market.com  was changed on %s", user.getEmail(), password);
         logger.debug(message);
         String email = user.getEmail();
-        mailService.send(email, "new password", message);
+//        mailService.send(email, "new password", message);
     }
 
     @Override
     @Transactional
-    public PageDTO<UserDTO> findAll(int page, int amount) {
-        Integer amountOfEntity = userRepository.getAmountOfEntity();
-        int maxPages = (Math.round(amountOfEntity / amount) + 1);
+    public PageDTO<UserDTO> getUsers(int page, int amount, boolean showDeleted) {
+        Integer amountOfEntity = userRepository.getAmountOfEntity(showDeleted);
+        int maxPages = getMaxPages(amountOfEntity, amount);
         int offset = getOffset(page, maxPages, amount);
-        List<User> users = userRepository.getEntities(offset, amount);
-        List<UserDTO> userDTOList = userConverter.toListDTO(users);
-        PageDTO<UserDTO> pageDTO = new PageDTO<>();
-        pageDTO.setAmountOfPages(maxPages);
-        pageDTO.setList(userDTOList);
-        return pageDTO;
+        List<User> users = userRepository.findUsersSortedByEmail(offset, amount, showDeleted);
+        List<UserDTO> userListDTO = userConverter.toListDTO(users);
+        return getPageDTO(userListDTO, maxPages);
+    }
+
+    @Override
+    @Transactional
+    public UserDTO findUserByEmailExcludeSecureApiUser(String email) {
+        User user = userRepository.findByEmailExcludeSecureApiUser(email);
+        logger.debug(String.format("User with email:%s was found", email));
+        return userConverter.toDTO(user);
+    }
+
+    @Override
+    @Transactional
+    public UserRestDTO registerFromRest(UserRestDTO userDTO) {
+        String email = userDTO.getEmail();
+        if (!userRepository.isUserExist(email)) {
+            User user = userConverter.fromRestDTO(userDTO);
+            String password = passwordService.generatePassword(STANDARD_PASSWORD_LENGTH);
+            user.setPassword(passwordEncoder.encode(password));
+            Long roleId = user.getRole().getId();
+            Role role = roleRepository.findById(roleId);
+            if (role == null) {
+                String message = String.format("role with id:%s not exist", roleId);
+                logger.error(message);
+                throw new RestEntityNotFoundException(message);
+            }
+            user.setRole(role);
+            Profile profile = user.getProfile();
+            profile.setUser(user);
+            userRepository.persist(user);
+            String message = String.format("Hello! %s. Your was registered on www.aerofeev-market.com  your password: %s", userDTO.getEmail(), password);
+//            mailService.send(email, "new password", message);
+            logger.debug(String.format("User with email: %s and password: %s was saved on www.aerofeev-market.com", email, password));
+            return userConverter.toRestDTO(user);
+        }
+        String message = String.format("user same email: %s  exist", email);
+        logger.error(message);
+        throw new RestEntityNotFoundException(message);
     }
 
     @Override
@@ -135,12 +176,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void updateRole(Long id, String roleName) {
+    public List<RoleDTO> getAllRoles() {
+        List<Role> roles = roleRepository.findAll();
+        return roleConverter.toListDTO(roles);
+    }
+
+    @Override
+    @Transactional
+    public void updateRole(Long id, Long roleId) {
         User user = userRepository.findById(id);
         if (user.getUndeletable().equals(true)) {
             return;
         }
-        Role role = roleRepository.findRoleByName(roleName);
+        Role role = roleRepository.findById(roleId);
         user.setRole(role);
         userRepository.merge(user);
     }
@@ -159,13 +207,6 @@ public class UserServiceImpl implements UserService {
             return true;
         }
         return false;
-    }
-
-    private int getOffset(int page, int maxPages, int amount) {
-        if (page > maxPages) {
-            page = maxPages;
-        }
-        return (page - 1) * amount;
     }
 
     private void updateUserFields(User user, ProfileViewDTO profileViewDTO) {

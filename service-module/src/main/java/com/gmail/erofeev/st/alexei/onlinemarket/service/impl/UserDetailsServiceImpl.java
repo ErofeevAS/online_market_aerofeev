@@ -11,15 +11,15 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-@Service
+@Service(value = "userDetailsServiceImpl")
 public class UserDetailsServiceImpl implements UserDetailsService {
-    private static final Logger logger = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserDetailsServiceRestImpl.class);
     @Autowired
     private UserService userService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserDTO user = userService.findUserByEmail(username);
+        UserDTO user = userService.findUserByEmailExcludeSecureApiUser(username);
         if (user == null) {
             String message = "User is not found: " + username;
             logger.error(message);

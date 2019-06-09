@@ -18,14 +18,33 @@ public class UserRepositoryImpl extends GenericRepositoryImpl<Long, User> implem
     }
 
     @Override
+    public User findByEmailExcludeSecureApiUser(String email) {
+        String hql = "select u from User u where u.email = :email and u.role.id<>4";
+        Query query = entityManager.createQuery(hql, User.class);
+        query.setParameter("email", email);
+        return (User) query.getSingleResult();
+    }
+
+    @Override
     public Boolean isUserExist(String email) {
         String hql = "select u from User u where u.email = :email";
         Query query = entityManager.createQuery(hql);
         query.setParameter("email", email);
         List resultList = query.getResultList();
-        if (resultList.isEmpty()) {
-            return false;
+        return !resultList.isEmpty();
+    }
+
+    @Override
+    public List<User> findUsersSortedByEmail(int offset, int amount, boolean showDeleted) {
+        String hql;
+        if (showDeleted) {
+            hql = "select u from User u ORDER BY u.email asc ";
+        } else {
+            hql = "select u from User u where u.deleted = false ORDER BY u.email asc  ";
         }
-        return true;
+        Query query = entityManager.createQuery(hql);
+        query.setFirstResult(offset);
+        query.setMaxResults(amount);
+        return query.getResultList();
     }
 }

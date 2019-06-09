@@ -20,7 +20,7 @@ import java.util.Objects;
 @Entity
 @Table
 @SQLDelete(sql = "UPDATE tag SET deleted = true WHERE id = ?")
-@Where(clause = "deleted = '0'")
+@Where(clause = "deleted = false")
 public class Tag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

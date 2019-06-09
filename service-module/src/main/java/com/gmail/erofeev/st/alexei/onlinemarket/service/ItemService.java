@@ -1,23 +1,29 @@
 package com.gmail.erofeev.st.alexei.onlinemarket.service;
 
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ItemDTO;
-import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ItemRestDTO;
+import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ItemDetailsDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.PageDTO;
+import com.gmail.erofeev.st.alexei.onlinemarket.service.model.xml.ItemXMLDTO;
 
 import java.util.List;
 
 public interface ItemService {
-    PageDTO<ItemDTO> getItems(int page, int amount);
+    PageDTO<ItemDetailsDTO> getItems(int page, int amount, boolean showDeleted);
 
-    ItemDTO findById(Long id);
+    ItemDetailsDTO findById(Long id);
 
     void deleteById(Long id);
 
+    void deleteByIdForRest(Long id);
+
     void copyItem(Long id);
 
-    List<ItemRestDTO> getItemsForRest(int offset, int amount);
+    List<ItemDTO> getItemsForRest(int offset, int amount);
 
-    ItemRestDTO findRestItemById(Long validatedId);
+    ItemDTO findItemByIdForRest(Long id);
 
-    ItemRestDTO saveItem(Long userId, ItemRestDTO itemRestDTO);
+    ItemDTO saveItem(ItemDTO itemRestDTO);
+
+    void importItem(List<ItemXMLDTO> itemsXML);
+
 }

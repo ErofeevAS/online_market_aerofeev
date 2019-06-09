@@ -1,15 +1,18 @@
 package com.gmail.erofeev.st.alexei.onlinemarket.service.model;
 
+import org.springframework.validation.annotation.Validated;
+
+import javax.validation.constraints.Size;
 import java.sql.Timestamp;
 
+@Validated
 public class CommentDTO {
     private Long id;
     private Long articleId;
     private UserDTO user;
+    @Size(min = 1, max = 200)
     private String content;
-    private Timestamp date;
-    private boolean isDeleted = false;
-    private boolean isHidden = false;
+    private Timestamp createdDate;
 
     public Long getId() {
         return id;
@@ -35,28 +38,12 @@ public class CommentDTO {
         this.content = content;
     }
 
-    public Timestamp getDate() {
-        return date;
+    public Timestamp getCreatedDate() {
+        return createdDate;
     }
 
-    public void setDate(Timestamp date) {
-        this.date = date;
-    }
-
-    public boolean isDeleted() {
-        return isDeleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        isDeleted = deleted;
-    }
-
-    public boolean isHidden() {
-        return isHidden;
-    }
-
-    public void setHidden(boolean hidden) {
-        isHidden = hidden;
+    public void setCreatedDate(Timestamp createdDate) {
+        this.createdDate = createdDate;
     }
 
     public Long getArticleId() {
@@ -74,9 +61,7 @@ public class CommentDTO {
                 ", articleId=" + articleId +
                 ", user=" + user +
                 ", content='" + content + '\'' +
-                ", date=" + date +
-                ", isDeleted=" + isDeleted +
-                ", isHidden=" + isHidden +
+                ", createdDate=" + createdDate +
                 '}';
     }
 }

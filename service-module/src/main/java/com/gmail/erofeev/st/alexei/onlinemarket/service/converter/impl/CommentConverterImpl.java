@@ -2,14 +2,12 @@ package com.gmail.erofeev.st.alexei.onlinemarket.service.converter.impl;
 
 import com.gmail.erofeev.st.alexei.onlinemarket.repository.model.Article;
 import com.gmail.erofeev.st.alexei.onlinemarket.repository.model.Comment;
-import com.gmail.erofeev.st.alexei.onlinemarket.repository.model.User;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.converter.CommentConverter;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.converter.UserConverter;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.CommentDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.UserDTO;
 import org.springframework.stereotype.Component;
 
-import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,31 +26,22 @@ public class CommentConverterImpl implements CommentConverter {
 
     @Override
     public CommentDTO toDTO(Comment comment) {
-        Long id = comment.getId();
-        User user = comment.getUser();
-        UserDTO userDTO = userConverter.toDTO(user);
-        String content = comment.getContent();
-        Timestamp date = comment.getDate();
-        boolean hided = comment.isHidden();
         CommentDTO commentDTO = new CommentDTO();
-        commentDTO.setId(id);
-        commentDTO.setContent(content);
+        commentDTO.setId(comment.getId());
+        commentDTO.setContent(comment.getContent());
+        commentDTO.setCreatedDate(comment.getCreatedDate());
+        UserDTO userDTO = userConverter.toDTO(comment.getUser());
         commentDTO.setUser(userDTO);
-        commentDTO.setDate(date);
-        commentDTO.setHidden(hided);
         return commentDTO;
     }
 
     @Override
     public Comment fromDTO(CommentDTO commentDTO) {
-        String content = commentDTO.getContent();
-        Timestamp date = commentDTO.getDate();
-        Long articleId = commentDTO.getArticleId();
         Comment comment = new Comment();
-        comment.setContent(content);
-        comment.setDate(date);
+        comment.setContent(commentDTO.getContent());
+        comment.setCreatedDate(commentDTO.getCreatedDate());
         Article article = new Article();
-        article.setId(articleId);
+        article.setId(commentDTO.getArticleId());
         comment.setArticle(article);
         return comment;
     }

@@ -1,15 +1,21 @@
 package com.gmail.erofeev.st.alexei.onlinemarket.service.model;
 
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
 
 public class ItemDTO {
     private Long id;
+    @NotNull
     private String name;
     private String uniqueNumber;
+    @NotNull
+    @Digits(integer = 6, fraction = 2)
+    @Positive
     private BigDecimal price;
+    @NotNull
     private String description;
-    private UserDTO user;
-    private String shortDescription;
 
     public Long getId() {
         return id;
@@ -51,19 +57,4 @@ public class ItemDTO {
         this.description = description;
     }
 
-    public UserDTO getUser() {
-        return user;
-    }
-
-    public void setUser(UserDTO user) {
-        this.user = user;
-    }
-
-    public String getShortDescription() {
-        return shortDescription;
-    }
-
-    public void setShortDescription(String shortDescription) {
-        this.shortDescription = shortDescription;
-    }
 }

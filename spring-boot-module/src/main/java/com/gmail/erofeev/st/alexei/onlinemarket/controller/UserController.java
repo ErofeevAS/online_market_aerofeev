@@ -1,15 +1,15 @@
 package com.gmail.erofeev.st.alexei.onlinemarket.controller;
 
 import com.gmail.erofeev.st.alexei.onlinemarket.controller.util.Paginator;
+import com.gmail.erofeev.st.alexei.onlinemarket.service.UserAuthenticationService;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.UserService;
-import com.gmail.erofeev.st.alexei.onlinemarket.service.model.AppUserPrincipal;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.PageDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.PasswordDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ProfileViewDTO;
+import com.gmail.erofeev.st.alexei.onlinemarket.service.model.RoleDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -25,10 +25,12 @@ import java.util.List;
 @Controller
 public class UserController {
     private final UserService userService;
+    private final UserAuthenticationService userAuthenticationService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, UserAuthenticationService userAuthenticationService) {
         this.userService = userService;
+        this.userAuthenticationService = userAuthenticationService;
     }
 
     @GetMapping("/users")
@@ -36,11 +38,13 @@ public class UserController {
                            @RequestParam(defaultValue = "1", required = false) String page,
                            @RequestParam(defaultValue = "10", required = false) String size) {
         Paginator paginator = new Paginator(page, size);
-        PageDTO<UserDTO> pageDTO = userService.findAll(paginator.getPage(), paginator.getSize());
+        PageDTO<UserDTO> pageDTO = userService.getUsers(paginator.getPage(), paginator.getSize(), false);
         paginator.setMaxPage(pageDTO.getAmountOfPages());
         model.addAttribute("users", pageDTO.getList());
         model.addAttribute("paginator", paginator);
         model.addAttribute("updatedUser", new UserDTO());
+        List<RoleDTO> roles = userService.getAllRoles();
+        model.addAttribute("roles", roles);
         return "users";
     }
 
@@ -52,8 +56,8 @@ public class UserController {
 
     @PostMapping("/users/{id}/update")
     public String updateRole(@PathVariable Long id,
-                             @RequestParam String roleName) {
-        userService.updateRole(id, roleName);
+                             @RequestParam Long roleId) {
+        userService.updateRole(id, roleId);
         return "redirect:/users";
     }
 
@@ -61,16 +65,21 @@ public class UserController {
     public String addUser(Model model) {
         UserDTO user = new UserDTO();
         model.addAttribute("user", user);
+        List<RoleDTO> roles = userService.getAllRoles();
+        model.addAttribute("roles", roles);
         return "adduser";
     }
 
     @PostMapping("/users/add")
-    public String addUserPost(@ModelAttribute("user") @Valid UserDTO user, BindingResult
-            bindingResult, Model model) {
+    public String addUserPost(@ModelAttribute("user") @Valid UserDTO user,
+                              BindingResult bindingResult,
+                              Model model) {
+        List<RoleDTO> roles = userService.getAllRoles();
+        model.addAttribute("roles", roles);
         if (bindingResult.hasErrors()) {
             return "adduser";
         }
-        UserDTO registeredUser = userService.register(user);
+        UserDTO registeredUser = userService.registerUser(user);
         if (registeredUser != null) {
             model.addAttribute("info", "user was registered");
             return "adduser";
@@ -82,7 +91,7 @@ public class UserController {
 
     @GetMapping("/profile")
     public String getProfile(Model model, Authentication authentication) {
-        Long id = getSecureUserId(authentication);
+        Long id = userAuthenticationService.getSecureUserId(authentication);
         ProfileViewDTO profileView = userService.getProfileView(id);
         model.addAttribute("profileView", profileView);
         PasswordDTO passwordDTO = new PasswordDTO();
@@ -101,22 +110,28 @@ public class UserController {
         if (bindingResult.hasErrors()) {
             return "profile";
         }
-        Long id = getSecureUserId(authentication);
+        Long id = userAuthenticationService.getSecureUserId(authentication);
         userService.updateProfile(id, profileView);
         model.addAttribute("info", "profile was update");
         return "profile";
     }
 
     @PostMapping("/profile/changepassword")
-    public String changePasswordForUser(
-            Model model,
-            @ModelAttribute("passwordDTO") @Valid PasswordDTO passwordDTO,
-            Authentication authentication) {
-        Long id = getSecureUserId(authentication);
-        userService.changeOldPassword(id, passwordDTO);
+    public String changePasswordForUser(@ModelAttribute("passwordDTO") @Valid PasswordDTO passwordDTO,
+                                        BindingResult bindingResult,
+                                        Model model,
+                                        Authentication authentication) {
+        Long id = userAuthenticationService.getSecureUserId(authentication);
         ProfileViewDTO profileView = userService.getProfileView(id);
         model.addAttribute("profileView", profileView);
+        if (!userService.changeOldPassword(id, passwordDTO)) {
+            model.addAttribute("infoPassword", "password wrong");
+            return "profile";
+        }
         model.addAttribute("passwordDTO", passwordDTO);
+        if (bindingResult.hasErrors()) {
+            return "profile";
+        }
         model.addAttribute("infoPassword", "password was changed");
         return "profile";
     }
@@ -124,14 +139,6 @@ public class UserController {
     @PostMapping("/users/changepassword")
     public String changePasswordForRandomPassword(@RequestParam(name = "userId") Long id) {
         userService.changePassword(id);
-        return "users";
-    }
-
-    private Long getSecureUserId(Authentication authentication) {
-        authentication = SecurityContextHolder.getContext().getAuthentication();
-        AppUserPrincipal principal = (AppUserPrincipal) authentication.getPrincipal();
-        return principal.getUser().getId();
+        return "redirect:/users";
     }
 }
-
-

@@ -9,31 +9,18 @@ import org.springframework.stereotype.Component;
 public class ProfileConverterImpl implements ProfileConverter {
     @Override
     public ProfileDTO toDTO(Profile profile) {
-        if (profile == null) {
-            return new ProfileDTO();
-        }
-        Long id = profile.getId();
-        String address = profile.getAddress();
-        String phone = profile.getPhone();
         ProfileDTO profileDTO = new ProfileDTO();
-        profileDTO.setId(id);
-        profileDTO.setAddress(address);
-        profileDTO.setPhone(phone);
+        profileDTO.setId(profile.getId());
+        profileDTO.setAddress(profile.getAddress());
+        profileDTO.setPhone(profile.getPhone());
         return profileDTO;
     }
 
     @Override
     public Profile fromDTO(ProfileDTO profileDTO) {
-        if (profileDTO == null) {
-            return new Profile();
-        }
-        Long id = profileDTO.getId();
-        String address = profileDTO.getAddress();
-        String phone = profileDTO.getPhone();
         Profile profile = new Profile();
-        profile.setId(id);
-        profile.setAddress(address);
-        profile.setPhone(phone);
+        profile.setAddress(profileDTO.getAddress());
+        profile.setPhone(profileDTO.getPhone());
         return profile;
     }
 }

@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
-    <title>Users</title>
+    <title>item</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"/>
@@ -10,35 +10,36 @@
 <body>
 
 <div class="container">
-    <div class="row" th:insert="~{fragments/header :: header}">
-    </div>
-    <div class="row" th:insert="~{fragments/navbar :: navbar}">
-    </div>
-
+    <div class="row" th:insert="~{fragments/header :: header}"></div>
+    <div class="row" th:insert="~{fragments/navbar :: navbar}"></div>
     <div class="row">
         <div class="col-sm-4">
-            <div sec:authorize="hasRole('ROLE_Sale')">
-
+            <div sec:authorize="hasAnyRole('ROLE_Sale','ROLE_Customer')">
+                <div class="alert alert-danger" th:if="${info}" th:text="${info}"></div>
                 <label for="item-name">item name</label>
-                <p th:text="${item.name}"
+                <p th:text="${item.itemDTO.name}"
                    name="name" id="item-name"></p>
                 <label for="item-unique-number">item unique number</label>
-                <p th:text="${item.uniqueNumber}"
+                <p th:text="${item.itemDTO.uniqueNumber}"
                    name="uniqueNumber" id="item-unique-number"></p>
                 <label for="item-price">item price</label>
-                <p th:text="${item.price}"
+                <p th:text="${item.itemDTO.price}"
                    name="price" id="item-price"></p>
                 <label for="item-description">item description</label>
-                <p th:text="${item.description}"
+                <p th:text="${item.itemDTO.description}"
                    name="description" id="item-description"></p>
+            </div>
+            <div class="btn-group" role="group" aria-label="Basic example" sec:authorize="hasRole('ROLE_Customer')">
+                <input class="form-control" type="number" min="1" id="amount" name="amount" form="newOrder"/>
+                <input type="hidden" th:value="${item.itemDTO.id}" id="itemId" name="itemId" form="newOrder"/>
+                <form action="#" th:action="@{/orders/customer/new}" method="post" id="newOrder"></form>
+                <button type="submit" class="btn btn-outline-primary mx-1" form="newOrder">
+                    buy
+                </button>
             </div>
         </div>
     </div>
-
-    <div class="row" th:insert="~{fragments/footer :: footer}">
-    </div>
-
-
+    <div class="row" th:insert="~{fragments/footer :: footer}"></div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"

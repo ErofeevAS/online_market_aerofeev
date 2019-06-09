@@ -4,4 +4,6 @@ import org.springframework.security.core.Authentication;
 
 public interface UserAuthenticationService {
     Long getSecureUserId(Authentication authentication);
+
+    void isUserThSameLikeAuthorizedUser(Long id, Authentication authentication);
 }

@@ -5,20 +5,18 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
-<title>Registration page</title>
+<title>new user page</title>
 </head>
 <body>
-<div th:insert="~{fragments/header :: header}"></div>
-<div th:insert="~{fragments/navbar :: navbar}"></div>
+<div class="container">
+    <div class="row" th:insert="~{fragments/header :: header}"></div>
+    <div class="row" th:insert="~{fragments/navbar :: navbar}"></div>
 
     <div class="container col-md-6 col-lg-5 ml-auto d-flex align-items-center mt-4 mt-md-0">
         <div class="row">
             <div class="col-ml-6">
                 <form th:action="@{/users/add}" th:object="${user}" method="post">
-
-                    <div class="alert alert-info" th:if="${info}" th:text="${info}">
-
-                    </div>
+                    <div class="alert alert-info" th:if="${info}" th:text="${info}"></div>
                     <div class="alert alert-danger" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">
                         Name Error
                     </div>
@@ -27,7 +25,6 @@
                         <input type="text" th:field="*{lastName}" class="form-control" autofocus="autofocus"
                                placeholder="lastName">
                     </div>
-
                     <div class="alert alert-danger" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">
                         Name Error
                     </div>
@@ -36,7 +33,6 @@
                         <input type="text" th:field="*{firstName}" class="form-control" autofocus="autofocus"
                                placeholder="firstName">
                     </div>
-
                     <div class="alert alert-danger" th:if="${#fields.hasErrors('patronymic')}"
                          th:errors="*{patronymic}">
                         Name Error
@@ -46,7 +42,6 @@
                         <input type="text" th:field="*{patronymic}" class="form-control" autofocus="autofocus"
                                placeholder="patronymic">
                     </div>
-
                     <div class="alert alert-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">
                         Name Error
                     </div>
@@ -56,14 +51,12 @@
                                placeholder="email">
                     </div>
                     <label class="label">Role:</label>
-                    <select th:field="${user.role.name}">
-                        <option th:each="state : ${T(com.gmail.erofeev.st.alexei.onlinemarket.controller.util.RolesNameEnum).values()}"
-                                th:value="${state}"
-                                th:text="${state}"
-                                th:selected="${state==T(com.gmail.erofeev.st.alexei.onlinemarket.controller.util.RolesNameEnum).valueOf('ROLE_Customer')}">
+                    <select th:field="${user.role.id}">
+                        <option th:each="role : ${roles}"
+                                th:value="${role.id}"
+                                th:text="${role.name}">
                         </option>
                     </select>
-
                     <div class="form-group">
                         <div class="row">
                             <div class="col-sm-6">
@@ -79,8 +72,10 @@
             </div>
         </div>
     </div>
+    <div class="row" th:insert="~{fragments/footer :: footer}">
+    </div>
 </div>
-<div th:insert="~{fragments/footer :: footer}"></div>
+
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script>

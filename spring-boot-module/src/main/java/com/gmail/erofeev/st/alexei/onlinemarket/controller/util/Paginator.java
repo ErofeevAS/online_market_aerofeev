@@ -19,7 +19,7 @@ public class Paginator {
         validateSize(stringSize);
     }
 
-    public int validatePage(String stringPage) {
+    private int validatePage(String stringPage) {
         try {
             page = Integer.parseInt(stringPage);
         } catch (NumberFormatException e) {
@@ -31,7 +31,7 @@ public class Paginator {
         return page;
     }
 
-    public int validateSize(String stringSize) {
+    private int validateSize(String stringSize) {
         try {
             size = Integer.parseInt(stringSize);
         } catch (NumberFormatException e) {

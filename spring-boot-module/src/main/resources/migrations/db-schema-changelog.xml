@@ -75,13 +75,10 @@
             <column name="content" type="varchar(1000)">
                 <constraints nullable="false"/>
             </column>
-            <column name="date" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+            <column name="created_date" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueBoolean="false" name="deleted" type="boolean">
-                <constraints nullable="false"/>
-            </column>
-            <column defaultValueBoolean="false" name="hidden" type="boolean">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -110,13 +107,10 @@
             <column name="content" type="varchar(200)">
                 <constraints nullable="false"/>
             </column>
-            <column name="date" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+            <column name="created_date" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueBoolean="false" name="deleted" type="boolean">
-                <constraints nullable="false"/>
-            </column>
-            <column defaultValueBoolean="false" name="hidden" type="boolean">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -181,7 +175,7 @@
             <column name="content" type="varchar(500)">
                 <constraints nullable="false"/>
             </column>
-            <column name="date" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+            <column name="created_date" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueBoolean="false" name="deleted" type="boolean">
@@ -203,6 +197,157 @@
                                  onUpdate="NO ACTION"
                                  referencedColumnNames="id"
                                  referencedTableName="user"/>
+    </changeSet>
+
+    <changeSet author="alexei.st.erofeev@gmail.com" id="COMMENT_TABLE_2">
+        <addColumn tableName="comment">
+            <column name="article_id" type="BIGINT"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="alexei.st.erofeev@gmail.com" id="COMMENT_PARENT_ID_1">
+
+        <addForeignKeyConstraint baseColumnNames="article_id"
+                                 baseTableName="comment"
+                                 constraintName="fk_article_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="article"/>
+    </changeSet>
+
+    <changeSet author="alexei.st.erofeev@gmail.com" id="PROFILE_TABLE_1">
+        <createTable tableName="profile">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="address" type="varchar(120)" defaultValue=""></column>
+            <column name="phone" type="varchar(15)" defaultValue=""></column>
+            <column defaultValueBoolean="false" name="deleted" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="alexei.st.erofeev@gmail.com" id="PROFILE_ADD_FK_ID_1">
+
+        <addForeignKeyConstraint baseColumnNames="id"
+                                 baseTableName="profile"
+                                 constraintName="fk_user_profile_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="user"/>
+    </changeSet>
+
+    <changeSet author="alexei.st.erofeev@gmail.com" id="TAG_TABLE_1">
+        <createTable tableName="tag">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(20)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="alexei.st.erofeev@gmail.com" id="ARTICLE_TAG_TABLE_1">
+        <createTable tableName="article_tag">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="article_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tag_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="alexei.st.erofeev@gmail.com" id="ARTICLE_TAG_TABLE_FK_ID_1">
+
+        <addForeignKeyConstraint baseColumnNames="article_id"
+                                 baseTableName="article_tag"
+                                 constraintName="fk_article_tag_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="article"/>
+        <addForeignKeyConstraint baseColumnNames="tag_id"
+                                 baseTableName="article_tag"
+                                 constraintName="fk_tag_article_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="tag"/>
+    </changeSet>
+
+    <changeSet author="alexei.st.erofeev@gmail.com" id="addColumn-deleted_tag_table">
+        <addColumn tableName="tag">
+            <column defaultValueBoolean="false" name="deleted" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="alexei.st.erofeev@gmail.com" id="ITEM_TABLE_1">
+        <createTable tableName="item">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(150)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="unique_number" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="DECIMAL(10,4)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="varchar(1000)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueBoolean="false" name="deleted" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="alexei.st.erofeev@gmail.com" id="ORDER_TABLE_1">
+        <createTable tableName="order">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="item_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="unique_number" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="amount" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column defaultValueBoolean="false" name="deleted" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="alexei.st.erofeev@gmail.com" id="ORDER_TABLE_FK_ID">
+
+        <addForeignKeyConstraint baseColumnNames="user_id"
+                                 baseTableName="order"
+                                 constraintName="order_fk_user_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="user"/>
+
+        <addForeignKeyConstraint baseColumnNames="item_id"
+                                 baseTableName="order"
+                                 constraintName="order_fk_item_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="item"/>
     </changeSet>
 
 </databaseChangeLog>

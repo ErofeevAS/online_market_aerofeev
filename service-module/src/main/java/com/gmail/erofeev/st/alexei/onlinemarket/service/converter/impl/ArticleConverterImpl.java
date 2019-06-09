@@ -46,45 +46,33 @@ public class ArticleConverterImpl implements ArticleConverter {
 
     @Override
     public ArticleDTO toDTO(Article article) {
-        Long id = article.getId();
-        String title = article.getTitle();
-        String date = article.getDate().toLocalDateTime().toString();
-        String content = article.getContent();
-        User user = article.getUser();
-        boolean deleted = article.isDeleted();
-        boolean hidden = article.isHidden();
+        ArticleDTO articleDTO = new ArticleDTO();
+        articleDTO.setId(article.getId());
+        articleDTO.setTitle(article.getTitle());
+        String date = article.getCreatedDate().toLocalDateTime().toString();
+        articleDTO.setCreatedDate(date);
+        articleDTO.setContent(article.getContent());
         List<Comment> comments = article.getComments();
         List<CommentDTO> commentDTOList = commentConverter.toListDTO(comments);
-        UserDTO userDTO = userConverter.toDTO(user);
+        articleDTO.setComments(commentDTOList);
+        UserDTO userDTO = userConverter.toDTO(article.getUser());
         userDTO.setPassword("");
-        ArticleDTO articleDTO = new ArticleDTO();
+        articleDTO.setUser(userDTO);
         List<Tag> tags = article.getTags();
         List<TagDTO> tagsDTO = tagConverter.toListDTO(tags);
         articleDTO.setTags(tagsDTO);
-        articleDTO.setComments(commentDTOList);
-        articleDTO.setId(id);
-        articleDTO.setTitle(title);
-        articleDTO.setDate(date);
-        articleDTO.setContent(content);
-        articleDTO.setDeleted(deleted);
-        articleDTO.setHidden(hidden);
-        articleDTO.setUser(userDTO);
         return articleDTO;
     }
 
     @Override
     public ArticleRestDTO toRestDTO(Article article) {
-        Long id = article.getId();
-        String title = article.getTitle();
-        String content = article.getContent();
-        Timestamp date = article.getDate();
-        User user = article.getUser();
         ArticleRestDTO articleRestDTO = new ArticleRestDTO();
-        articleRestDTO.setId(id);
-        articleRestDTO.setTitle(title);
-        articleRestDTO.setContent(content);
-        articleRestDTO.setDate(date);
-        articleRestDTO.setAuthorEmail(user.getEmail());
+        articleRestDTO.setId(article.getId());
+        articleRestDTO.setTitle(article.getTitle());
+        articleRestDTO.setContent(article.getContent());
+        articleRestDTO.setCreatedDate(article.getCreatedDate());
+        User user = article.getUser();
+        articleRestDTO.setAuthorId(user.getId());
         articleRestDTO.setAuthorFirstName(user.getFirstName());
         articleRestDTO.setAuthorLastName(user.getLastName());
         return articleRestDTO;
@@ -99,39 +87,35 @@ public class ArticleConverterImpl implements ArticleConverter {
 
     @Override
     public Article fromRestDTO(ArticleRestDTO articleRestDTO) {
-        String title = articleRestDTO.getTitle();
-        String content = articleRestDTO.getContent();
-        Timestamp date = articleRestDTO.getDate();
         Article article = new Article();
-        article.setTitle(title);
-        article.setContent(content);
-        article.setDate(date);
+        article.setTitle(articleRestDTO.getTitle());
+        article.setContent(articleRestDTO.getContent());
+        article.setCreatedDate(articleRestDTO.getCreatedDate());
+        User user = new User();
+        user.setId(articleRestDTO.getAuthorId());
+        article.setUser(user);
         return article;
     }
 
     @Override
     public Article fromDTO(ArticleDTO articleDTO) {
-        String title = articleDTO.getTitle();
-        String content = articleDTO.getContent();
-        String dateFromPage = articleDTO.getDate();
-        Timestamp date = dateTimeConverter.convertDateTimeLocaleToTimeStamp(dateFromPage);
         Article article = new Article();
-        article.setTitle(title);
-        article.setDate(date);
-        article.setContent(content);
+        article.setTitle(articleDTO.getTitle());
+        article.setContent(articleDTO.getContent());
+        String dateFromPage = articleDTO.getCreatedDate();
+        Timestamp date = dateTimeConverter.convertDateTimeLocaleToTimeStamp(dateFromPage);
+        article.setCreatedDate(date);
         return article;
     }
 
     @Override
     public Article toArticle(NewArticleDTO newArticleDTO) {
-        String content = newArticleDTO.getContent();
-        String title = newArticleDTO.getTitle();
-        String dateFromPage = newArticleDTO.getDate();
-        Timestamp date = dateTimeConverter.convertDateTimeLocaleToTimeStamp(dateFromPage);
         Article article = new Article();
-        article.setDate(date);
-        article.setContent(content);
-        article.setTitle(title);
+        article.setContent(newArticleDTO.getContent());
+        article.setTitle(newArticleDTO.getTitle());
+        String dateFromPage = newArticleDTO.getCreatedDate();
+        Timestamp date = dateTimeConverter.convertDateTimeLocaleToTimeStamp(dateFromPage);
+        article.setCreatedDate(date);
         return article;
     }
 }

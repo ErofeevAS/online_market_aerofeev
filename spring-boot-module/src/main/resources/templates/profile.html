@@ -5,82 +5,86 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
-<title>Registration page</title>
+<title>profile</title>
 </head>
 <body>
 
-<div class="container align-items-center">
-    <div class="row" th:insert="~{fragments/header :: header}">
-    </div>
-    <div class="row" th:insert="~{fragments/navbar :: navbar}">
-    </div>
-    <div class="row">
-        <div class="col-ml-6">
-            <form th:action="@{/profile}" th:object="${profileView}" method="post">
+<div class="container">
+    <div class="row" th:insert="~{fragments/header :: header}"></div>
+    <div class="row" th:insert="~{fragments/navbar :: navbar}"></div>
+    <div>
+        <div class="container col-md-6 col-lg-5 ml-auto d-flex align-items-center mt-4 mt-md-0">
+            <div class="col-ml-6">
+                <div class="row">
+                    <div class="col-ml-6">
+                        <form th:action="@{/profile}" th:object="${profileView}" method="post">
+                            <div class="alert alert-info" th:if="${info}" th:text="${info}">
+                            </div>
+                            <div class="alert alert-danger" th:if="${#fields.hasErrors('lastName')}"
+                                 th:errors="*{lastName}"> Name Error
+                            </div>
+                            <div class="form-group">
+                                <label>last name</label>:
+                                <input type="text" th:field="*{lastName}" class="form-control" autofocus="autofocus"
+                                       th:placeholder="*{lastName}">
+                            </div>
 
-                <div class="alert alert-info" th:if="${info}" th:text="${info}">
+                            <div class="alert alert-danger" th:if="${#fields.hasErrors('firstName')}"
+                                 th:errors="*{firstName}">
+                                Name Error
+                            </div>
+                            <div class="form-group">
+                                <label>first name</label>:
+                                <input type="text" th:field="*{firstName}" class="form-control" autofocus="autofocus"
+                                       th:placeholder="*{firstName}">
+                            </div>
 
-                </div>
-                <div class="alert alert-danger" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">
-                    Name Error
-                </div>
-                <div class="form-group">
-                    <label>last name</label>:
-                    <input type="text" th:field="*{lastName}" class="form-control" autofocus="autofocus"
-                           th:placeholder="*{lastName}">
-                </div>
+                            <div class="alert alert-danger" th:if="${#fields.hasErrors('address')}"
+                                 th:errors="*{address}">
+                                Name Error
+                            </div>
+                            <div class="form-group">
+                                <label>address</label>:
+                                <input type="text" th:field="*{address}" class="form-control" autofocus="autofocus"
+                                       th:placeholder="*{address}">
+                            </div>
 
-                <div class="alert alert-danger" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">
-                    Name Error
-                </div>
-                <div class="form-group">
-                    <label>first name</label>:
-                    <input type="text" th:field="*{firstName}" class="form-control" autofocus="autofocus"
-                           th:placeholder="*{firstName}">
-                </div>
+                            <div class="alert alert-danger" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}">
+                                Name Error
+                            </div>
+                            <div class="form-group">
+                                <label>phone</label>:
+                                <input type="text" th:field="*{phone}" class="form-control" autofocus="autofocus"
+                                       th:placeholder="*{phone}">
+                            </div>
+                            <input type="submit" class="form-control btn btn-info" value="save changes">
 
-                <div class="alert alert-danger" th:if="${#fields.hasErrors('address')}" th:errors="*{address}">
-                    Name Error
-                </div>
-                <div class="form-group">
-                    <label>address</label>:
-                    <input type="text" th:field="*{address}" class="form-control" autofocus="autofocus"
-                           th:placeholder="*{address}">
-                </div>
+                        </form>
+                        <div class="alert alert-info" th:if="${infoPassword}" th:text="${infoPassword}"></div>
+                        <form th:action="@{/profile/changepassword}" th:object="${passwordDTO}" method="post">
+                            <div class="form-group">
+                                <label>old password</label>:
+                                <input type="password" th:field="*{oldPassword}" class="form-control"
+                                       autofocus="autofocus"
+                                       placeholder="old password">
+                            </div>
 
-                <div class="alert alert-danger" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}">
-                    Name Error
+                            <div class="form-group">
+                                <label>new password</label>:
+                                <input type="password" th:field="*{newPassword}" text="new password"
+                                       class="form-control"
+                                       autofocus="autofocus"
+                                       placeholder="new password">
+                            </div>
+                            <input type="submit" class="form-control btn btn-info" value="change password">
+                        </form>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>phone</label>:
-                    <input type="text" th:field="*{phone}" class="form-control" autofocus="autofocus"
-                           th:placeholder="*{phone}">
-                </div>
-                <input type="submit" class="form-control btn btn-info" value="save changes">
-
-            </form>
-            <div class="alert alert-info" th:if="${infoPassword}" th:text="${infoPassword}"></div>
-            <form th:action="@{/profile/changepassword}" th:object="${passwordDTO}" method="post">
-                <div class="form-group">
-                    <label>old password</label>:
-                    <input type="password" th:field="*{oldPassword}" class="form-control" autofocus="autofocus"
-                           placeholder="old password">
-                </div>
-
-                <div class="form-group">
-                    <label>new password</label>:
-                    <input type="password" th:field="*{newPassword}" text="new password" class="form-control"
-                           autofocus="autofocus"
-                           placeholder="new password">
-                </div>
-                <input type="submit" class="form-control btn btn-info" value="change password">
-            </form>
-
+            </div>
         </div>
+        <div th:insert="~{fragments/footer :: footer}"></div>
     </div>
-    <div th:insert="~{fragments/footer :: footer}"></div>
 </div>
-
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"

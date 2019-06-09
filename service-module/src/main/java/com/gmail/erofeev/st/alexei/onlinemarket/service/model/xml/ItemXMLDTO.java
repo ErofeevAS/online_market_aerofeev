@@ -1,13 +1,21 @@
-package com.gmail.erofeev.st.alexei.onlinemarket.service.model;
+package com.gmail.erofeev.st.alexei.onlinemarket.service.model.xml;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.math.BigDecimal;
 
-public class ItemRestDTO {
+@XmlRootElement(name = "item")
+@XmlAccessorType(XmlAccessType.FIELD)
+public class ItemXMLDTO {
+    @XmlAttribute
     private Long id;
     private String name;
-    private String uniqueNumber;
-    private BigDecimal price;
     private String description;
+    private String uniqueNumber;
+
+    private BigDecimal price;
 
     public Long getId() {
         return id;
@@ -47,5 +55,16 @@ public class ItemRestDTO {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Override
+    public String toString() {
+        return "ItemXMLDTO{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", uniqueNumber='" + uniqueNumber + '\'' +
+                ", price=" + price +
+                '}';
     }
 }

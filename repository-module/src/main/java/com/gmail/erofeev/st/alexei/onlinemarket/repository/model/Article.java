@@ -22,9 +22,9 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "article")
+@Table
 @SQLDelete(sql = "UPDATE article SET deleted = true WHERE id = ?")
-@Where(clause = "deleted = '0'")
+@Where(clause = "deleted = false")
 public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,14 +37,12 @@ public class Article {
     private User user;
     @Column
     private String content;
-    @Column
-    private Timestamp date;
+    @Column(name = "created_date")
+    private Timestamp createdDate;
     @Column(name = "deleted")
-    private boolean isDeleted;
-    @Column(name = "hidden")
-    private boolean isHidden;
+    private boolean deleted = false;
     @OneToMany(mappedBy = "article", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @OrderBy("date")
+    @OrderBy("created_date")
     private List<Comment> comments = new ArrayList<>();
     @ManyToMany(mappedBy = "articles", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private List<Tag> tags = new ArrayList<>();
@@ -81,28 +79,20 @@ public class Article {
         this.content = content;
     }
 
-    public Timestamp getDate() {
-        return date;
+    public Timestamp getCreatedDate() {
+        return createdDate;
     }
 
-    public void setDate(Timestamp date) {
-        this.date = date;
+    public void setCreatedDate(Timestamp createdDate) {
+        this.createdDate = createdDate;
     }
 
     public boolean isDeleted() {
-        return isDeleted;
+        return deleted;
     }
 
     public void setDeleted(boolean deleted) {
-        isDeleted = deleted;
-    }
-
-    public boolean isHidden() {
-        return isHidden;
-    }
-
-    public void setHidden(boolean hidden) {
-        isHidden = hidden;
+        this.deleted = deleted;
     }
 
     public List<Comment> getComments() {
@@ -126,17 +116,16 @@ public class Article {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Article article = (Article) o;
-        return isDeleted == article.isDeleted &&
-                isHidden == article.isHidden &&
+        return deleted == article.deleted &&
                 id.equals(article.id) &&
                 Objects.equals(title, article.title) &&
                 Objects.equals(content, article.content) &&
-                Objects.equals(date, article.date);
+                Objects.equals(createdDate, article.createdDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, content, date, isDeleted, isHidden);
+        return Objects.hash(id, title, content, createdDate, deleted);
     }
 
     @Override
@@ -146,9 +135,8 @@ public class Article {
                 ", title='" + title + '\'' +
                 ", user=" + user +
                 ", content='" + content + '\'' +
-                ", date=" + date +
-                ", isDeleted=" + isDeleted +
-                ", isHidden=" + isHidden +
+                ", createdDate=" + createdDate +
+                ", deleted=" + deleted +
                 '}';
     }
 }

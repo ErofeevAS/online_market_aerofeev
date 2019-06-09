@@ -22,7 +22,9 @@ public class CommentServiceImpl implements CommentService {
     private final CommentConverter commentConverter;
     private final UserRepository userRepository;
 
-    public CommentServiceImpl(CommentRepository commentRepository, CommentConverter commentConverter, UserRepository userRepository) {
+    public CommentServiceImpl(CommentRepository commentRepository,
+                              CommentConverter commentConverter,
+                              UserRepository userRepository) {
         this.commentRepository = commentRepository;
         this.commentConverter = commentConverter;
         this.userRepository = userRepository;
@@ -33,7 +35,7 @@ public class CommentServiceImpl implements CommentService {
     public void save(Long userId, CommentDTO commentDTO) {
         User user = userRepository.findById(userId);
         Timestamp currentTime = new Timestamp((new Date()).getTime());
-        commentDTO.setDate(currentTime);
+        commentDTO.setCreatedDate(currentTime);
         Comment comment = commentConverter.fromDTO(commentDTO);
         comment.setUser(user);
         commentRepository.persist(comment);

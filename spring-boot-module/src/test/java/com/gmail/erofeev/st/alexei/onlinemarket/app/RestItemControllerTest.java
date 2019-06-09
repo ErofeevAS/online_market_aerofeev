@@ -2,7 +2,7 @@ package com.gmail.erofeev.st.alexei.onlinemarket.app;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ItemRestDTO;
+import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ItemDTO;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,6 +23,7 @@ import java.util.UUID;
 
 import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.REST_API_EMAIL;
 import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.ROLE_SECURE_REST_API;
+import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.USER_DETAILS_SERVICE_REST_API;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -48,7 +49,7 @@ public class RestItemControllerTest {
         MvcResult mvcResult = mvc.perform(get(url).param("offset", offset).param("amount", amount))
                 .andExpect(status().isOk()).andReturn();
         String content = mvcResult.getResponse().getContentAsString();
-        List<ItemRestDTO> items = objectMapper.readValue(content, new TypeReference<List<ItemRestDTO>>() {
+        List<ItemDTO> items = objectMapper.readValue(content, new TypeReference<List<ItemDTO>>() {
         });
         Assert.assertEquals(2, items.size());
     }
@@ -70,7 +71,7 @@ public class RestItemControllerTest {
         MvcResult mvcResult = mvc.perform(get(url))
                 .andExpect(status().isOk()).andReturn();
         String content = mvcResult.getResponse().getContentAsString();
-        ItemRestDTO item = objectMapper.readValue(content, new TypeReference<ItemRestDTO>() {
+        ItemDTO item = objectMapper.readValue(content, new TypeReference<ItemDTO>() {
         });
         boolean isExist = false;
         if (item.getId() == 5L) {
@@ -96,7 +97,7 @@ public class RestItemControllerTest {
         MvcResult mvcResult = mvc.perform(get(url).param("offset", offset).param("amount", amount))
                 .andExpect(status().isOk()).andReturn();
         String content = mvcResult.getResponse().getContentAsString();
-        List<ItemRestDTO> items = objectMapper.readValue(content, new TypeReference<List<ItemRestDTO>>() {
+        List<ItemDTO> items = objectMapper.readValue(content, new TypeReference<List<ItemDTO>>() {
         });
         String urlForDelete = "/api/v1/items/1";
         mvc.perform(delete(urlForDelete))
@@ -106,7 +107,7 @@ public class RestItemControllerTest {
         mvcResult = mvc.perform(get(url).param("offset", offset).param("amount", amount))
                 .andExpect(status().isOk()).andReturn();
         content = mvcResult.getResponse().getContentAsString();
-        List<ItemRestDTO> itemsAfterDeleteOne = objectMapper.readValue(content, new TypeReference<List<ItemRestDTO>>() {
+        List<ItemDTO> itemsAfterDeleteOne = objectMapper.readValue(content, new TypeReference<List<ItemDTO>>() {
         });
         int amountOfItem = items.size();
         int amountOfItemsAfterDeleteOne = itemsAfterDeleteOne.size();
@@ -122,9 +123,9 @@ public class RestItemControllerTest {
     }
 
     @Test
-    @WithUserDetails(REST_API_EMAIL)
+    @WithUserDetails(value = REST_API_EMAIL, userDetailsServiceBeanName = USER_DETAILS_SERVICE_REST_API)
     public void shouldSaveNewItemForUser() throws Exception {
-        ItemRestDTO itemRestDTO = new ItemRestDTO();
+        ItemDTO itemRestDTO = new ItemDTO();
         String name = "rest_test_item";
         String description = "rest_test_item_description";
         BigDecimal price = new BigDecimal("123.11");
@@ -138,9 +139,8 @@ public class RestItemControllerTest {
                 .content(json))
                 .andExpect(status().is2xxSuccessful()).andReturn();
         String content = mvcResult.getResponse().getContentAsString();
-        ItemRestDTO item = objectMapper.readValue(content, new TypeReference<ItemRestDTO>() {
+        ItemDTO item = objectMapper.readValue(content, new TypeReference<ItemDTO>() {
         });
         Assert.assertNotNull(item.getId());
     }
-
 }

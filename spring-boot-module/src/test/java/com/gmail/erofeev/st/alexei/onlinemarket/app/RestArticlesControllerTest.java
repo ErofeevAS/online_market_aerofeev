@@ -14,8 +14,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.util.List;
-
 import static com.gmail.erofeev.st.alexei.onlinemarket.config.properties.GlobalConstants.ROLE_SECURE_REST_API;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -32,18 +30,6 @@ public class RestArticlesControllerTest {
     MockMvc mvc;
     @Autowired
     private ObjectMapper objectMapper;
-
-    @Test
-    @WithMockUser(roles = ROLE_SECURE_REST_API)
-    public void getArticlesBySecureApi() throws Exception {
-        String url = "/api/v1/articles";
-        MvcResult mvcResult = mvc.perform(get(url))
-                .andExpect(status().isOk()).andReturn();
-        String content = mvcResult.getResponse().getContentAsString();
-        List<ArticleRestDTO> articles = objectMapper.readValue(content, new TypeReference<List<ArticleRestDTO>>() {
-        });
-        Assert.assertEquals(8, articles.size());
-    }
 
     @Test
     @WithMockUser(roles = ROLE_SECURE_REST_API)
@@ -66,7 +52,7 @@ public class RestArticlesControllerTest {
     public void deleteArticleById() throws Exception {
         String url = "/api/v1/articles/1";
         mvc.perform(delete(url))
-                .andExpect(content().string("success"))
+                .andExpect(content().string("article was deleted"))
                 .andExpect(status().isOk()).andReturn();
     }
 }

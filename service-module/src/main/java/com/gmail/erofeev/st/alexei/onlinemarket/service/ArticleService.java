@@ -13,19 +13,25 @@ public interface ArticleService {
 
     ArticleDTO getArticleById(Long id);
 
+    ArticleRestDTO getArticleByIdForRest(Long id);
+
     List<ArticleDTO> getArticles();
 
-    List<ArticleRestDTO> getRestArticles();
+    List<ArticleRestDTO> getArticlesForRest(int offset, int amount);
 
-    String delete(Long id);
+    String deleteArticleById(Long id);
 
-    void add(ArticleDTO articleDTO);
+    void deleteArticleByIdForRest(Long id);
 
-    Integer getAmountOfArticlesWithKeyWord(String keyWord);
+//    void add(ArticleDTO articleDTO);
 
-    PageDTO<ArticleDTO> getArticlesByTag(int page, int size, String tagName);
+//    Integer getAmountOfArticlesWithKeyWord(String keyWord);
+
+//    PageDTO<ArticleDTO> getArticlesByTag(int page, int size, String tagName);
 
     void createArticle(NewArticleDTO article);
 
     void update(NewArticleDTO article);
+
+    ArticleRestDTO addArticleForRest(ArticleRestDTO articleDTO);
 }

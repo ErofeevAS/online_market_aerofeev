@@ -7,22 +7,23 @@ import com.gmail.erofeev.st.alexei.onlinemarket.repository.model.User;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.ArticleService;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.converter.ArticleConverter;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.converter.DateTimeConverter;
-import com.gmail.erofeev.st.alexei.onlinemarket.service.exception.ServiceException;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ArticleDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.ArticleRestDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.NewArticleDTO;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.PageDTO;
+import com.gmail.erofeev.st.alexei.onlinemarket.service.model.RestEntityNotFoundException;
 import com.gmail.erofeev.st.alexei.onlinemarket.service.model.SearchingFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.util.List;
 
 @Service
-public class ArticleServiceImpl implements ArticleService {
+public class ArticleServiceImpl extends GenericService<ArticleDTO> implements ArticleService {
     private static final Logger logger = LoggerFactory.getLogger(ArticleServiceImpl.class);
     private static final String SUCCESSFUL_DELETE_MESSAGE = "success";
     private final ArticleRepository articleRepository;
@@ -46,28 +47,28 @@ public class ArticleServiceImpl implements ArticleService {
         String keyWord = searchingFilter.getKeyWord();
         String tag = searchingFilter.getTag();
         if (keyWord == null && tag == null) {
-            Integer amountOfEntity = articleRepository.getAmountOfEntity();
+            int amountOfEntity = articleRepository.getAmountOfEntity(false);
             int maxPages = getMaxPages(amountOfEntity, amount);
             int offset = getOffset(page, maxPages, amount);
-            List<Article> articles = articleRepository.getEntities(offset, amount);
+            List<Article> articles = articleRepository.getArticles(offset, amount);
             List<ArticleDTO> articleDTOList = articleConverter.toListDTO(articles);
             return getPageDTO(articleDTOList, maxPages);
         } else if (keyWord == null) {
-            Integer amountOfEntity = articleRepository.getAmountOfEntity();
+            int amountOfEntity = articleRepository.getAmountOfArticlesWithSameTag(tag);
             int maxPages = getMaxPages(amountOfEntity, amount);
             int offset = getOffset(page, maxPages, amount);
             List<Article> articles = articleRepository.getEntitiesByTag(offset, amount, searchingFilter.getTag());
             List<ArticleDTO> articleDTOList = articleConverter.toListDTO(articles);
             return getPageDTO(articleDTOList, maxPages);
         } else if (tag == null) {
-            Integer amountOfEntity = articleRepository.getAmountOfEntity();
+            int amountOfEntity = articleRepository.getAmountOfArticlesWithKeyWord(keyWord);
             int maxPages = getMaxPages(amountOfEntity, amount);
             int offset = getOffset(page, maxPages, amount);
             List<Article> articles = articleRepository.getArticlesFilteredByKeyWord(offset, amount, keyWord);
             List<ArticleDTO> articleDTOList = articleConverter.toListDTO(articles);
             return getPageDTO(articleDTOList, maxPages);
         } else {
-            Integer amountOfEntity = articleRepository.getAmountOfArticlesWithKeyWord(searchingFilter.getKeyWord());
+            Integer amountOfEntity = articleRepository.getAmountOfArticlesWithKeyWordAndTag(keyWord, tag);
             int maxPages = getMaxPages(amountOfEntity, amount);
             int offset = getOffset(page, maxPages, amount);
             List<Article> articles = articleRepository.getEntitiesByTagAndKeyword(offset, amount, tag, keyWord);
@@ -80,12 +81,16 @@ public class ArticleServiceImpl implements ArticleService {
     @Transactional
     public ArticleDTO getArticleById(Long id) {
         Article article = articleRepository.findById(id);
-        if (article == null) {
-            String message = String.format("Article with id:%s not found", id);
-            logger.error(message);
-            throw new ServiceException(message);
-        }
+        isExist(article, id);
         return articleConverter.toDTO(article);
+    }
+
+    @Override
+    @Transactional
+    public ArticleRestDTO getArticleByIdForRest(Long id) {
+        Article article = articleRepository.findById(id);
+        isExistForRest(article, id);
+        return articleConverter.toRestDTO(article);
     }
 
     @Override
@@ -97,47 +102,26 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     @Transactional
-    public List<ArticleRestDTO> getRestArticles() {
-        List<Article> articles = articleRepository.findAll();
+    public List<ArticleRestDTO> getArticlesForRest(int offset, int amount) {
+        List<Article> articles = articleRepository.getEntities(offset, amount);
         return articleConverter.toListRestDTO(articles);
     }
 
     @Override
     @Transactional
-    public String delete(Long id) {
+    public String deleteArticleById(Long id) {
         Article article = articleRepository.findById(id);
+        isExist(article, id);
         articleRepository.remove(article);
         return SUCCESSFUL_DELETE_MESSAGE;
     }
 
     @Override
     @Transactional
-    public void add(ArticleDTO articleDTO) {
-        Long userId = articleDTO.getUser().getId();
-        User user = userRepository.findById(userId);
-        Article article = articleConverter.fromDTO(articleDTO);
-        article.setUser(user);
-        articleRepository.persist(article);
-    }
-
-    @Override
-    @Transactional
-    public Integer getAmountOfArticlesWithKeyWord(String keyWord) {
-        return articleRepository.getAmountOfArticlesWithKeyWord(keyWord);
-    }
-
-    @Override
-    @Transactional
-    public PageDTO<ArticleDTO> getArticlesByTag(int page, int amount, String tagName) {
-        Integer amountOfEntity = articleRepository.getAmountOfArticlesWithSameTag(tagName);
-        int maxPages = getMaxPages(amountOfEntity, amount);
-        int offset = getOffset(page, maxPages, amount);
-        List<Article> articles = articleRepository.getArticlesFilteredByKeyWord(offset, amount, tagName);
-        List<ArticleDTO> articleDTOList = articleConverter.toListDTO(articles);
-        PageDTO<ArticleDTO> pageDTO = new PageDTO<>();
-        pageDTO.setList(articleDTOList);
-        pageDTO.setAmountOfPages(maxPages);
-        return pageDTO;
+    public void deleteArticleByIdForRest(Long id) {
+        Article article = articleRepository.findById(id);
+        isExistForRest(article, id);
+        articleRepository.remove(article);
     }
 
     @Override
@@ -156,9 +140,9 @@ public class ArticleServiceImpl implements ArticleService {
     public void update(NewArticleDTO articleDTO) {
         Long id = articleDTO.getId();
         Article article = articleRepository.findById(id);
-        String date = articleDTO.getDate();
+        String date = articleDTO.getCreatedDate();
         Timestamp timestamp = dateTimeConverter.convertDateTimeLocaleToTimeStamp(date);
-        article.setDate(timestamp);
+        article.setCreatedDate(timestamp);
         String content = articleDTO.getContent();
         article.setContent(content);
         String title = articleDTO.getTitle();
@@ -166,22 +150,37 @@ public class ArticleServiceImpl implements ArticleService {
         articleRepository.merge(article);
     }
 
-    private int getOffset(int page, int maxPages, int amount) {
-        if (page > maxPages) {
-            page = maxPages;
+    @Override
+    @Transactional
+    public ArticleRestDTO addArticleForRest(ArticleRestDTO articleDTO) {
+        Article article = articleConverter.fromRestDTO(articleDTO);
+        Long userId = article.getUser().getId();
+        User user = userRepository.findById(userId);
+        if (user == null) {
+            String message = String.format("user with id:%s not exist ", userId);
+            logger.error(message);
+            throw new RestEntityNotFoundException(message);
         }
-        return (page - 1) * amount;
+        article.setUser(user);
+        articleRepository.persist(article);
+        return articleConverter.toRestDTO(article);
     }
 
-    private int getMaxPages(int amountOfEntity, int amountOfDisplayedEntities) {
-        int maxPages = (Math.round(amountOfEntity / amountOfDisplayedEntities) + 1);
-        return maxPages;
+    private void isExist(Article article, Long id) {
+        String defaultMessage = "Article with id:%s not found. ";
+        if (article == null) {
+            String message = String.format(defaultMessage, id);
+            logger.error(message);
+            throw new EntityNotFoundException(String.format(message, id));
+        }
     }
 
-    private PageDTO<ArticleDTO> getPageDTO(List<ArticleDTO> articleDTOList, Integer maxPages) {
-        PageDTO<ArticleDTO> pageDTO = new PageDTO<>();
-        pageDTO.setList(articleDTOList);
-        pageDTO.setAmountOfPages(maxPages);
-        return pageDTO;
+    private void isExistForRest(Article article, Long id) {
+        String defaultMessage = "Article with id:%s not found. ";
+        if (article == null) {
+            String message = String.format(defaultMessage, id);
+            logger.error(message);
+            throw new RestEntityNotFoundException(String.format(message, id));
+        }
     }
 }

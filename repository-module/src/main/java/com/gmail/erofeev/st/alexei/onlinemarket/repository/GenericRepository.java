@@ -14,7 +14,7 @@ public interface GenericRepository<I, T> {
 
     List<T> findAll();
 
-    Integer getAmountOfEntity();
+    Integer getAmountOfEntity(boolean countDeleted);
 
     List<T> getEntities(Integer offset, Integer amount);
 }
