@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.context.support.WithUserDetails;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -33,6 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 public class ArticleControllerSecureIntegrationTest {
 
     @Autowired
@@ -57,7 +59,7 @@ public class ArticleControllerSecureIntegrationTest {
 
     @Test
     @WithMockUser(roles = ROLE_CUSTOMER)
-    public void shouldGetFourTestArticlesFromPage() throws Exception {
+    public void shouldGetNineTestArticlesFromPageForCustomer() throws Exception {
         mockMvc.perform(get("/articles"))
                 .andExpect(status().isOk())
                 .andExpect(xpath("//*[@id='article']").nodeCount(9));
@@ -105,7 +107,7 @@ public class ArticleControllerSecureIntegrationTest {
 
     @Test
     @WithMockUser(roles = ROLE_SALE)
-    public void shouldGetEightTestArticlesFromPage() throws Exception {
+    public void shouldGetNineTestArticlesFromPage() throws Exception {
         mockMvc.perform(get("/articles"))
                 .andExpect(status().isOk())
                 .andExpect(xpath("//*[@id='article']").nodeCount(9));
